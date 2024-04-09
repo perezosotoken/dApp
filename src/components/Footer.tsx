@@ -59,7 +59,7 @@ const Footer: React.FC = () => {
                   <i className="fa-brands fa-telegram"></i>
                 </a>
 
-                  <ButtonMailto mailto="mailto:test@test.com" ></ButtonMailto>
+                  <ButtonMailto mailto="mailto:enc.perezoso@perezosotoken.com" ></ButtonMailto>
 
               </div>
             </div>
