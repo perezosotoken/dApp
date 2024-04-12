@@ -55,38 +55,46 @@ const HomePage: React.FC = () => {
           <div className="row align-items-center justify-content-center">
             <div className="text-center">
                 <div className="button-group">
-                 
+                  <Link
+                    className="btn btn-bordered-white "
+                    to="https://www.dextools.io/app/en/bnb/pair-explorer/0xe2f4a4534133beacd8542f404f8c9d5135fbaf0e"
+                    style={{height:"60px", width:"230px"}}
+                    target="_blank"
+                  >
+                    <img src="https://perezosotoken.com/assets/images/dextools.png" style={{ width: "25px", marginRight: "10px" }} />
+                    {!ctx.isSpanishCountry ? "Dappradar" : "Dappradar"}
+                  </Link>                 
                   <Link
                     className="btn btn-bordered-white"
                     to="https://ave.ai/token/0x53ff62409b219ccaff01042bb2743211bb99882e-bsc?from=Default"
                     style={{height:"60px", width:"230px"}}
                   >
+                    <img src="https://perezosotoken.com/assets/images/avedex.png" style={{ width: "25px", marginRight: "10px" }} />
                     {!ctx.isSpanishCountry ? "Avedex" : "Avedex"}
-                    <img src="https://perezosotoken.com/assets/images/avedex.png" style={{ width: "25px", marginLeft: "10px" }} />
                   </Link>
                   <Link
                     className="btn btn-bordered-white "
                     to="https://www.coingecko.com/en/coins/perezoso"
                     style={{height:"60px", width:"230px"}}
                   >
+                    <img src="https://perezosotoken.com/assets/images/coingecko.png" style={{ width: "25px", marginRight: "10px" }} />
                     {!ctx.isSpanishCountry ? "Coingecko" : "Coingecko"}
-                    <img src="https://perezosotoken.com/assets/images/coingecko.png" style={{ width: "25px", marginLeft: "10px" }} />
                   </Link>
                   <Link
                     className="btn btn-bordered-white "
                     to="https://coinmarketcap.com/currencies/perezoso/"
                     style={{height:"60px", width:"230px"}}
                   >
+                    <img src="https://perezosotoken.com/assets/images/cmc.png" style={{ width: "25px", marginRight: "10px" }} />
                     {!ctx.isSpanishCountry ? "CMC" : "CMC"}
-                    <img src="https://perezosotoken.com/assets/images/cmc.png" style={{ width: "25px", marginLeft: "10px" }} />
                   </Link>
                   <Link
                     className="btn btn-bordered-white "
                     to="https://dappradar.com/dapp/perezoso"
                     style={{height:"60px", width:"230px"}}
                   >
+                    <img src="https://perezosotoken.com/assets/images/dappradar.png" style={{ width: "25px", marginRight: "10px" }} />
                     {!ctx.isSpanishCountry ? "Dappradar" : "Dappradar"}
-                    <img src="https://perezosotoken.com/assets/images/dappradar.png" style={{ width: "25px", marginLeft: "10px" }} />
                   </Link>                  
                 </div>
             </div>
