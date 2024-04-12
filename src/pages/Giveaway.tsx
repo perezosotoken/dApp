@@ -4,6 +4,9 @@ import ABI from "../core/ABI.json";
 import TOKENABI from "../core/TokenABI.json";
 import { toast } from "react-toastify";
 import { CirclesWithBar } from "react-loader-spinner";
+import {ethers} from "ethers";
+
+const { formatEther, parseEther } = ethers;
 
 interface Winner {
   prize: number;
@@ -11,11 +14,23 @@ interface Winner {
   winner: Address;
 }
 
+const commify = (number) => {
+  let numStr = number.toString();
+  let [integerPart, decimalPart] = numStr.split(".");
+  integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return decimalPart ? `${integerPart}.${decimalPart}` : integerPart;
+}
+
 const DashboardPage: React.FC = () => {
   const giveawayAddress = "0x3234ddFeB18fbeFcBF5D482A00a8dD4fAEdA8d19";
   const tokenAddress = "0x53Ff62409B219CcAfF01042Bb2743211bB99882e";
+  const ZERO_ADDRESS = "0x000000000000000000000000000000000000dead";
+  
+  const totalSupply = 420000000000000;
+  
   const [ticket, setTicket] = useState<number>(0);
   const [priceToPay, setPriceToPay] = useState<number>(0);
+  // const [totalBurned, setTotalBurned] = useState<number>(0);
   const [winning, setWinning] = useState<string>("");
   const { address, isConnected } = useAccount();
   const [ticketsBought, setTicketBought] = useState<number>(0);
@@ -51,6 +66,15 @@ const DashboardPage: React.FC = () => {
         setTicketBought(count);
       },
     });
+
+  const {data: totalBurned} = useContractRead({
+    address: tokenAddress,
+    abi: TOKENABI,
+    functionName: "balanceOf",
+    args: [ZERO_ADDRESS],
+  });
+
+  console.log(`Total burned: ${totalBurned}`)
 
   const { data: maxTicket } = useContractRead({
     address: giveawayAddress,
@@ -107,6 +131,7 @@ const DashboardPage: React.FC = () => {
       toast("Error, Approval unsuccessful.");
     },
   });
+
 
   const { isLoading, write: enterDraw } = useContractWrite({
     address: giveawayAddress,
@@ -244,8 +269,18 @@ const DashboardPage: React.FC = () => {
                               </li>
                               <li className="d-flex justify-content-between">
                                 <strong>Max Token Supply:</strong>
-                                <span>420,000,000,000,000 PRZS</span>
+                                <span>{`${commify(totalSupply)}`} PRZS</span>
                               </li>
+                              <li className="d-flex justify-content-between">
+                                  <strong>Circulating Supply:</strong>
+                                  {/* @ts-ignore */}
+                                  <span>{`${totalBurned != null ? commify(formatEther(parseEther(`${totalSupply}`) - totalBurned)) : 0}`} PRZS</span>
+                                </li>                               
+                              <li className="d-flex justify-content-between">
+                                <strong>Burned Supply:</strong>
+                                {/* @ts-ignore */}
+                                <span>{`${totalBurned != null ? commify(formatEther(totalBurned)) : 0}`} PRZS</span>
+                               </li>                                   
                               <li className="d-flex justify-content-between">
                                 <strong>Token Price:</strong>
                                 <span>$0.00</span>
