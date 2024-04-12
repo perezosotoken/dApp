@@ -61,7 +61,6 @@ const HomePage: React.FC = () => {
                     to="https://ave.ai/token/0x53ff62409b219ccaff01042bb2743211bb99882e-bsc?from=Default"
                     style={{height:"60px", width:"230px"}}
                   >
-                    <i className="fa-solid fa-ring mr-2"></i>
                     {!ctx.isSpanishCountry ? "Avedex" : "Avedex"}
                     <img src="https://perezosotoken.com/assets/images/avedex.png" style={{ width: "25px", marginLeft: "10px" }} />
                   </Link>
@@ -70,7 +69,6 @@ const HomePage: React.FC = () => {
                     to="https://www.coingecko.com/en/coins/perezoso"
                     style={{height:"60px", width:"230px"}}
                   >
-                    <i className="fa-solid fa-ring mr-2"></i>
                     {!ctx.isSpanishCountry ? "Coingecko" : "Coingecko"}
                     <img src="https://perezosotoken.com/assets/images/coingecko.png" style={{ width: "25px", marginLeft: "10px" }} />
                   </Link>
@@ -79,7 +77,6 @@ const HomePage: React.FC = () => {
                     to="https://coinmarketcap.com/currencies/perezoso/"
                     style={{height:"60px", width:"230px"}}
                   >
-                    <i className="fa-solid fa-ring mr-2"></i>
                     {!ctx.isSpanishCountry ? "CMC" : "CMC"}
                     <img src="https://perezosotoken.com/assets/images/cmc.png" style={{ width: "25px", marginLeft: "10px" }} />
                   </Link>
@@ -88,7 +85,6 @@ const HomePage: React.FC = () => {
                     to="https://dappradar.com/dapp/perezoso"
                     style={{height:"60px", width:"230px"}}
                   >
-                    <i className="fa-solid fa-ring mr-2"></i>
                     {!ctx.isSpanishCountry ? "Dappradar" : "Dappradar"}
                     <img src="https://perezosotoken.com/assets/images/dappradar.png" style={{ width: "25px", marginLeft: "10px" }} />
                   </Link>                  
