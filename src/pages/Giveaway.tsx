@@ -312,7 +312,7 @@ const DashboardPage: React.FC = () => {
                         </div>
                       </div>
                       <span>
-                        Note: The giveaway would be done every day at 9:00 P.M
+                        Note: The giveaway will be done every day at 9:00 P.M
                       </span>
                       <div className="staking-tab-content mt-4">
                         <p>Tokenomics</p>
