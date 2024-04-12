@@ -30,59 +30,83 @@ const DashboardPage: React.FC = () => {
   
   const [ticket, setTicket] = useState<number>(0);
   const [priceToPay, setPriceToPay] = useState<number>(0);
-  // const [totalBurned, setTotalBurned] = useState<number>(0);
+  const [tokenPrice, setTokenPrice] = useState<number>(0);
+  const [holders, setHolders] = useState<string>("");
   const [winning, setWinning] = useState<string>("");
   const { address, isConnected } = useAccount();
   const [ticketsBought, setTicketBought] = useState<number>(0);
   const [isWaitingForApproval, setIsWaitingForApproval] =
     useState<boolean>(false);
+    useEffect(() => {
+      const fetchTokenHolders = async () => {
+        const url = 'https://corsproxy.io/?https%3A%2F%2Fbscscan.com%2Ftoken%2F0x53Ff62409B219CcAfF01042Bb2743211bB99882e';
+        try {
+          const response = await fetch(url, {
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest'
+            }
+          });
+          const text = await response.text();
+          
+          console.log("Entire HTML Output:", text); // Log the full HTML to verify the structure
+  
+          // Use DOMParser to parse the HTML response
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(text, "text/html");
+  
+          // Attempt to locate the specific holder count element
+          const holdersDiv = doc.querySelector('#ContentPlaceHolder1_tr_tokenHolders div > div'); // Adjusted for nested div structure
+          if (holdersDiv) {
+            const holdersText = holdersDiv.textContent.trim().split(' ')[0]; // Extracts the number directly
 
-  useEffect(() => {
-// Function to fetch the page content
-  async function fetchAndParsePage(url: string | URL | Request) {
-      try { 
-        console.log('here')
-        // Fetch the page
-        const response = await fetch(url, {
-          mode: 'no-cors',
-          headers: {
-            'Content-Type': 'text/html',
-          },
-        });
+            //@ts-ignore
+            setHolders(holdersText);
+          } else {
+            console.log('Token holders element not found');
+          }
+        } catch (error) {
+          console.error("Failed to fetch or parse the page:", error);
+        }
+      };
+  
+      fetchTokenHolders();
+    }, []);
+  
 
-        const text = await response.text();
-        console.log(response.body)
+    useEffect(() => {
+      const fetchTokenPrice = async () => {
+          const url = 'https://cors-anywhere.herokuapp.com/https://www.coingecko.com/en/coins/perezoso';
+          const response = await fetch(url, {
+              headers: {
+                  'X-Requested-With': 'XMLHttpRequest'
+              }
+          });
+          const text = await response.text();
 
         // Use DOMParser to parse the HTML response
         const parser = new DOMParser();
         const doc = parser.parseFromString(text, "text/html");
 
         // Now extract data using querySelectors
-        const data = {};
-
-        // Select the element with the specific attributes
         const priceElement = doc.querySelector('span[data-converter-target="price"][data-coin-id="36344"]');
-
-        // Retrieve the value from the 'title' attribute of the <sub> element within the selected span
-        const price = priceElement.querySelector('sub').getAttribute('title');
-
-        // Output the price to the console
-        console.log(price);
+        if (priceElement) {
+          const subElement = priceElement.querySelector('sub');
+          if (subElement) {
+            const price = subElement.getAttribute('title');
+            //@ts-ignore
+            setTokenPrice(price);
+          } else {
+            console.log('Sub element not found');
+          }
+        } else {
+          console.log('Price element not found');
+        }
  
-          return data;
-      } catch (error) {
-          console.error("Failed to fetch or parse the page:", error);
-          return null;
-      }
-    }
-
-    // URL of the webpage you want to scrape
-    const url = "https://www.coingecko.com/en/coins/perezoso";
-
-    // Call the function and log the result
-    fetchAndParsePage(url)
-
+      };
+  
+      fetchTokenPrice();
   }, [isConnected]);
+  
 
   function accumulatedPrizeForAddress(
     winners: Winner[],
@@ -328,15 +352,11 @@ const DashboardPage: React.FC = () => {
                                </li>                                   
                               <li className="d-flex justify-content-between">
                                 <strong>Token Price:</strong>
-                                <span>$0.00</span>
-                              </li>
-                              <li className="d-flex justify-content-between">
-                                <strong>Circulation Supply:</strong>
-                                <span>----</span>
+                                <span>${tokenPrice}</span>
                               </li>
                               <li className="d-flex justify-content-between">
                                 <strong>Holders:</strong>
-                                <span>471+</span>
+                                <span>{holders}+</span>
                               </li>
                             </ul>
                           </div>
