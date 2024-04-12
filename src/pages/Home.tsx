@@ -74,15 +74,6 @@ const HomePage: React.FC = () => {
                     {!ctx.isSpanishCountry ? "Coingecko" : "Coingecko"}
                   </Link>                  
                   <Link
-                    className="btn btn-bordered-white"
-                    to="https://ave.ai/token/0x53ff62409b219ccaff01042bb2743211bb99882e-bsc?from=Default"
-                    style={{height:"60px", width:"230px"}}
-                    target="_blank"
-                  >
-                    <img src="https://perezosotoken.com/assets/images/avedex.png" style={{ width: "25px", marginRight: "10px" }} />
-                    {!ctx.isSpanishCountry ? "Avedex" : "Avedex"}
-                  </Link>
-                  <Link
                     className="btn btn-bordered-white "
                     to="https://pancakeswap.finance/swap?outputCurrency=0x53ff62409b219ccaff01042bb2743211bb99882e&inputCurrency=BNB"
                     style={{height:"60px", width:"230px"}}
@@ -134,7 +125,16 @@ const HomePage: React.FC = () => {
                   >
                     <img src="https://perezosotoken.com/assets/images/ntm.png" style={{ width: "25px", marginRight: "10px" }} />
                     {!ctx.isSpanishCountry ? "NTM" : "NTM"}
-                  </Link>                   
+                  </Link>      
+                  <Link
+                    className="btn btn-bordered-white"
+                    to="https://ave.ai/token/0x53ff62409b219ccaff01042bb2743211bb99882e-bsc?from=Default"
+                    style={{height:"60px", width:"230px"}}
+                    target="_blank"
+                  >
+                    <img src="https://perezosotoken.com/assets/images/avedex.png" style={{ width: "25px", marginRight: "10px" }} />
+                    {!ctx.isSpanishCountry ? "Avedex" : "Avedex"}
+                  </Link>             
                 </div>
             </div>
           </div>               
