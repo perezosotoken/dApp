@@ -75,7 +75,7 @@ const DashboardPage: React.FC = () => {
 
     useEffect(() => {
       const fetchTokenPrice = async () => {
-          const url = 'https://cors-anywhere.herokuapp.com/https://www.coingecko.com/en/coins/perezoso';
+          const url = 'https://corsproxy.io/?https%3A%2F%2Fwww.coingecko.com%2Fen%2Fcoins%2Fperezoso';
           const response = await fetch(url, {
               headers: {
                   'X-Requested-With': 'XMLHttpRequest'
