@@ -278,8 +278,8 @@ const DashboardPage: React.FC = () => {
                               onChange={(e) => {
                                 setTicket(parseInt(e.target.value));
                                 setPriceToPay(
-                                  parseInt(e.target.value || "0") *
-                                    commify(Number(TICKET_PRICE))
+                                  commify( parseInt(e.target.value || "0") *
+                                    Number(TICKET_PRICE))
                                 );
                               }}
                             />
