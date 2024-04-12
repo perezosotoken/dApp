@@ -275,6 +275,7 @@ const DashboardPage: React.FC = () => {
                             <input
                               type="number"
                               placeholder="0.00"
+                              min="1"
                               onChange={(e) => {
                                 setTicket(parseInt(e.target.value));
                                 setPriceToPay(
