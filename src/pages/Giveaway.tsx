@@ -5,6 +5,7 @@ import TOKENABI from "../core/TokenABI.json";
 import { toast } from "react-toastify";
 import { CirclesWithBar } from "react-loader-spinner";
 import { ethers } from "ethers";
+import { commify } from "../utils";
 
 const { formatEther, parseEther } = ethers;
 
@@ -13,13 +14,7 @@ interface Winner {
   timestamp: number;
   winner: Address;
 }
-
-const commify = (number) => {
-  let numStr = number.toString();
-  let [integerPart, decimalPart] = numStr.split(".");
-  integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  return decimalPart ? `${integerPart}.${decimalPart}` : integerPart;
-}
+ 
 
 const DashboardPage: React.FC = () => {
   const giveawayAddress = "0x3234ddFeB18fbeFcBF5D482A00a8dD4fAEdA8d19";
@@ -253,7 +248,7 @@ const DashboardPage: React.FC = () => {
                 <div className="card no-hover staking-card single-staking">
                   <h3 className="m-0">Perezoso Raffle Draw</h3>
                   <span className="balance">
-                    {Number(PRIZE)} PRZS Token Prize
+                    {commify(Number(PRIZE))} PRZS Token Prize
                   </span>
 
                   <div className="tab-content mt-md-3" id="myTabContent">
@@ -266,12 +261,12 @@ const DashboardPage: React.FC = () => {
                       <div className="input-box my-4 d-flex row">
                         <div className="input-area col-lg-6 col-12 mb-3">
                           <div className="input-text">
-                            <label>Ticket Price {Number(TICKET_PRICE)}</label>
+                            <label>Ticket Price {commify(Number(TICKET_PRICE))} PRZS</label>
                             <input
                               type="text"
                               value={TICKET_PRICE + " PRZS"}
                               disabled
-                            />
+                            /> 
                           </div>
                         </div>
                         <div className="input-area col-lg-6 col-12 mb-3">
@@ -284,7 +279,7 @@ const DashboardPage: React.FC = () => {
                                 setTicket(parseInt(e.target.value));
                                 setPriceToPay(
                                   parseInt(e.target.value || "0") *
-                                    Number(TICKET_PRICE)
+                                    commify(Number(TICKET_PRICE))
                                 );
                               }}
                             />
@@ -370,22 +365,22 @@ const DashboardPage: React.FC = () => {
               <div className="col-12 col-md-5">
                 <div className="staking-items mt-4 mt-md-0">
                   <div className="card no-hover staking-card">
-                    <h3 className="m-0">{winning}</h3>
+                    <h3 className="m-0">{commify(winning)}</h3>
                     <p>Your Winnings</p>
                   </div>
                   <div className="card no-hover staking-card my-4">
-                    <h3 className="m-0">{ticketsBought}</h3>
+                    <h3 className="m-0">{commify(ticketsBought)}</h3>
                     <p>Your Ticket(s)</p>
                   </div>
                   <div className="card no-hover staking-card my-4">
                     <h3 className="m-0">
-                      {Number(totalRewardDistributed) || 0} PRZS
+                      {commify(Number(totalRewardDistributed)) || 0} PRZS
                     </h3>
                     <p>Total Rewards Distributed</p>
                   </div>
                   <div className="card no-hover staking-card">
                     <h3 className="m-0">
-                      {(currentPlayers as string[])?.length}
+                      {currentPlayers ? commify(currentPlayers.length) : 0}
                     </h3>
                     <p>Current Number of Players Today</p>
                   </div>
