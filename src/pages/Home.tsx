@@ -51,6 +51,50 @@ const HomePage: React.FC = () => {
               </div>
             </div>
           </div>
+          <center><p style={{marginTop:"30px"}}><h3 style={{ color: "#fff" }}>Perezoso Token is featured on:</h3> </p></center>
+          <div className="row align-items-center justify-content-center">
+            <div className="text-center">
+                <div className="button-group">
+                 
+                  <Link
+                    className="btn btn-bordered-white"
+                    to="https://ave.ai/token/0x53ff62409b219ccaff01042bb2743211bb99882e-bsc?from=Default"
+                    style={{height:"60px", width:"230px"}}
+                  >
+                    <i className="fa-solid fa-ring mr-2"></i>
+                    {!ctx.isSpanishCountry ? "Avedex" : "Avedex"}
+                    <img src="https://perezoso.com/assets/images/avedex.png" style={{ width: "25px", marginLeft: "10px" }} />
+                  </Link>
+                  <Link
+                    className="btn btn-bordered-white "
+                    to="https://www.coingecko.com/en/coins/perezoso"
+                    style={{height:"60px", width:"230px"}}
+                  >
+                    <i className="fa-solid fa-ring mr-2"></i>
+                    {!ctx.isSpanishCountry ? "Coingecko" : "Coingecko"}
+                    <img src="https://perezoso.com/assets/images/coingecko.png" style={{ width: "25px", marginLeft: "10px" }} />
+                  </Link>
+                  <Link
+                    className="btn btn-bordered-white "
+                    to="https://coinmarketcap.com/currencies/perezoso/"
+                    style={{height:"60px", width:"230px"}}
+                  >
+                    <i className="fa-solid fa-ring mr-2"></i>
+                    {!ctx.isSpanishCountry ? "CMC" : "CMC"}
+                    <img src="https://perezoso.com/assets/images/cmc.png" style={{ width: "25px", marginLeft: "10px" }} />
+                  </Link>
+                  <Link
+                    className="btn btn-bordered-white "
+                    to="https://dappradar.com/dapp/perezoso"
+                    style={{height:"60px", width:"230px"}}
+                  >
+                    <i className="fa-solid fa-ring mr-2"></i>
+                    {!ctx.isSpanishCountry ? "Dappradar" : "Dappradar"}
+                    <img src="https://perezoso.com/assets/images/dappradar.png" style={{ width: "25px", marginLeft: "10px" }} />
+                  </Link>                  
+                </div>
+            </div>
+          </div>          
         </div>
       </section>
       <section className="content-area" style={{ marginBottom: "-100px" }}>
