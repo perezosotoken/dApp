@@ -59,6 +59,7 @@ const HomePage: React.FC = () => {
                     className="btn btn-bordered-white"
                     to="https://ave.ai/token/0x53ff62409b219ccaff01042bb2743211bb99882e-bsc?from=Default"
                     style={{height:"60px", width:"230px"}}
+                    target="_blank"
                   >
                     <img src="https://perezosotoken.com/assets/images/avedex.png" style={{ width: "25px", marginRight: "10px" }} />
                     {!ctx.isSpanishCountry ? "Avedex" : "Avedex"}
@@ -67,6 +68,7 @@ const HomePage: React.FC = () => {
                     className="btn btn-bordered-white "
                     to="https://www.coingecko.com/en/coins/perezoso"
                     style={{height:"60px", width:"230px"}}
+                    target="_blank"
                   >
                     <img src="https://perezosotoken.com/assets/images/coingecko.png" style={{ width: "25px", marginRight: "10px" }} />
                     {!ctx.isSpanishCountry ? "Coingecko" : "Coingecko"}
@@ -75,6 +77,7 @@ const HomePage: React.FC = () => {
                     className="btn btn-bordered-white "
                     to="https://coinmarketcap.com/currencies/perezoso/"
                     style={{height:"60px", width:"230px"}}
+                    target="_blank"
                   >
                     <img src="https://perezosotoken.com/assets/images/cmc.png" style={{ width: "25px", marginRight: "10px" }} />
                     {!ctx.isSpanishCountry ? "CMC" : "CMC"}
@@ -83,6 +86,7 @@ const HomePage: React.FC = () => {
                     className="btn btn-bordered-white "
                     to="https://dappradar.com/dapp/perezoso"
                     style={{height:"60px", width:"230px"}}
+                    target="_blank"
                   >
                     <img src="https://perezosotoken.com/assets/images/dappradar.png" style={{ width: "25px", marginRight: "10px" }} />
                     {!ctx.isSpanishCountry ? "Dappradar" : "Dappradar"}
