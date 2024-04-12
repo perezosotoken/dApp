@@ -63,7 +63,7 @@ const HomePage: React.FC = () => {
                   >
                     <i className="fa-solid fa-ring mr-2"></i>
                     {!ctx.isSpanishCountry ? "Avedex" : "Avedex"}
-                    <img src="https://perezoso.com/assets/images/avedex.png" style={{ width: "25px", marginLeft: "10px" }} />
+                    <img src="https://perezosotoken.com/assets/images/avedex.png" style={{ width: "25px", marginLeft: "10px" }} />
                   </Link>
                   <Link
                     className="btn btn-bordered-white "
@@ -72,7 +72,7 @@ const HomePage: React.FC = () => {
                   >
                     <i className="fa-solid fa-ring mr-2"></i>
                     {!ctx.isSpanishCountry ? "Coingecko" : "Coingecko"}
-                    <img src="https://perezoso.com/assets/images/coingecko.png" style={{ width: "25px", marginLeft: "10px" }} />
+                    <img src="https://perezosotoken.com/assets/images/coingecko.png" style={{ width: "25px", marginLeft: "10px" }} />
                   </Link>
                   <Link
                     className="btn btn-bordered-white "
@@ -81,7 +81,7 @@ const HomePage: React.FC = () => {
                   >
                     <i className="fa-solid fa-ring mr-2"></i>
                     {!ctx.isSpanishCountry ? "CMC" : "CMC"}
-                    <img src="https://perezoso.com/assets/images/cmc.png" style={{ width: "25px", marginLeft: "10px" }} />
+                    <img src="https://perezosotoken.com/assets/images/cmc.png" style={{ width: "25px", marginLeft: "10px" }} />
                   </Link>
                   <Link
                     className="btn btn-bordered-white "
@@ -90,7 +90,7 @@ const HomePage: React.FC = () => {
                   >
                     <i className="fa-solid fa-ring mr-2"></i>
                     {!ctx.isSpanishCountry ? "Dappradar" : "Dappradar"}
-                    <img src="https://perezoso.com/assets/images/dappradar.png" style={{ width: "25px", marginLeft: "10px" }} />
+                    <img src="https://perezosotoken.com/assets/images/dappradar.png" style={{ width: "25px", marginLeft: "10px" }} />
                   </Link>                  
                 </div>
             </div>
