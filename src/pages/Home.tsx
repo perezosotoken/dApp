@@ -54,25 +54,7 @@ const HomePage: React.FC = () => {
           <center><p style={{marginTop:"30px"}}><h3 style={{ color: "#fff" }}>Perezoso Token is featured on:</h3> </p></center>
           <div className="row align-items-center justify-content-center">
             <div className="text-center">
-                <div className="button-group">
-                <Link
-                    className="btn btn-bordered-white "
-                    to="https://pancakeswap.finance/swap?outputCurrency=0x53ff62409b219ccaff01042bb2743211bb99882e&inputCurrency=BNB"
-                    style={{height:"60px", width:"230px"}}
-                    target="_blank"
-                  >
-                    <img src="https://perezosotoken.com/assets/images/pancakeswap.png" style={{ width: "25px", marginRight: "10px" }} />
-                    {!ctx.isSpanishCountry ? "PancakeSwap" : "PancakeSwap"}
-                  </Link>                   
-                  <Link
-                    className="btn btn-bordered-white "
-                    to="https://www.dextools.io/app/en/bnb/pair-explorer/0xe2f4a4534133beacd8542f404f8c9d5135fbaf0e"
-                    style={{height:"60px", width:"230px"}}
-                    target="_blank"
-                  >
-                    <img src="https://perezosotoken.com/assets/images/dextools.png" style={{ width: "25px", marginRight: "10px" }} />
-                    {!ctx.isSpanishCountry ? "Dextools" : "Dextools"}
-                  </Link>                 
+                <div className="button-group">                                  
                   <Link
                     className="btn btn-bordered-white"
                     to="https://ave.ai/token/0x53ff62409b219ccaff01042bb2743211bb99882e-bsc?from=Default"
@@ -109,6 +91,50 @@ const HomePage: React.FC = () => {
             </div>
           </div>          
         </div>
+
+        <div className="row align-items-center justify-content-center">
+            <div className="col-sm5 text-center">
+                <div className="button-group">
+                <Link
+                    className="btn btn-bordered-white "
+                    to="https://bscscan.com/token/0x53ff62409b219ccaff01042bb2743211bb99882e"
+                    style={{height:"60px", width:"230px"}}
+                    target="_blank"
+                  >
+                    <img src="https://perezosotoken.com/assets/images/bscscan.png" style={{ width: "25px", marginRight: "10px" }} />
+                    {!ctx.isSpanishCountry ? "Bscscan" : "Bscscan"}
+                  </Link>                  
+                <Link
+                    className="btn btn-bordered-white "
+                    to="https://ntm.ai/token/0x53ff62409b219ccaff01042bb2743211bb99882e"
+                    style={{height:"60px", width:"230px"}}
+                    target="_blank"
+                  >
+                    <img src="https://perezosotoken.com/assets/images/ntm.png" style={{ width: "25px", marginRight: "10px" }} />
+                    {!ctx.isSpanishCountry ? "NTM" : "NTM"}
+                  </Link>                  
+                <Link
+                    className="btn btn-bordered-white "
+                    to="https://pancakeswap.finance/swap?outputCurrency=0x53ff62409b219ccaff01042bb2743211bb99882e&inputCurrency=BNB"
+                    style={{height:"60px", width:"230px"}}
+                    target="_blank"
+                  >
+                    <img src="https://perezosotoken.com/assets/images/pancakeswap.png" style={{ width: "25px", marginRight: "10px" }} />
+                    {!ctx.isSpanishCountry ? "PancakeSwap" : "PancakeSwap"}
+                  </Link>                   
+                  <Link
+                    className="btn btn-bordered-white "
+                    to="https://www.dextools.io/app/en/bnb/pair-explorer/0xe2f4a4534133beacd8542f404f8c9d5135fbaf0e"
+                    style={{height:"60px", width:"230px"}}
+                    target="_blank"
+                  >
+                    <img src="https://perezosotoken.com/assets/images/dextools.png" style={{ width: "25px", marginRight: "10px" }} />
+                    {!ctx.isSpanishCountry ? "Dextools" : "Dextools"}
+                  </Link>                 
+                  
+                </div>
+            </div>
+          </div>               
       </section>
       <section className="content-area" style={{ marginBottom: "-100px" }}>
         <div className="container">
