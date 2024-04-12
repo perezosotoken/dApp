@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Address, useAccount, useContractRead, useContractWrite } from "wagmi";
 import ABI from "../core/ABI.json";
 import TOKENABI from "../core/TokenABI.json";
 import { toast } from "react-toastify";
 import { CirclesWithBar } from "react-loader-spinner";
-import {ethers} from "ethers";
+import { ethers } from "ethers";
 
 const { formatEther, parseEther } = ethers;
 
@@ -36,6 +36,53 @@ const DashboardPage: React.FC = () => {
   const [ticketsBought, setTicketBought] = useState<number>(0);
   const [isWaitingForApproval, setIsWaitingForApproval] =
     useState<boolean>(false);
+
+  useEffect(() => {
+// Function to fetch the page content
+  async function fetchAndParsePage(url: string | URL | Request) {
+      try { 
+        console.log('here')
+        // Fetch the page
+        const response = await fetch(url, {
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'text/html',
+          },
+        });
+
+        const text = await response.text();
+        console.log(response.body)
+
+        // Use DOMParser to parse the HTML response
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(text, "text/html");
+
+        // Now extract data using querySelectors
+        const data = {};
+
+        // Select the element with the specific attributes
+        const priceElement = doc.querySelector('span[data-converter-target="price"][data-coin-id="36344"]');
+
+        // Retrieve the value from the 'title' attribute of the <sub> element within the selected span
+        const price = priceElement.querySelector('sub').getAttribute('title');
+
+        // Output the price to the console
+        console.log(price);
+ 
+          return data;
+      } catch (error) {
+          console.error("Failed to fetch or parse the page:", error);
+          return null;
+      }
+    }
+
+    // URL of the webpage you want to scrape
+    const url = "https://www.coingecko.com/en/coins/perezoso";
+
+    // Call the function and log the result
+    fetchAndParsePage(url)
+
+  }, [isConnected]);
 
   function accumulatedPrizeForAddress(
     winners: Winner[],
@@ -73,8 +120,6 @@ const DashboardPage: React.FC = () => {
     functionName: "balanceOf",
     args: [ZERO_ADDRESS],
   });
-
-  console.log(`Total burned: ${totalBurned}`)
 
   const { data: maxTicket } = useContractRead({
     address: giveawayAddress,
