@@ -55,6 +55,15 @@ const HomePage: React.FC = () => {
           <div className="row align-items-center justify-content-center">
             <div className="text-center">
                 <div className="button-group">
+                <Link
+                    className="btn btn-bordered-white "
+                    to="https://pancakeswap.finance/swap?outputCurrency=0x53ff62409b219ccaff01042bb2743211bb99882e&inputCurrency=BNB"
+                    style={{height:"60px", width:"230px"}}
+                    target="_blank"
+                  >
+                    <img src="https://perezosotoken.com/assets/images/pancakeswap.png" style={{ width: "25px", marginRight: "10px" }} />
+                    {!ctx.isSpanishCountry ? "PancakeSwap" : "PancakeSwap"}
+                  </Link>                   
                   <Link
                     className="btn btn-bordered-white "
                     to="https://www.dextools.io/app/en/bnb/pair-explorer/0xe2f4a4534133beacd8542f404f8c9d5135fbaf0e"
@@ -62,7 +71,7 @@ const HomePage: React.FC = () => {
                     target="_blank"
                   >
                     <img src="https://perezosotoken.com/assets/images/dextools.png" style={{ width: "25px", marginRight: "10px" }} />
-                    {!ctx.isSpanishCountry ? "Dappradar" : "Dappradar"}
+                    {!ctx.isSpanishCountry ? "Dextools" : "Dextools"}
                   </Link>                 
                   <Link
                     className="btn btn-bordered-white"
