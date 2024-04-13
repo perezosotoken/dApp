@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { LanguageContext, LanguageContextType } from "../core/LanguageProvider";
+import { BrowserView, MobileView, isBrowser, isMobile } from 'react-device-detect';
 
 const HomePage: React.FC = () => {
   const ctx = useContext<LanguageContextType>(LanguageContext);
@@ -58,7 +59,7 @@ const HomePage: React.FC = () => {
                 <Link
                     className="btn btn-bordered-white "
                     to="https://coinmarketcap.com/currencies/perezoso/"
-                    style={{height:"60px", width:"230px"}}
+                    style={{marginBottom: `${isMobile ? "25px": "0px"}`, height:"60px", width:"230px"}}
                     target="_blank"
                   >
                     <img src="https://perezosotoken.com/assets/images/cmc.png" style={{ width: "25px", marginRight: "10px" }} />
@@ -67,7 +68,7 @@ const HomePage: React.FC = () => {
                   <Link
                     className="btn btn-bordered-white "
                     to="https://www.coingecko.com/en/coins/perezoso"
-                    style={{height:"60px", width:"230px"}}
+                    style={{marginBottom: `${isMobile ? "25px": "0px"}`, height:"60px", width:"230px"}}
                     target="_blank"
                   >
                     <img src="https://perezosotoken.com/assets/images/coingecko.png" style={{ width: "25px", marginRight: "10px" }} />
@@ -76,7 +77,7 @@ const HomePage: React.FC = () => {
                   <Link
                     className="btn btn-bordered-white "
                     to="https://pancakeswap.finance/swap?outputCurrency=0x53ff62409b219ccaff01042bb2743211bb99882e&inputCurrency=BNB"
-                    style={{height:"60px", width:"230px"}}
+                    style={{marginBottom: `${isMobile ? "25px": "0px"}`, height:"60px", width:"230px"}}
                     target="_blank"
                   >
                     <img src="https://perezosotoken.com/assets/images/pancakeswap.png" style={{ width: "25px", marginRight: "10px" }} />
@@ -85,7 +86,7 @@ const HomePage: React.FC = () => {
                   <Link
                     className="btn btn-bordered-white "
                     to="https://dappradar.com/dapp/perezoso"
-                    style={{height:"60px", width:"230px"}}
+                    style={{marginBottom: `${isMobile ? "25px": "0px"}`, height:"60px", width:"230px"}}
                     target="_blank"
                   >
                     <img src="https://perezosotoken.com/assets/images/dappradar.png" style={{ width: "25px", marginRight: "10px" }} />
@@ -102,7 +103,7 @@ const HomePage: React.FC = () => {
                 <Link
                     className="btn btn-bordered-white "
                     to="https://bscscan.com/token/0x53ff62409b219ccaff01042bb2743211bb99882e"
-                    style={{height:"60px", width:"230px"}}
+                    style={{marginBottom: `${isMobile ? "25px": "0px"}`, height:"60px", width:"230px"}}
                     target="_blank"
                   >
                     <img src="https://perezosotoken.com/assets/images/bscscan.png" style={{ width: "25px", marginRight: "10px" }} />
@@ -111,7 +112,7 @@ const HomePage: React.FC = () => {
                   <Link
                     className="btn btn-bordered-white "
                     to="https://www.dextools.io/app/en/bnb/pair-explorer/0xe2f4a4534133beacd8542f404f8c9d5135fbaf0e"
-                    style={{height:"60px", width:"230px"}}
+                    style={{marginBottom: `${isMobile ? "25px": "0px"}`,height:"60px", width:"230px"}}
                     target="_blank"
                   >
                     <img src="https://perezosotoken.com/assets/images/dextools.png" style={{ width: "25px", marginRight: "10px" }} />
@@ -120,7 +121,7 @@ const HomePage: React.FC = () => {
                   <Link
                     className="btn btn-bordered-white "
                     to="https://ntm.ai/token/0x53ff62409b219ccaff01042bb2743211bb99882e"
-                    style={{height:"60px", width:"230px"}}
+                    style={{marginBottom: `${isMobile ? "25px": "0px"}`,height:"60px", width:"230px"}}
                     target="_blank"
                   >
                     <img src="https://perezosotoken.com/assets/images/ntm.png" style={{ width: "25px", marginRight: "10px" }} />
