@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Address, useContractRead } from "wagmi";
 import ABI from "../core/ABI.json";
 import { CirclesWithBar } from "react-loader-spinner";
+import { commify } from "../utils";
 
 interface Winner {
   prize: number;
@@ -68,7 +69,7 @@ const LeaderboardPage: React.FC = () => {
                             <td style={{ width: "5%" }}>{index + 1}</td>
                             <td style={{ width: "45%" }}>{addr.winner}</td>
                             <td style={{ width: "25%" }}>
-                              {Number(addr.prize)} PRZS
+                              {commify(Number(addr.prize))} PRZS
                             </td>
                             <td style={{ width: "25%" }}>
                               {new Date(
