@@ -305,22 +305,50 @@ const Staking: React.FC = () => {
   }
 
   useEffect(() => {
-    console.log(`Isuser staked ${isUserStaked}`)
-    if (isUserStaked) {
-      const expData = localStorage.getItem('expData');
-      console.log(expData)
-      if (expData == null) {
-        const now = new Date();
-        let unlockDate = new Date(now.getTime());
-        unlockDate.setDate(now.getDate() + 30);
-        unlockDate = unlockDate.toISOString().split('T', 1)[0];
-        console.log(`Unlock date is ${unlockDate}`)
-        localStorage.setItem('expData', JSON.stringify(unlockDate));        
+      // Check if it's the first time the user has visited this component
+      const isFirstVisit = localStorage.getItem('hasVisitedBefore');
+
+      if (!isFirstVisit) {
+          console.log("Welcome! This is your first time here.");
+          
+          // Now set the flag in localStorage so next time this won't run
+          localStorage.setItem('hasVisitedBefore', 'true');
+
+          const expData = localStorage.getItem('expData');
+          console.log(expData)
+          if (expData == null) {
+            const now = new Date();
+            let unlockDate = new Date(now.getTime());
+            unlockDate.setDate(now.getDate() + 30);
+            unlockDate = unlockDate.toISOString().split('T', 1)[0];
+            console.log(`Unlock date is ${unlockDate}`)
+            localStorage.setItem('expData', JSON.stringify(unlockDate));        
+          }          
+
+          // Perform any other actions for first-time visit
+      } else {
+          console.log("Welcome back!");
       }
-    }
-  }, [isUserStaked]);
+
+      // Since the dependency array is empty, this effect will only run once after the initial render.
+      // Future renders will not trigger this effect.
+  }, []);  // The empty array ensures this hook is only run on mount
 
   useEffect(() => {
+    console.log(`Is user staked ${isUserStaked} realtime rewards ${realtimeRewards} stakedBalance ${stakedBalance}`)
+    // if (stakedBalance > 0 || realtimeRewards > 0 ) {
+    //   const expData = localStorage.getItem('expData');
+    //   console.log(expData)
+    //   if (expData == null) {
+    //     const now = new Date();
+    //     let unlockDate = new Date(now.getTime());
+    //     unlockDate.setDate(now.getDate() + 30);
+    //     unlockDate = unlockDate.toISOString().split('T', 1)[0];
+    //     console.log(`Unlock date is ${unlockDate}`)
+    //     localStorage.setItem('expData', JSON.stringify(unlockDate));        
+    //   }
+    // }
+
     async function updateRewardsLs() {
       if (realtimeRewards > 0)  {
         localStorage.setItem('realtimeRewards', realtimeRewards.toString());
@@ -330,7 +358,7 @@ const Staking: React.FC = () => {
     updateRewardsLs();  // Initial update
 
     return () => clearInterval(interval);  // Cleanup
-  }, [realtimeRewards])
+  }, [realtimeRewards, stakedBalance, isUserStaked])
 
   return(
     <>
