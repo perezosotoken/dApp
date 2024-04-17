@@ -45,7 +45,10 @@ const Staking: React.FC = () => {
   const tokenAddress = "0x53Ff62409B219CcAfF01042Bb2743211bB99882e";
   const stakingAddress = "0xE2DF958c48F0245D823c2dCb012134CfDa9F8f9F";
   const [timeLeft, setTimeLeft] = useState("");
-  const [realtimeRewards, setRealtimeRewards] = useState(0); 
+    // Initialize state with value from localStorage
+    const [realtimeRewards, setRealtimeRewards] = useState(() => {
+      return JSON.parse(localStorage.getItem('realtimeRewards') || "0");
+  });
 
   const {data: przsBalance, refetch: refetchPrzsBalance} = useContractRead({
     address: tokenAddress,
@@ -133,6 +136,36 @@ const Staking: React.FC = () => {
   });
 
   useEffect(() => {
+    function useCountdown(initialSeconds) {
+        const [secondsLeft, setSecondsLeft] = useState(initialSeconds);
+        const [timeString, setTimeString] = useState('');
+    
+        useEffect(() => {
+            const intervalId = setInterval(() => {
+                setSecondsLeft(seconds => {
+                    if (seconds <= 0) {
+                        clearInterval(intervalId);
+                        return 0; // Make sure we don't go below zero
+                    }
+                    return seconds - 1;
+                });
+            }, 1000);
+    
+            return () => clearInterval(intervalId);  // Cleanup interval on component unmount
+        }, []);
+    
+        useEffect(() => {
+            const days = Math.floor(secondsLeft / 86400);
+            const hours = Math.floor((secondsLeft % 86400) / 3600);
+            const minutes = Math.floor((secondsLeft % 3600) / 60);
+            const seconds = secondsLeft % 60;
+    
+            setTimeString(`${days}d ${hours}h ${minutes}m ${seconds}s`);
+        }, [secondsLeft]);
+    
+        return timeString;
+    }
+
     function updateCountdown() {
       // Retrieve the expiration date from localStorage
       const expData = localStorage.getItem('expData');
@@ -142,7 +175,7 @@ const Staking: React.FC = () => {
       }
   
       // Parse the expiration date reliably
-      const unlockDate = parseISOString(expData);
+      const unlockDate = new Date(expData);
       if (!unlockDate) {
           console.error("Failed to parse the expiration date.");
           return;
@@ -160,36 +193,28 @@ const Staking: React.FC = () => {
           clearInterval(interval);  // Assuming 'interval' is the interval ID for setInterval
           return;
       }
-  
-      // Calculate days, hours, minutes, and seconds remaining
-      let days = Math.floor(delta / 86400);
-      delta -= days * 86400;
-      let hours = Math.floor(delta / 3600) % 24;
-      delta -= hours * 3600;
-      let minutes = Math.floor(delta / 60) % 60;
-      delta -= minutes * 60;
-      let seconds = delta % 60;
-  
-      // Log the time left for debugging
-      console.log(`Time left: ${days}d ${hours}h ${minutes}m ${seconds}s`);
-  
-      // Calculate the reward increment per second
-      const totalReward = rewardsMap[selectedTier][selectedTime]; // Ensure these variables are defined and accessible
-      const rewardIncrement = totalReward / 2592000;  // Fixed reward rate per second
-  
-      // Increment realtimeRewards by rewardIncrement every second
-      setRealtimeRewards((prev) => prev + rewardIncrement);
-  
-      // Log the current reward rate
-      console.log(`Realtime Rewards Updated: ${realtimeRewards.toFixed(8)}`);
-  
-      // Optionally update UI or perform further actions with `realtimeRewards` and formatted time
-  }
     
-    function parseISOString(s) {
-        var b = s.split(/\D+/);
-        return new Date(Date.UTC(b[0], --b[1], b[2], b[3], b[4], b[5], b[6]));
+      const dateString = useCountdown(delta);
+
+        // Calculate the reward increment per second
+        const totalReward = rewardsMap[selectedTier][selectedTime]; // Ensure these variables are defined and accessible
+        const rewardIncrement = totalReward / 2592000;  // Fixed reward rate per second
+        
+        const realtimeRewards = JSON.parse(localStorage.getItem('realtimeRewards') || "0");
+
+        // Update the rewards
+        setRealtimeRewards(prev => {
+          const updatedRewards = prev + rewardIncrement;
+          localStorage.setItem('realtimeRewards', JSON.stringify(updatedRewards));
+          return updatedRewards;
+        });
+        // Log the current reward rate
+        console.log(`Realtime Rewards Updated: ${realtimeRewards.toFixed(8)}`);
+
+        setTimeLeft(dateString);
+        // Optionally update UI or perform further actions with `realtimeRewards` and formatted time
     }
+
      
     // Update the countdown every 1 second
     const interval = setInterval(updateCountdown, 1000);
@@ -295,13 +320,26 @@ const Staking: React.FC = () => {
       console.log(expData)
       if (expData == null) {
         const now = new Date();
-        const unlockDate = new Date(now.getTime());
+        let unlockDate = new Date(now.getTime());
         unlockDate.setDate(now.getDate() + 30);
-  
+        unlockDate = unlockDate.toISOString().split('T', 1)[0];
+        console.log(`Unlock date is ${unlockDate}`)
         localStorage.setItem('expData', JSON.stringify(unlockDate));        
       }
     }
   }, [isUserStaked]);
+
+  // useEffect(() => {
+  //   async function updateRewardsLs() {
+  //     if (realtimeRewards > 0)  {
+  //       localStorage.setItem('realtimeRewards', realtimeRewards.toString());
+  //     }
+  //   }
+  //   const interval = setInterval(updateRewardsLs, 1000);
+  //   updateRewardsLs();  // Initial update
+
+  //   return () => clearInterval(interval);  // Cleanup
+  // }, [realtimeRewards])
 
   return(
     <>
