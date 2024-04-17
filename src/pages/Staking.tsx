@@ -139,19 +139,43 @@ const Staking: React.FC = () => {
   });
 
   useEffect(() => {
+     
+    function countdown(seconds, setTimeleft) {
+      function printTime(secondsLeft) {
+            if (secondsLeft < 0) return; // Stop the countdown when less than zero
+             
+            const days = Math.floor(secondsLeft / 86400);
+            const hours = Math.floor((secondsLeft % 86400) / 3600);
+            const minutes = Math.floor((secondsLeft % 3600) / 60);
+            const seconds = secondsLeft % 60;
+
+            const dateString = `${days}d ${hours}h ${minutes}m ${seconds}s`;
  
+
+            if (!isNaN(days) && !isNaN(hours) && !isNaN(minutes) && !isNaN(seconds)) {
+              setTimeleft(dateString);
+            }
+
+            if (secondsLeft > 0) {
+                setTimeout(() => printTime(secondsLeft - 1), 1000);  // Recursive call
+            }
+        }
+    
+        printTime(seconds);
+    } 
+
     function updateCountdown() {
       // Retrieve the expiration date from localStorage
       const expData = localStorage.getItem('expData');
-      if (!expData) {
+      if (expData != "") {
         const now = new Date();
         let unlockDate = new Date(now.getTime());
         unlockDate.setDate(now.getDate() + 30);
         unlockDate = unlockDate.toISOString().split('T', 1)[0];
-        console.log(`Unlock date is ${unlockDate}`)
+        // console.log(`Unlock date is ${unlockDate}`)
         localStorage.setItem('expData', JSON.stringify(unlockDate));          
-          console.error("Expiration data not found in localStorage.");
-          return;
+      } else {
+        console.log(`No expiration data found ${expData}`)
       }
   
       // Parse the expiration date reliably
@@ -163,7 +187,9 @@ const Staking: React.FC = () => {
   
       // Get the current date and time
       const now = new Date();
-  
+      
+      console.log(`${unlockDate} - ${now}`)
+
       // Calculate the time left until the unlock date in seconds
       let delta = Math.floor((unlockDate - now) / 1000);
   
@@ -173,31 +199,6 @@ const Staking: React.FC = () => {
           clearInterval(interval);  // Assuming 'interval' is the interval ID for setInterval
           return;
       }
-    
-      function countdown(seconds, setTimeleft) {
-        function printTime(secondsLeft) {
-              if (secondsLeft < 0) return; // Stop the countdown when less than zero
-              console.log(`${secondsLeft} / 86400`);
-              
-              const days = Math.floor(secondsLeft / 86400);
-              const hours = Math.floor((secondsLeft % 86400) / 3600);
-              const minutes = Math.floor((secondsLeft % 3600) / 60);
-              const seconds = secondsLeft % 60;
-
-              const dateString = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-              console.log(dateString);
-
-              if (!isNaN(days) && !isNaN(hours) && !isNaN(minutes) && !isNaN(seconds)) {
-                setTimeleft(dateString);
-              }
-
-              if (secondsLeft > 0) {
-                  setTimeout(() => printTime(secondsLeft - 1), 1000);  // Recursive call
-              }
-          }
-      
-          printTime(seconds);
-      } 
 
       // Calculate the reward increment per second
       const totalReward = rewardsMap[selectedTier][selectedTime]; // Ensure these variables are defined and accessible
@@ -213,7 +214,7 @@ const Staking: React.FC = () => {
       });
       
       // Log the current reward rate
-      console.log(`Realtime Rewards Updated: ${realtimeRewards.toFixed(8)}`);
+      // console.log(`Realtime Rewards Updated: ${realtimeRewards.toFixed(8)}`);
       console.log(`Delta is ${delta}`);
 
       if (!isNaN(delta))
