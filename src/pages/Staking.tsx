@@ -584,7 +584,7 @@ const Staking: React.FC = () => {
                           <Button 
                               isDisabled={stakedBalance == 0}
                               w={"200px"}
-                              // isDisabled={accumulatedRewards == 0}
+                              isDisabled={stakedBalance == 0}
                               style={{marginLeft:"10px", border:"1px solid white", borderRadius:"10px"}}
                               onClick={() => unStake()}
                             > 
