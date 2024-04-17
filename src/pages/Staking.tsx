@@ -136,36 +136,7 @@ const Staking: React.FC = () => {
   });
 
   useEffect(() => {
-    function useCountdown(initialSeconds) {
-        const [secondsLeft, setSecondsLeft] = useState(initialSeconds);
-        const [timeString, setTimeString] = useState('');
-    
-        useEffect(() => {
-            const intervalId = setInterval(() => {
-                setSecondsLeft(seconds => {
-                    if (seconds <= 0) {
-                        clearInterval(intervalId);
-                        return 0; // Make sure we don't go below zero
-                    }
-                    return seconds - 1;
-                });
-            }, 1000);
-    
-            return () => clearInterval(intervalId);  // Cleanup interval on component unmount
-        }, []);
-    
-        useEffect(() => {
-            const days = Math.floor(secondsLeft / 86400);
-            const hours = Math.floor((secondsLeft % 86400) / 3600);
-            const minutes = Math.floor((secondsLeft % 3600) / 60);
-            const seconds = secondsLeft % 60;
-    
-            setTimeString(`${days}d ${hours}h ${minutes}m ${seconds}s`);
-        }, [secondsLeft]);
-    
-        return timeString;
-    }
-
+ 
     function updateCountdown() {
       // Retrieve the expiration date from localStorage
       const expData = localStorage.getItem('expData');
@@ -194,7 +165,27 @@ const Staking: React.FC = () => {
           return;
       }
     
-      const dateString = useCountdown(delta);
+      function countdown(seconds, setTimeleft) {
+        function printTime(secondsLeft) {
+              if (secondsLeft < 0) return; // Stop the countdown when less than zero
+      
+              const days = Math.floor(secondsLeft / 86400);
+              const hours = Math.floor((secondsLeft % 86400) / 3600);
+              const minutes = Math.floor((secondsLeft % 3600) / 60);
+              const seconds = secondsLeft % 60;
+      
+              console.log(`${days}d ${hours}h ${minutes}m ${seconds}s`);
+              setTimeleft(`${days}d ${hours}h ${minutes}m ${seconds}s`);
+
+              if (secondsLeft > 0) {
+                  setTimeout(() => printTime(secondsLeft - 1), 1000);  // Recursive call
+              }
+          }
+      
+          printTime(seconds);
+      }
+
+      ;
 
         // Calculate the reward increment per second
         const totalReward = rewardsMap[selectedTier][selectedTime]; // Ensure these variables are defined and accessible
@@ -210,8 +201,8 @@ const Staking: React.FC = () => {
         });
         // Log the current reward rate
         console.log(`Realtime Rewards Updated: ${realtimeRewards.toFixed(8)}`);
-
-        setTimeLeft(dateString);
+        countdown(delta, setTimeLeft);
+        
         // Optionally update UI or perform further actions with `realtimeRewards` and formatted time
     }
 
