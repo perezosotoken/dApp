@@ -579,7 +579,7 @@ const Staking: React.FC = () => {
                           </HStack>
                         </Box>
                         <Box w={"50%"} w={150}>
-                        <Box mt={!isMobile? "-100px" : 0}>
+                        <Box mt={!isMobile? "-100px" :"-100px"}>
                           <HStack>                       
                           <Button 
                               isDisabled={stakedBalance == 0}
