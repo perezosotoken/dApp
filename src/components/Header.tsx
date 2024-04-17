@@ -131,6 +131,18 @@ const Header: React.FC = () => {
                         {!ctx.isSpanishCountry ? "Raffle Draw" : "Sorteo"}
                       </Link>
                     </li>
+                    <li 
+                      className="nav-item"
+                      data-bs-dismiss="modal"
+                      style={{ fontSize: "20px" }}                    
+                    >
+                    <a
+                      className="nav-link"
+                      href="/staking"
+                    >
+                        {!ctx.isSpanishCountry ? "Staking" : "Acuñar"}
+                    </a>
+                    </li>
                     <li
                       className="nav-item"
                       data-bs-dismiss="modal"
