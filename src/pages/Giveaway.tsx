@@ -37,7 +37,6 @@ const DashboardPage: React.FC = () => {
   const [ticketsBought, setTicketBought] = useState<number>(0);
   const [isWaitingForApproval, setIsWaitingForApproval] = useState<boolean>(false);
 
-  console.log(PerezosoStakingAbi.abi)
   useEffect(() => {
     const fetchTokenHolders = async () => {
       const url = 'https://corsproxy.io/?https%3A%2F%2Fbscscan.com%2Ftoken%2F0x53Ff62409B219CcAfF01042Bb2743211bB99882e';
@@ -124,7 +123,7 @@ const DashboardPage: React.FC = () => {
   const { isLoading: gettingNoOfPlayers, data: currentPlayers } =
     useContractRead({
       address: giveawayAddress,
-      abi: PerezosoStakingAbi.abi,
+      abi: ABI,
       functionName: "getCurrentPlayers",
       watch: true,
       onSuccess: (data: Address[]) => {
@@ -138,7 +137,7 @@ const DashboardPage: React.FC = () => {
 
   const {data: totalStakers} = useContractRead({
     address: stakingAddress,
-    abi: PerezosoStakingAbi.abi,
+    abi: ABI,
     functionName: "getTotalStakers",
     args: [],
   });
