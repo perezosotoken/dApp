@@ -54,6 +54,7 @@ const HomePage: React.FC = () => {
   console.log(`Total stakers is ${totalStakers} total staked ${totalStaked}`)
 
   const stakeButtonWidth = !isMobile? "auto" : "120px";
+  const stakeButtonMt = !isMobile? "0px" : "-5px";
   return (
     <>
       <section className="hero-section">
@@ -90,7 +91,7 @@ const HomePage: React.FC = () => {
                       <Link
                       className="btn btn-bordered active smooth-anchor  mb-2"
                       to="/staking"
-                      style={{width:`${stakeButtonWidth}`}}
+                      style={{width:`${stakeButtonWidth}`, marginTop: `${stakeButtonMt}`}}
                     >
                       <i className="fa-solid fa-lock mr-2"></i>
                       {!ctx.isSpanishCountry ? "Stake" : "Acuñar"}
