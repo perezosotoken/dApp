@@ -6,6 +6,7 @@ import App from "./App";
 import HomePage from "./pages/Home";
 import DashboardPage from "./pages/Giveaway";
 import LeaderboardPage from "./pages/Leaderboard";
+import Staking from "./pages/Staking";
 
 
 const router = createBrowserRouter([
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: "/leaderboard",
         element: <LeaderboardPage />,
+      },
+      {
+        path: "/staking",
+        element: <Staking />,
       },
     ],
   },
