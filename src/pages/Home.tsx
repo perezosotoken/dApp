@@ -53,8 +53,9 @@ const HomePage: React.FC = () => {
 
   console.log(`Total stakers is ${totalStakers} total staked ${totalStaked}`)
 
-  const stakeButtonWidth = !isMobile? "auto" : "120px";
-  const stakeButtonMt = !isMobile? "0px" : "-5px";
+  const stakeButtonWidth = !isMobile ? "auto" : "220px";
+  const stakeButtonMt = !isMobile ? "0px" : "10";
+  const stakeButtonMl = !isMobile ? "0" : "50%";
   return (
     <>
       <section className="hero-section">
@@ -74,10 +75,10 @@ const HomePage: React.FC = () => {
                       : "¡Redefiniendo el valor digital con eficiencia!"}
                   </p>
                 </div>
-                <div className="button-group">
-                  <Flex direction={"row"} w={"80%"} ml={!isMobile? 90: 20}>
-                    <Box w={"50%"}  >
-                    <HStack>
+                <div style={{  margin: "auto", width: "70%"}}>
+                  <Flex direction={"row"}  >
+                    <Box w={"60%"}>
+                      <HStack>
                       <Text><b>{!isMobile ? `Total staked:` : `Staked:`} </b></Text>
                       <Text mt={0}>{typeof totalStaked != "undefined" ? commify(formatEther(totalStaked)) : 0}</Text>&nbsp;
                       <Image  mt={-25} src={logoPRZS} width="25px"></Image>
@@ -86,17 +87,20 @@ const HomePage: React.FC = () => {
                       <Text><b>Total stakers: </b></Text>
                       <Text  mt={-22} >{typeof totalStakers == "undefined" ? 0 : commify(totalStakers)}</Text>&nbsp;
                       </HStack> 
+
                     </Box>
-                    <Box w={"50%"} ml={!isMobile? "auto" : 60}>
-                      <Link
-                      className="btn btn-bordered active smooth-anchor  mb-2"
-                      to="/staking"
-                      style={{width:`${stakeButtonWidth}`, marginTop: `${stakeButtonMt}`}}
-                    >
-                      <i className="fa-solid fa-lock mr-2"></i>
-                      {!ctx.isSpanishCountry ? "Stake" : "Acuñar"}
-                    </Link>
-                    </Box>                    
+                   <Box  w={"30%"} >
+                      {!isMobile ? 
+                        <Link
+                          
+                          className="btn btn-bordered active smooth-anchor  mb-2"
+                          to="/staking"
+                          style={{width:`${stakeButtonWidth}`, marginTop: `${stakeButtonMt}`, marginLeft: `${stakeButtonMl}`}}
+                      >
+                        {!isMobile ? <i className="fa-solid fa-lock mr-2"></i> : <></>}
+                        {!ctx.isSpanishCountry ? "Stake" : "Acuñar"}
+                      </Link> : <></>}
+                   </Box>
                   </Flex>
 
                 </div> 
@@ -122,6 +126,14 @@ const HomePage: React.FC = () => {
                     <i className="fa-solid fa-file mr-2"></i>
                     Whitepaper
                   </a>
+                  {isMobile ? <Link
+                      className="btn btn-bordered active smooth-anchor  mb-2"
+                      to="/staking"
+                      style={{width:`${stakeButtonWidth}`, marginTop: `${stakeButtonMt}`}}
+                    >
+                      {!isMobile ? <i className="fa-solid fa-lock mr-2"></i> : <></>}
+                      {!ctx.isSpanishCountry ? "Stake" : "Acuñar"}
+                    </Link> : <></>}                  
                 </div>          
               </div>
             </div>
