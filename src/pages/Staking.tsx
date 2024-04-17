@@ -288,6 +288,21 @@ const Staking: React.FC = () => {
     }    
   }
 
+  useEffect(() => {
+    console.log(`Isuser staked ${isUserStaked}`)
+    if (isUserStaked) {
+      const expData = localStorage.getItem('expData');
+      console.log(expData)
+      if (expData == null) {
+        const now = new Date();
+        const unlockDate = new Date(now.getTime());
+        unlockDate.setDate(now.getDate() + 30);
+  
+        localStorage.setItem('expData', JSON.stringify(unlockDate));        
+      }
+    }
+  }, [isUserStaked]);
+
   return(
     <>
       <section className="hero-section">
@@ -519,12 +534,12 @@ const Staking: React.FC = () => {
                         <HStack>
                         <Box w={"20%"} style={{marginBottom: "10px"}}>
                           <HStack >
-                            <h5 className="m-0" style={{width:"220px"}}>{realtimeRewards > 0 ? commify(realtimeRewards.toFixed(8)):0}</h5> 
+                            <h5 className="m-0" style={{width:"220px"}}>{realtimeRewards > 0 ? commify(realtimeRewards.toFixed(4)):0}</h5> 
                           </HStack>
                         </Box>
                         <Box w={"50%"}>
                           <HStack mt={-10}>
-                            <p>&nbsp;&nbsp;&nbsp;&nbsp;(PRZS)</p>
+                            <p>&nbsp;&nbsp;(PRZS)</p>
                           </HStack>
                         </Box>
                         </HStack>
