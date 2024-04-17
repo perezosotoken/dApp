@@ -6,7 +6,8 @@ import { toast } from "react-toastify";
 import { CirclesWithBar } from "react-loader-spinner";
 import { ethers } from "ethers";
 import { commify } from "../utils";
-
+import { BrowserView, MobileView, isBrowser, isMobile } from 'react-device-detect';
+ 
 const { formatEther, parseEther } = ethers;
 
 interface Winner {
@@ -15,94 +16,94 @@ interface Winner {
   winner: Address;
 }
  
-
 const DashboardPage: React.FC = () => {
+  const stakingAddress = "0x821aF23363F93CFa1E2497f573FB8A8c82423869";
   const giveawayAddress = "0x3234ddFeB18fbeFcBF5D482A00a8dD4fAEdA8d19";
   const tokenAddress = "0x53Ff62409B219CcAfF01042Bb2743211bB99882e";
+  
   const ZERO_ADDRESS = "0x000000000000000000000000000000000000dead";
   
-  const totalSupply = 420000000000000;
+  const totalSupply = 420e12;
   
+  const { address, isConnected } = useAccount();
+
   const [ticket, setTicket] = useState<number>(0);
   const [priceToPay, setPriceToPay] = useState<number>(0);
   const [tokenPrice, setTokenPrice] = useState<number>(0);
   const [holders, setHolders] = useState<string>("");
   const [winning, setWinning] = useState<string>("");
-  const { address, isConnected } = useAccount();
   const [ticketsBought, setTicketBought] = useState<number>(0);
-  const [isWaitingForApproval, setIsWaitingForApproval] =
-    useState<boolean>(false);
-    useEffect(() => {
-      const fetchTokenHolders = async () => {
-        const url = 'https://corsproxy.io/?https%3A%2F%2Fbscscan.com%2Ftoken%2F0x53Ff62409B219CcAfF01042Bb2743211bB99882e';
-        try {
-          const response = await fetch(url, {
-            headers: {
-              'X-Requested-With': 'XMLHttpRequest'
-            }
-          });
-          const text = await response.text();
-          
-          console.log("Entire HTML Output:", text); // Log the full HTML to verify the structure
-  
-          // Use DOMParser to parse the HTML response
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(text, "text/html");
-  
-          // Attempt to locate the specific holder count element
-          const holdersDiv = doc.querySelector('#ContentPlaceHolder1_tr_tokenHolders div > div'); // Adjusted for nested div structure
-          if (holdersDiv) {
-            const holdersText = holdersDiv.textContent.trim().split(' ')[0]; // Extracts the number directly
+  const [isWaitingForApproval, setIsWaitingForApproval] = useState<boolean>(false);
 
-            //@ts-ignore
-            setHolders(holdersText);
-          } else {
-            console.log('Token holders element not found');
+  useEffect(() => {
+    const fetchTokenHolders = async () => {
+      const url = 'https://corsproxy.io/?https%3A%2F%2Fbscscan.com%2Ftoken%2F0x53Ff62409B219CcAfF01042Bb2743211bB99882e';
+      try {
+        const response = await fetch(url, {
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest'
           }
-        } catch (error) {
-          console.error("Failed to fetch or parse the page:", error);
-        }
-      };
-  
-      fetchTokenHolders();
-    }, []);
-  
-
-    useEffect(() => {
-      const fetchTokenPrice = async () => {
-          const url = 'https://corsproxy.io/?https%3A%2F%2Fwww.coingecko.com%2Fen%2Fcoins%2Fperezoso';
-          const response = await fetch(url, {
-              headers: {
-                  'X-Requested-With': 'XMLHttpRequest'
-              }
-          });
-          const text = await response.text();
+        });
+        
+        const text = await response.text();
+        
+        console.log("Entire HTML Output:", text); // Log the full HTML to verify the structure
 
         // Use DOMParser to parse the HTML response
         const parser = new DOMParser();
         const doc = parser.parseFromString(text, "text/html");
 
-        // Now extract data using querySelectors
-        const priceElement = doc.querySelector('span[data-converter-target="price"][data-coin-id="36344"]');
-        if (priceElement) {
-          const subElement = priceElement.querySelector('sub');
-          if (subElement) {
-            const price = subElement.getAttribute('title');
-            //@ts-ignore
-            setTokenPrice(price);
-          } else {
-            console.log('Sub element not found');
-          }
-        } else {
-          console.log('Price element not found');
-        }
- 
-      };
-  
-      fetchTokenPrice();
-  }, [isConnected]);
-  
+        // Attempt to locate the specific holder count element
+        const holdersDiv = doc.querySelector('#ContentPlaceHolder1_tr_tokenHolders div > div'); // Adjusted for nested div structure
+        if (holdersDiv) {
+          const holdersText = holdersDiv.textContent.trim().split(' ')[0]; // Extracts the number directly
 
+          //@ts-ignore
+          setHolders(holdersText);
+        } else {
+          console.log('Token holders element not found');
+        }
+      } catch (error) {
+        console.error("Failed to fetch or parse the page:", error);
+      }
+    };
+
+    fetchTokenHolders();
+  }, []);
+  
+  useEffect(() => {
+    const fetchTokenPrice = async () => {
+        const url = 'https://corsproxy.io/?https%3A%2F%2Fwww.coingecko.com%2Fen%2Fcoins%2Fperezoso';
+        const response = await fetch(url, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+        const text = await response.text();
+
+      // Use DOMParser to parse the HTML response
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(text, "text/html");
+
+      // Now extract data using querySelectors
+      const priceElement = doc.querySelector('span[data-converter-target="price"][data-coin-id="36344"]');
+      if (priceElement) {
+        const subElement = priceElement.querySelector('sub');
+        if (subElement) {
+          const price = subElement.getAttribute('title');
+          //@ts-ignore
+          setTokenPrice(price);
+        } else {
+          console.log('Sub element not found');
+        }
+      } else {
+        console.log('Price element not found');
+      }
+    };
+
+    fetchTokenPrice();
+  }, [isConnected]);
+    
   function accumulatedPrizeForAddress(
     winners: Winner[],
     address: string
@@ -114,7 +115,6 @@ const DashboardPage: React.FC = () => {
         accumulatedPrize += Number(winner.prize);
       }
     }
-
     return accumulatedPrize;
   }
 
@@ -138,6 +138,13 @@ const DashboardPage: React.FC = () => {
     abi: TOKENABI,
     functionName: "balanceOf",
     args: [ZERO_ADDRESS],
+  });
+
+  const {data: totalStaked} = useContractRead({
+    address: tokenAddress,
+    abi: TOKENABI,
+    functionName: "balanceOf",
+    args: [stakingAddress],
   });
 
   const { data: maxTicket } = useContractRead({
@@ -196,7 +203,6 @@ const DashboardPage: React.FC = () => {
     },
   });
 
-
   const { isLoading, write: enterDraw } = useContractWrite({
     address: giveawayAddress,
     abi: ABI,
@@ -237,6 +243,9 @@ const DashboardPage: React.FC = () => {
       toast("Error, Transaction unsuccessful.");
     },
   });
+
+  console.log(`Staked amount is ${totalStaked}`)
+
 
   return (
     <>
@@ -339,13 +348,23 @@ const DashboardPage: React.FC = () => {
                               <li className="d-flex justify-content-between">
                                   <strong>Circulating Supply:</strong>
                                   {/* @ts-ignore */}
-                                  <span>{`${totalBurned != null ? commify(formatEther(parseEther(`${totalSupply}`) - totalBurned)) : 0}`} PRZS</span>
-                                </li>                               
+                                  <span>
+                                    {`${totalBurned != null  && totalStaked != null ? 
+                                      commify(formatEther(parseEther(`${totalSupply}`) - (totalBurned + totalStaked))) : 0}`} PRZS
+                                  </span>
+                                </li>                                                               
                               <li className="d-flex justify-content-between">
                                 <strong>Burned Supply:</strong>
                                 {/* @ts-ignore */}
                                 <span>{`${totalBurned != null ? commify(formatEther(totalBurned)) : 0}`} PRZS</span>
-                               </li>                                   
+                               </li>
+                               <li className="d-flex justify-content-between">
+                                  <strong>Staked Supply:</strong>
+                                  {/* @ts-ignore */}
+                                  <span>
+                                    {`${totalBurned != null ? commify(formatEther(typeof totalStaked != "undefined" ? totalStaked : 0)) : 0}`} PRZS
+                                    </span>
+                                </li>                                                                  
                               <li className="d-flex justify-content-between">
                                 <strong>Token Price:</strong>
                                 <span>${tokenPrice}</span>
