@@ -33,9 +33,13 @@ function App() {
 
   watchNetwork(async (network) => {
     if (network.chain?.name != "bsc") {
-      await switchNetwork({
-        chainId: 56,
-      });
+      try {
+        await switchNetwork({
+          chainId: 56,
+        });
+      } catch (e) {
+        console.error(e);
+      }
     }
   });
 
