@@ -141,6 +141,12 @@ const Staking: React.FC = () => {
       // Retrieve the expiration date from localStorage
       const expData = localStorage.getItem('expData');
       if (!expData) {
+        const now = new Date();
+        let unlockDate = new Date(now.getTime());
+        unlockDate.setDate(now.getDate() + 30);
+        unlockDate = unlockDate.toISOString().split('T', 1)[0];
+        console.log(`Unlock date is ${unlockDate}`)
+        localStorage.setItem('expData', JSON.stringify(unlockDate));          
           console.error("Expiration data not found in localStorage.");
           return;
       }
