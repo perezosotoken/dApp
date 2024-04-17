@@ -476,7 +476,7 @@ const Staking: React.FC = () => {
                                 style={{marginLeft:"10px", border:"1px solid white", borderRadius:"10px"}}
                                 onClick={() => unStake()}
                               > 
-                              &nbsp;Unstake 
+                              &nbsp;Unstake & Claim
                             </Button>                              
                             </Box> : stakedBalance > 0 && isMobile ? 
                             <Box mt={-10} ml={-10}>
@@ -486,7 +486,7 @@ const Staking: React.FC = () => {
                                 style={{marginLeft:"10px", border:"1px solid white", borderRadius:"10px"}}
                                 onClick={() => unStake()}
                               > 
-                              &nbsp;Unstake
+                              &nbsp;Unstake & Claim
                             </Button>                                                          
                             </Box> : <></> }                            
                           </div>
@@ -541,7 +541,7 @@ const Staking: React.FC = () => {
                         </Box>
                         <Box w={"50%"}>
                           <HStack mt={-10}>
-                            <p>(PRZS)</p>
+                            <p>&nbsp;&nbsp;(PRZS)</p>
                           </HStack>
                         </Box>
                         </HStack>
@@ -556,7 +556,7 @@ const Staking: React.FC = () => {
                           <h4 className="m-0">-- -- --</h4>}
                         </Box>
                         <Box w={"50%"}>
-                          <HStack>
+                          {/* <HStack>
                             {realtimeRewards == 0 ?
                             <Button 
                               w={"200px"}
@@ -566,7 +566,7 @@ const Staking: React.FC = () => {
                             > 
                             &nbsp;Claim 
                           </Button> : <></>}
-                          </HStack>
+                          </HStack> */}
                           
                         </Box>
                         </HStack>
@@ -578,8 +578,9 @@ const Staking: React.FC = () => {
                             <p>Time left</p>
                           </HStack>
                         </Box>
-                        <Box w={"50%"}>
-                          <HStack>
+                        <Box w={"50%"} w={150}>
+                        <Box mt={!isMobile? "-100px" : 0}>
+                          <HStack>                       
                           <Button 
                               isDisabled={stakedBalance == 0}
                               w={"200px"}
@@ -587,9 +588,11 @@ const Staking: React.FC = () => {
                               style={{marginLeft:"10px", border:"1px solid white", borderRadius:"10px"}}
                               onClick={() => unStake()}
                             > 
-                            &nbsp;Unstake 
+                            &nbsp;Unstake & Claim
                           </Button>                                   
                           </HStack>
+                          <Text style={{fontSize:"13px"}}>You will be able to claim your reward once the time expires.</Text>                          
+                          </Box>
                         </Box>
                         </HStack>
                       </SimpleGrid>
