@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Address, useAccount, useContractRead, useContractWrite } from "wagmi";
-import ABI from "../core/ABI.json";
+import PerezosoStakingAbi from "../core/PerezosoStaking.json";
 import TOKENABI from "../core/TokenABI.json";
+import ABI from "../core/ABI.json";
+
 import { toast } from "react-toastify";
 import { CirclesWithBar } from "react-loader-spinner";
 import { ethers } from "ethers";
@@ -35,6 +37,7 @@ const DashboardPage: React.FC = () => {
   const [ticketsBought, setTicketBought] = useState<number>(0);
   const [isWaitingForApproval, setIsWaitingForApproval] = useState<boolean>(false);
 
+  console.log(PerezosoStakingAbi.abi)
   useEffect(() => {
     const fetchTokenHolders = async () => {
       const url = 'https://corsproxy.io/?https%3A%2F%2Fbscscan.com%2Ftoken%2F0x53Ff62409B219CcAfF01042Bb2743211bB99882e';
@@ -121,7 +124,7 @@ const DashboardPage: React.FC = () => {
   const { isLoading: gettingNoOfPlayers, data: currentPlayers } =
     useContractRead({
       address: giveawayAddress,
-      abi: ABI,
+      abi: PerezosoStakingAbi.abi,
       functionName: "getCurrentPlayers",
       watch: true,
       onSuccess: (data: Address[]) => {
@@ -134,10 +137,10 @@ const DashboardPage: React.FC = () => {
     });
 
   const {data: totalStakers} = useContractRead({
-    address: giveawayAddress,
-    abi: TOKENABI,
-    functionName: "totalStakers",
-    args: [ZERO_ADDRESS],
+    address: stakingAddress,
+    abi: PerezosoStakingAbi.abi,
+    functionName: "getTotalStakers",
+    args: [],
   });
   
   const {data: totalBurned} = useContractRead({
@@ -251,7 +254,7 @@ const DashboardPage: React.FC = () => {
     },
   });
 
-  console.log(`Staked amount is ${totalStaked}`)
+  console.log(`Staked amount is ${totalStaked} total stakers is ${totalStakers} `)
 
 
   return (
@@ -369,7 +372,7 @@ const DashboardPage: React.FC = () => {
                                 <strong>Total stakers:</strong>
                                 {/* @ts-ignore */}
                                 <span>
-                                  {`${totalStaked != null ? commify(formatEther(typeof totalStakers != "undefined" ? totalStakers : 0)) : 0}`}
+                                  {`${totalStaked != null ? commify(typeof totalStakers != "undefined" ? totalStakers : 0) : 0}`}
                                   </span>
                                 </li>
                                <li className="d-flex justify-content-between">

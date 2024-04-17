@@ -53,6 +53,7 @@ const HomePage: React.FC = () => {
 
   console.log(`Total stakers is ${totalStakers} total staked ${totalStaked}`)
 
+  const stakeButtonWidth = !isMobile? "auto" : "120px";
   return (
     <>
       <section className="hero-section">
@@ -73,10 +74,10 @@ const HomePage: React.FC = () => {
                   </p>
                 </div>
                 <div className="button-group">
-                  <Flex direction={"row"} w={"80%"} m={90}>
+                  <Flex direction={"row"} w={"80%"} ml={!isMobile? 90: 20}>
                     <Box w={"50%"}  >
                     <HStack>
-                      <Text><b>Total staked: </b></Text>
+                      <Text><b>{!isMobile ? `Total staked:` : `Staked:`} </b></Text>
                       <Text mt={0}>{typeof totalStaked != "undefined" ? commify(formatEther(totalStaked)) : 0}</Text>&nbsp;
                       <Image  mt={-25} src={logoPRZS} width="25px"></Image>
                       </HStack>
@@ -85,12 +86,11 @@ const HomePage: React.FC = () => {
                       <Text  mt={-22} >{typeof totalStakers == "undefined" ? 0 : commify(totalStakers)}</Text>&nbsp;
                       </HStack> 
                     </Box>
-                    <Box w={"50%"}   >
+                    <Box w={"50%"} ml={!isMobile? "auto" : 60}>
                       <Link
                       className="btn btn-bordered active smooth-anchor  mb-2"
                       to="/staking"
-                      style={{width:"250px"}}
-                      
+                      style={{width:`${stakeButtonWidth}`}}
                     >
                       <i className="fa-solid fa-lock mr-2"></i>
                       {!ctx.isSpanishCountry ? "Stake" : "Acuñar"}
