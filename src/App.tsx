@@ -45,7 +45,7 @@ function App() {
         <Header />
         <Outlet />
         <Footer />
-        <ToastContainer />
+        <ToastContainer theme="dark" />
       </LanguageProvider>
     </WagmiConfig>
   );
