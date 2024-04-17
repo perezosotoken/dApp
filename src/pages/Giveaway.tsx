@@ -17,7 +17,7 @@ interface Winner {
 }
  
 const DashboardPage: React.FC = () => {
-  const stakingAddress = "0x821aF23363F93CFa1E2497f573FB8A8c82423869";
+  const stakingAddress = "0x6174984F3aa1798235236f594981bCB8958e7a12";
   const giveawayAddress = "0x3234ddFeB18fbeFcBF5D482A00a8dD4fAEdA8d19";
   const tokenAddress = "0x53Ff62409B219CcAfF01042Bb2743211bB99882e";
   
