@@ -1,11 +1,51 @@
 import React, { useContext } from "react";
+import { Address, useAccount, useContractRead, } from "wagmi";
+import PerezosoStakingAbi from "../core/PerezosoStaking.json";
+
 import { Link } from "react-router-dom";
 import { LanguageContext, LanguageContextType } from "../core/LanguageProvider";
 import { isMobile } from 'react-device-detect';
+import { 
+  Heading, 
+  Box,
+  Stack, 
+  Image,
+  Text,
+  Input,
+  Button,
+  Flex,
+  HStack,
+  Select,
+  SimpleGrid,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,       
+  VStack
+} from '@chakra-ui/react';
 
 const HomePage: React.FC = () => {
   const ctx = useContext<LanguageContextType>(LanguageContext);
+  const stakingAddress = "0xE2DF958c48F0245D823c2dCb012134CfDa9F8f9F";
+  const { address } = useAccount();
 
+  const {data: totalStakers} = useContractRead({
+    address: stakingAddress,
+    abi: PerezosoStakingAbi.abi,
+    functionName: "getTotalStakers",
+    args: [address],
+  });
+
+  const { data: stakedBalance, refetch } = useContractRead({
+    address: stakingAddress,
+    abi: PerezosoStakingAbi.abi,
+    functionName: "getStakedBalance",
+    args: [address], 
+    watch: false,  // Ensure it doesn't refetch on every render automatically if not desired
+  });
+
+  console.log(`Total stakers is ${totalStakers}`)
   return (
     <>
       <section className="hero-section">
@@ -25,16 +65,22 @@ const HomePage: React.FC = () => {
                       : "¡Redefiniendo el valor digital con eficiencia!"}
                   </p>
                 </div>
+                {/* <div style={{border:"1px solid white"}}>
                 <div className="button-group">
-                  <Link
-                    className="btn btn-bordered active smooth-anchor  mb-2"
-                    to="/staking"
-                    style={{width:"250px"}}
-                  >
-                    <i className="fa-solid fa-lock mr-2"></i>
-                    {!ctx.isSpanishCountry ? "Stake" : "Acuñar"}
-                  </Link>
-                </div>                      
+                  <HStack>
+                    <Box ml={"30%"} w={"auto"}>
+                      <HStack>
+                        <Text><b>Total staked:</b></Text>
+                        <Text w={"50px"} mt={-22}>{typeof stakedBalance != "undefined" ? stakedBalance : 0}</Text>
+                      </HStack>
+                      <HStack>
+                        <Text><b>Total stakers:</b></Text>
+                        <Text w={"50px"} mt={-22}>{typeof totalStakers != "undefined" ? totalStakers : 0}</Text>
+                      </HStack>
+                    </Box>
+                  </HStack>
+                </div> 
+                </div>                      */}
                 <div className="button-group">
                   <a
                     className="btn btn-bordered-white mb-3"
