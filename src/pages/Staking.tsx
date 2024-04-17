@@ -70,7 +70,7 @@ const Staking: React.FC = () => {
     watch: false,  // Ensure it doesn't refetch on every render automatically if not desired
   });
 
-  console.log(`Total stakers: ${totalStakers} realtimeTime rewards ${realtimeRewards} stakedBalance ${stakedBalance}`)
+  // console.log(`Total stakers: ${totalStakers} realtimeTime rewards ${realtimeRewards} stakedBalance ${stakedBalance}`)
 
   // Effect to trigger the refetch on mount and when address or stakingAddress changes
   useEffect(() => {
@@ -101,6 +101,11 @@ const Staking: React.FC = () => {
     args: [selectedTier, selectedTime],
     onSuccess() {
       toast("Successfully staked your PRZS!");
+      const now = new Date();
+      const unlockDate = new Date(now.getTime());
+      unlockDate.setDate(now.getDate() + 30);
+
+      localStorage.setItem('expData', JSON.stringify(unlockDate));
 
       setTimeout(() => {
         window.location.reload();
@@ -128,39 +133,64 @@ const Staking: React.FC = () => {
   });
 
   useEffect(() => {
-    async function updateCountdown() {
-      const unlockDate = new Date(unlockTime * 1000);  // Convert UNIX timestamp to JavaScript Date object
-      const now = new Date();
-
-      let delta = Math.floor((unlockDate - now) / 1000);  // Remaining time in seconds
-  
-      if (delta <= 0) {
-          clearInterval(interval);  // Stop updating the countdown
-      } else {
-          let days = Math.floor(delta / 86400);
-          delta -= days * 86400;
-          let hours = Math.floor(delta / 3600) % 24;
-          delta -= hours * 3600;
-          let minutes = Math.floor(delta / 60) % 60;
-          delta -= minutes * 60;
-          let seconds = delta % 60;  // Remaining seconds
-
-          const totalReward = rewardsMap[selectedTier][selectedTime];  // Total rewards
-          const totalTime = 2592000;      // Total time in seconds
-          let rewardPerSecond = 0;
-
-          if (isUserStaked) {
-            // Dynamic reward calculation based on remaining time
-            rewardPerSecond = stakedBalance > 0 ? 
-            (totalReward / totalTime) * (1 + ((totalTime - delta) / totalTime)) : 0;
-          } else {
-            rewardPerSecond = 0;
-          }
-          setRealtimeRewards(rewardPerSecond);  // Update the rewards
-          setTimeLeft(`${days}d ${hours}h ${minutes}m ${seconds}s`);
+    function updateCountdown() {
+      // Retrieve the expiration date from localStorage
+      const expData = localStorage.getItem('expData');
+      if (!expData) {
+          console.error("Expiration data not found in localStorage.");
+          return;
       }
-    }
   
+      // Parse the expiration date reliably
+      const unlockDate = parseISOString(expData);
+      if (!unlockDate) {
+          console.error("Failed to parse the expiration date.");
+          return;
+      }
+  
+      // Get the current date and time
+      const now = new Date();
+  
+      // Calculate the time left until the unlock date in seconds
+      let delta = Math.floor((unlockDate - now) / 1000);
+  
+      // Check if the countdown has finished
+      if (delta <= 0) {
+          console.log("Countdown has finished.");
+          clearInterval(interval);  // Assuming 'interval' is the interval ID for setInterval
+          return;
+      }
+  
+      // Calculate days, hours, minutes, and seconds remaining
+      let days = Math.floor(delta / 86400);
+      delta -= days * 86400;
+      let hours = Math.floor(delta / 3600) % 24;
+      delta -= hours * 3600;
+      let minutes = Math.floor(delta / 60) % 60;
+      delta -= minutes * 60;
+      let seconds = delta % 60;
+  
+      // Log the time left for debugging
+      console.log(`Time left: ${days}d ${hours}h ${minutes}m ${seconds}s`);
+  
+      // Calculate the reward increment per second
+      const totalReward = rewardsMap[selectedTier][selectedTime]; // Ensure these variables are defined and accessible
+      const rewardIncrement = totalReward / 2592000;  // Fixed reward rate per second
+  
+      // Increment realtimeRewards by rewardIncrement every second
+      setRealtimeRewards((prev) => prev + rewardIncrement);
+  
+      // Log the current reward rate
+      console.log(`Realtime Rewards Updated: ${realtimeRewards.toFixed(8)}`);
+  
+      // Optionally update UI or perform further actions with `realtimeRewards` and formatted time
+  }
+    
+    function parseISOString(s) {
+        var b = s.split(/\D+/);
+        return new Date(Date.UTC(b[0], --b[1], b[2], b[3], b[4], b[5], b[6]));
+    }
+     
     // Update the countdown every 1 second
     const interval = setInterval(updateCountdown, 1000);
     updateCountdown();  // Initial update
@@ -489,7 +519,7 @@ const Staking: React.FC = () => {
                         <HStack>
                         <Box w={"20%"} style={{marginBottom: "10px"}}>
                           <HStack >
-                            <h5 className="m-0" style={{width:"220px"}}>{commify(realtimeRewards.toFixed(8))}</h5> 
+                            <h5 className="m-0" style={{width:"220px"}}>{realtimeRewards > 0 ? commify(realtimeRewards.toFixed(8)):0}</h5> 
                           </HStack>
                         </Box>
                         <Box w={"50%"}>
