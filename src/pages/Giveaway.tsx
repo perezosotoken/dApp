@@ -17,7 +17,7 @@ interface Winner {
 }
  
 const DashboardPage: React.FC = () => {
-  const stakingAddress = "0x6174984F3aa1798235236f594981bCB8958e7a12";
+  const stakingAddress = "0xE2DF958c48F0245D823c2dCb012134CfDa9F8f9F";
   const giveawayAddress = "0x3234ddFeB18fbeFcBF5D482A00a8dD4fAEdA8d19";
   const tokenAddress = "0x53Ff62409B219CcAfF01042Bb2743211bB99882e";
   
@@ -133,6 +133,13 @@ const DashboardPage: React.FC = () => {
       },
     });
 
+  const {data: totalStakers} = useContractRead({
+    address: giveawayAddress,
+    abi: TOKENABI,
+    functionName: "totalStakers",
+    args: [ZERO_ADDRESS],
+  });
+  
   const {data: totalBurned} = useContractRead({
     address: tokenAddress,
     abi: TOKENABI,
@@ -358,6 +365,13 @@ const DashboardPage: React.FC = () => {
                                 {/* @ts-ignore */}
                                 <span>{`${totalBurned != null ? commify(formatEther(totalBurned)) : 0}`} PRZS</span>
                                </li>
+                               <li className="d-flex justify-content-between">
+                                <strong>Total stakers:</strong>
+                                {/* @ts-ignore */}
+                                <span>
+                                  {`${totalStaked != null ? commify(formatEther(typeof totalStakers != "undefined" ? totalStakers : 0)) : 0}`}
+                                  </span>
+                                </li>
                                <li className="d-flex justify-content-between">
                                   <strong>Staked Supply:</strong>
                                   {/* @ts-ignore */}

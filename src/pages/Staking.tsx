@@ -44,7 +44,7 @@ const Staking: React.FC = () => {
   const [selectedTier, setSelectedTier] = useState("0");
   const [selectedTime, setSelectedTime] = useState("0");
   const tokenAddress = "0x53Ff62409B219CcAfF01042Bb2743211bB99882e";
-  const stakingAddress = "0x6174984F3aa1798235236f594981bCB8958e7a12";
+  const stakingAddress = "0xE2DF958c48F0245D823c2dCb012134CfDa9F8f9F";
   const [timeLeft, setTimeLeft] = useState("");
   const [realtimeRewards, setRealtimeRewards] = useState(0); 
 
