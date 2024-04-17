@@ -202,7 +202,7 @@ const Staking: React.FC = () => {
         // Log the current reward rate
         console.log(`Realtime Rewards Updated: ${realtimeRewards.toFixed(8)}`);
         countdown(delta, setTimeLeft);
-        
+
         // Optionally update UI or perform further actions with `realtimeRewards` and formatted time
     }
 
@@ -320,17 +320,17 @@ const Staking: React.FC = () => {
     }
   }, [isUserStaked]);
 
-  // useEffect(() => {
-  //   async function updateRewardsLs() {
-  //     if (realtimeRewards > 0)  {
-  //       localStorage.setItem('realtimeRewards', realtimeRewards.toString());
-  //     }
-  //   }
-  //   const interval = setInterval(updateRewardsLs, 1000);
-  //   updateRewardsLs();  // Initial update
+  useEffect(() => {
+    async function updateRewardsLs() {
+      if (realtimeRewards > 0)  {
+        localStorage.setItem('realtimeRewards', realtimeRewards.toString());
+      }
+    }
+    const interval = setInterval(updateRewardsLs, 1000);
+    updateRewardsLs();  // Initial update
 
-  //   return () => clearInterval(interval);  // Cleanup
-  // }, [realtimeRewards])
+    return () => clearInterval(interval);  // Cleanup
+  }, [realtimeRewards])
 
   return(
     <>
