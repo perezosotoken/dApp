@@ -46,6 +46,8 @@ const Staking: React.FC = () => {
   const tokenAddress = "0x53Ff62409B219CcAfF01042Bb2743211bB99882e";
   const stakingAddress = "0xE2DF958c48F0245D823c2dCb012134CfDa9F8f9F";
   const [timeLeft, setTimeLeft] = useState("");
+  const [expDate, setExpDate] = useState("");
+
     // Initialize state with value from localStorage
     const [realtimeRewards, setRealtimeRewards] = useState(() => {
       return JSON.parse(localStorage.getItem('realtimeRewards') || "0");
@@ -112,7 +114,7 @@ const Staking: React.FC = () => {
       unlockDate.setDate(now.getDate() + 30);
 
       localStorage.setItem('expData', JSON.stringify(unlockDate));
-
+      setExpDate(unlockDate.toISOString().split('T', 1)[0]);
       setTimeout(() => {
         window.location.reload();
       }, 5000);
@@ -173,7 +175,9 @@ const Staking: React.FC = () => {
         unlockDate.setDate(now.getDate() + 30);
         unlockDate = unlockDate.toISOString().split('T', 1)[0];
         // console.log(`Unlock date is ${unlockDate}`)
-        localStorage.setItem('expData', JSON.stringify(unlockDate));          
+        localStorage.setItem('expData', JSON.stringify(unlockDate));   
+        setExpDate(unlockDate);
+               
       } else {
         console.log(`No expiration data found ${expData}`)
       }
@@ -184,13 +188,13 @@ const Staking: React.FC = () => {
           console.error("Failed to parse the expiration date.");
           return;
       }
-  
-      // Get the current date and time
+
+      // Get the current date and timeLeft
       const now = new Date();
       
       console.log(`${unlockDate} - ${now}`)
 
-      // Calculate the time left until the unlock date in seconds
+      // Calculate the timeLeft left until the unlock date in seconds
       let delta = Math.floor((unlockDate - now) / 1000);
   
       // Check if the countdown has finished
@@ -204,7 +208,7 @@ const Staking: React.FC = () => {
       const totalReward = rewardsMap[selectedTier][selectedTime]; // Ensure these variables are defined and accessible
       const rewardIncrement = totalReward / 2592000;  // Fixed reward rate per second
       
-      const realtimeRewards = JSON.parse(localStorage.getItem('realtimeRewards') || "0");
+      // const realtimeRewards = JSON.parse(localStorage.getItem('realtimeRewards') || "0");
 
       // Update the rewards
       setRealtimeRewards(prev => {
@@ -220,7 +224,7 @@ const Staking: React.FC = () => {
       if (!isNaN(delta))
         countdown(delta, setTimeLeft);
 
-      // Optionally update UI or perform further actions with `realtimeRewards` and formatted time
+      // Optionally update UI or perform further actions with `realtimeRewards` and formatted timeLeft
     }
 
      
@@ -309,7 +313,6 @@ const Staking: React.FC = () => {
 
   const handleSelectTime = (value: string) => {
     setSelectedTime(value);
-    console.log(`Selected time is ${value}`)
   }
 
   const getRewardsFromMap = (tier: string, time: string) => {
@@ -321,13 +324,13 @@ const Staking: React.FC = () => {
   }
 
   useEffect(() => {
-      // Check if it's the first time the user has visited this component
+      // Check if it's the first timeLeft the user has visited this component
       const isFirstVisit = localStorage.getItem('hasVisitedBefore');
 
       if (!isFirstVisit) {
-          console.log("Welcome! This is your first time here.");
+           
           
-          // Now set the flag in localStorage so next time this won't run
+          // Now set the flag in localStorage so next timeLeft this won't run
           localStorage.setItem('hasVisitedBefore', 'true');
 
           const expData = localStorage.getItem('expData');
@@ -341,7 +344,7 @@ const Staking: React.FC = () => {
             localStorage.setItem('expData', JSON.stringify(unlockDate));        
           }          
 
-          // Perform any other actions for first-time visit
+          // Perform any other actions for first-timeLeft visit
       } else {
           console.log("Welcome back!");
       }
@@ -615,7 +618,7 @@ const Staking: React.FC = () => {
                         <Box w={"50%"} mt={10}>
                           {stakedBalance > 0 ?
                           <HStack>
-                            <h5 className="m-0">{timeLeft}</h5>
+                            <h5 className="m-0">{timeLeft != "" ? timeLeft : expDate}</h5>
                           </HStack> : 
                           <h4 className="m-0">-- -- --</h4>}
                         </Box>
@@ -655,7 +658,7 @@ const Staking: React.FC = () => {
                             &nbsp;Unstake & Claim
                           </Button>                                   
                           </HStack>
-                          <Text style={{fontSize:"13px"}} ml={10}>You will be able to claim your reward once the time expires.</Text>                          
+                          <Text style={{fontSize:"13px"}} ml={10}>You will be able to claim your reward once the countdown ends.</Text>                          
                           </Box>
                         </Box>
                         </HStack>
