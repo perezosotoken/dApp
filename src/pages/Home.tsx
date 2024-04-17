@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { LanguageContext, LanguageContextType } from "../core/LanguageProvider";
-import { BrowserView, MobileView, isBrowser, isMobile } from 'react-device-detect';
+import { isMobile } from 'react-device-detect';
 
 const HomePage: React.FC = () => {
   const ctx = useContext<LanguageContextType>(LanguageContext);
@@ -26,7 +26,16 @@ const HomePage: React.FC = () => {
                   </p>
                 </div>
                 <div className="button-group">
-                 
+                  <Link
+                    className="btn btn-bordered active smooth-anchor  mb-2"
+                    to="/staking"
+                    style={{width:"250px"}}
+                  >
+                    <i className="fa-solid fa-lock mr-2"></i>
+                    {!ctx.isSpanishCountry ? "Stake" : "Acuñar"}
+                  </Link>
+                </div>                      
+                <div className="button-group">
                   <a
                     className="btn btn-bordered-white mb-3"
                     href="https://pancakeswap.finance/swap?chain=bsc&outputCurrency=BNB&utm_source=Trust_iOS_Browser&inputCurrency=0x53Ff62409B219CcAfF01042Bb2743211bB99882e"
@@ -48,7 +57,7 @@ const HomePage: React.FC = () => {
                     <i className="fa-solid fa-file mr-2"></i>
                     Whitepaper
                   </a>
-                </div>
+                </div>          
               </div>
             </div>
           </div>
