@@ -70,7 +70,7 @@ const Staking: React.FC = () => {
     watch: false,  // Ensure it doesn't refetch on every render automatically if not desired
   });
 
-  console.log(`Total stakers: ${totalStakers}`)
+  console.log(`Total stakers: ${totalStakers} realtimeTime rewards ${realtimeRewards} stakedBalance ${stakedBalance}`)
 
   // Effect to trigger the refetch on mount and when address or stakingAddress changes
   useEffect(() => {
@@ -145,8 +145,8 @@ const Staking: React.FC = () => {
           delta -= minutes * 60;
           let seconds = delta % 60;  // Remaining seconds
 
-          const totalReward = 10000000;  // Total rewards
-          const totalTime = 150000;      // Total time in seconds
+          const totalReward = rewardsMap[selectedTier][selectedTime];  // Total rewards
+          const totalTime = 2592000;      // Total time in seconds
           let rewardPerSecond = 0;
 
           if (isUserStaked) {
@@ -215,53 +215,6 @@ const Staking: React.FC = () => {
     },
   });
 
-  // const { isLoading: claiming, write: claim } = useContractWrite({
-  //   address: stakingAddress,
-  //   abi: PerezosoStakingAbi.abi,
-  //   functionName: "claim",
-  //   args: [],
-  //   onSuccess() {
-  //     toast("Successfully staked your PRZS!");
-  //     setTimeout(() => {
-  //       refetchIsUserStaked();
-  //     }, 5000);
-  //   },
-  //   onError(data) {
-  //     if (!isConnected) {
-  //       toast("Please connect your wallet first");
-  //       return;
-  //     }
-  //     if (data?.stack?.includes("No reward tokens to claim")) {
-  //       toast("No reward tokens to claim");
-  //       return;
-  //     }      
-  //   toast("Error, Transaction unsuccessful.");
-  //   },
-  // });
-
-  // const { isLoading: withdrawing, write: withdraw } = useContractWrite({
-  //   address: stakingAddress,
-  //   abi: PerezosoStakingAbi.abi,
-  //   functionName: "withdraw",
-  //   args: [],
-  //   onSuccess() {
-  //     toast("Withdrawal successful.");
-  //     setTimeout(() => {
-  //       window.location.reload();
-  //     }, 5000);
-  //   },
-  //   onError(data) {
-  //     if (!isConnected) {
-  //       toast("Please connect your wallet first");
-  //       return;
-  //     }
-  //     if (data?.stack?.includes("Staked tokens are still locked")) {
-  //       toast("Staked tokens are still locked");
-  //       return;
-  //     }
-  //   toast("Error, Transaction unsuccessful.");
-  //   },
-  // });
 
   const handleAmountToStake = (value: string) => {
     if (typeof value != "undefined") {
@@ -536,12 +489,12 @@ const Staking: React.FC = () => {
                         <HStack>
                         <Box w={"20%"} style={{marginBottom: "10px"}}>
                           <HStack >
-                            <h5 className="m-0" style={{width:"220px"}}>{commify(realtimeRewards.toFixed(4))}</h5> 
+                            <h5 className="m-0" style={{width:"220px"}}>{commify(realtimeRewards.toFixed(8))}</h5> 
                           </HStack>
                         </Box>
                         <Box w={"50%"}>
                           <HStack mt={-10}>
-                            <p>&nbsp;&nbsp;(PRZS)</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;(PRZS)</p>
                           </HStack>
                         </Box>
                         </HStack>
