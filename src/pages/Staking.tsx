@@ -357,9 +357,6 @@ const Staking: React.FC = () => {
                                 // isDisabled={account == null}
                               >
                                   <option value='0'>30  days</option>
-                                  <option value='1'>90  days</option>
-                                  <option value='2'>180 days</option>
-                                  <option value='3'>365 days</option>
                               </Select>
                               </Box>
                               </HStack>
