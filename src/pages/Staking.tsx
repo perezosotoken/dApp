@@ -44,7 +44,7 @@ const Staking: React.FC = () => {
   const [selectedTier, setSelectedTier] = useState("0");
   const [selectedTime, setSelectedTime] = useState("0");
   const tokenAddress = "0x53Ff62409B219CcAfF01042Bb2743211bB99882e";
-  const stakingAddress = "0xAffd47A9d9d8c99E629d10F57523d201c6070509";
+  const stakingAddress = "0xE2DF958c48F0245D823c2dCb012134CfDa9F8f9F";
   const [timeLeft, setTimeLeft] = useState("");
     // Initialize state with value from localStorage
     const [realtimeRewards, setRealtimeRewards] = useState(() => {
@@ -58,12 +58,14 @@ const Staking: React.FC = () => {
     args: [address],
   });
 
+
+
   const { data: stakedBalance } = useContractRead({
     address: stakingAddress,
     abi: PerezosoStakingAbi.abi,
     functionName: "getStakedBalance",
     args: [address], 
-    watch: false,  // Ensure it doesn't refetch on every render automatically if not desired
+    watch: true,  // Ensure it doesn't refetch on every render automatically if not desired
   });
 
   const { data: totalStakers, refetch } = useContractRead({
@@ -86,6 +88,7 @@ const Staking: React.FC = () => {
     abi: PerezosoStakingAbi.abi,
     functionName: "isUserStaked",
     args: [address], 
+    watch: true
   });
  
   // const {data: unlockTime} = useContractRead({
@@ -180,10 +183,12 @@ const Staking: React.FC = () => {
               const hours = Math.floor((secondsLeft % 86400) / 3600);
               const minutes = Math.floor((secondsLeft % 3600) / 60);
               const seconds = secondsLeft % 60;
-      
-              console.log(`${days}d ${hours}h ${minutes}m ${seconds}s`);
+
+              const dateString = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+              console.log(dateString);
+
               if (!isNaN(days) && !isNaN(hours) && !isNaN(minutes) && !isNaN(seconds)) {
-                setTimeleft(`${days}d ${hours}h ${minutes}m ${seconds}s`);
+                setTimeleft(dateString);
               }
 
               if (secondsLeft > 0) {
@@ -331,7 +336,7 @@ const Staking: React.FC = () => {
             let unlockDate = new Date(now.getTime());
             unlockDate.setDate(now.getDate() + 30);
             unlockDate = unlockDate.toISOString().split('T', 1)[0];
-            console.log(`Unlock date is ${unlockDate}`)
+
             localStorage.setItem('expData', JSON.stringify(unlockDate));        
           }          
 
