@@ -1,6 +1,8 @@
 import React, { useContext } from "react";
 import { Address, useAccount, useContractRead, } from "wagmi";
 import PerezosoStakingAbi from "../core/PerezosoStaking.json";
+import TOKENABI from "../core/TokenABI.json";
+import { parseEther, formatEther } from "ethers";
 
 import { Link } from "react-router-dom";
 import { LanguageContext, LanguageContextType } from "../core/LanguageProvider";
@@ -24,28 +26,33 @@ import {
   NumberDecrementStepper,       
   VStack
 } from '@chakra-ui/react';
+import { commify } from "../utils";
+import logoPRZS from "../../public/assets/images/logo.png";
 
 const HomePage: React.FC = () => {
   const ctx = useContext<LanguageContextType>(LanguageContext);
   const stakingAddress = "0xE2DF958c48F0245D823c2dCb012134CfDa9F8f9F";
+  const tokenAddress = "0x53Ff62409B219CcAfF01042Bb2743211bB99882e";
+
   const { address } = useAccount();
 
   const {data: totalStakers} = useContractRead({
     address: stakingAddress,
     abi: PerezosoStakingAbi.abi,
     functionName: "getTotalStakers",
-    args: [address],
+    args: [],
+  });
+  
+  const {data: totalStaked} = useContractRead({
+    address: tokenAddress,
+    abi: TOKENABI,
+    functionName: "balanceOf",
+    args: [stakingAddress],
   });
 
-  const { data: stakedBalance, refetch } = useContractRead({
-    address: stakingAddress,
-    abi: PerezosoStakingAbi.abi,
-    functionName: "getStakedBalance",
-    args: [address], 
-    watch: false,  // Ensure it doesn't refetch on every render automatically if not desired
-  });
 
-  console.log(`Total stakers is ${totalStakers}`)
+  console.log(`Total stakers is ${totalStakers} total staked ${totalStaked}`)
+
   return (
     <>
       <section className="hero-section">
@@ -65,22 +72,33 @@ const HomePage: React.FC = () => {
                       : "¡Redefiniendo el valor digital con eficiencia!"}
                   </p>
                 </div>
-                {/* <div style={{border:"1px solid white"}}>
                 <div className="button-group">
-                  <HStack>
-                    <Box ml={"30%"} w={"auto"}>
-                      <HStack>
-                        <Text><b>Total staked:</b></Text>
-                        <Text w={"50px"} mt={-22}>{typeof stakedBalance != "undefined" ? stakedBalance : 0}</Text>
+                  <Flex direction={"row"} w={"80%"} m={90}>
+                    <Box w={"50%"}  >
+                    <HStack>
+                      <Text><b>Total staked: </b></Text>
+                      <Text mt={0}>{typeof totalStaked != "undefined" ? commify(formatEther(totalStaked)) : 0}</Text>&nbsp;
+                      <Image  mt={-25} src={logoPRZS} width="25px"></Image>
                       </HStack>
                       <HStack>
-                        <Text><b>Total stakers:</b></Text>
-                        <Text w={"50px"} mt={-22}>{typeof totalStakers != "undefined" ? totalStakers : 0}</Text>
-                      </HStack>
+                      <Text><b>Total stakers: </b></Text>
+                      <Text  mt={-22} >{typeof totalStakers == "undefined" ? 0 : commify(totalStakers)}</Text>&nbsp;
+                      </HStack> 
                     </Box>
-                  </HStack>
+                    <Box w={"50%"}   >
+                      <Link
+                      className="btn btn-bordered active smooth-anchor  mb-2"
+                      to="/staking"
+                      style={{width:"250px"}}
+                      
+                    >
+                      <i className="fa-solid fa-lock mr-2"></i>
+                      {!ctx.isSpanishCountry ? "Stake" : "Acuñar"}
+                    </Link>
+                    </Box>                    
+                  </Flex>
+
                 </div> 
-                </div>                      */}
                 <div className="button-group">
                   <a
                     className="btn btn-bordered-white mb-3"

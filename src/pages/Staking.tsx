@@ -29,11 +29,10 @@ import TOKENABI from "../core/TokenABI.json";
 import PerezosoStakingAbi from "../core/PerezosoStaking.json";
 import { toast } from "react-toastify";
 
-import { parseEther, formatEther } from "ethers";
+import { formatEther } from "ethers";
 import { commify } from "../utils";
 import { isMobile } from "react-device-detect";
 import { rewardsMap, depositMap } from "../core/Constants";
-import { ethers } from "ethers";
 
 const Staking: React.FC = () => {
   const ctx = useContext<LanguageContextType>(LanguageContext);
@@ -55,13 +54,23 @@ const Staking: React.FC = () => {
     args: [address],
   });
 
-  const { data: stakedBalance, refetch } = useContractRead({
+  const { data: stakedBalance } = useContractRead({
     address: stakingAddress,
     abi: PerezosoStakingAbi.abi,
     functionName: "getStakedBalance",
     args: [address], 
     watch: false,  // Ensure it doesn't refetch on every render automatically if not desired
   });
+
+  const { data: totalStakers, refetch } = useContractRead({
+    address: stakingAddress,
+    abi: PerezosoStakingAbi.abi,
+    functionName: "getTotalStakers",
+    args: [address], 
+    watch: false,  // Ensure it doesn't refetch on every render automatically if not desired
+  });
+
+  console.log(`Total stakers: ${totalStakers}`)
 
   // Effect to trigger the refetch on mount and when address or stakingAddress changes
   useEffect(() => {
@@ -83,6 +92,7 @@ const Staking: React.FC = () => {
     functionName: "getUnlockTime",
     args: [address], 
   });
+  
 
   const { isLoading: staking, write: stake } = useContractWrite({
     address: stakingAddress,
