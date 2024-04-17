@@ -38,12 +38,13 @@ const Staking: React.FC = () => {
   const ctx = useContext<LanguageContextType>(LanguageContext);
   const { address, connector, isConnected } = useAccount();
 
+  const [unlockTime, setUnlockTime] = useState("");
   const [amountToStake, setAmountToStake] = useState(0);
   const [isWaitingForApproval, setIsWaitingForApproval] = useState(false);
   const [selectedTier, setSelectedTier] = useState("0");
   const [selectedTime, setSelectedTime] = useState("0");
   const tokenAddress = "0x53Ff62409B219CcAfF01042Bb2743211bB99882e";
-  const stakingAddress = "0xE2DF958c48F0245D823c2dCb012134CfDa9F8f9F";
+  const stakingAddress = "0xAffd47A9d9d8c99E629d10F57523d201c6070509";
   const [timeLeft, setTimeLeft] = useState("");
     // Initialize state with value from localStorage
     const [realtimeRewards, setRealtimeRewards] = useState(() => {
@@ -80,21 +81,20 @@ const Staking: React.FC = () => {
     refetch();
   }, [address, stakingAddress, refetch]);
 
-  const { data: isUserStaked, refetch: refetchIsUserStaked  } = useContractRead({
+  const { data: isUserStaked  } = useContractRead({
     address: stakingAddress,
     abi: PerezosoStakingAbi.abi,
     functionName: "isUserStaked",
     args: [address], 
-    watch: true,   
   });
  
-  const {data: unlockTime} = useContractRead({
-    address: stakingAddress,
-    // @ts-ignore
-    abi: PerezosoStakingAbi.abi,
-    functionName: "getUnlockTime",
-    args: [address], 
-  });
+  // const {data: unlockTime} = useContractRead({
+  //   address: stakingAddress,
+  //   // @ts-ignore
+  //   abi: PerezosoStakingAbi.abi,
+  //   functionName: "getUnlockTime",
+  //   args: [address], 
+  // });
   
 
   const { isLoading: staking, write: stake } = useContractWrite({
@@ -168,14 +168,17 @@ const Staking: React.FC = () => {
       function countdown(seconds, setTimeleft) {
         function printTime(secondsLeft) {
               if (secondsLeft < 0) return; // Stop the countdown when less than zero
-      
+              console.log(`${secondsLeft} / 86400`);
+              
               const days = Math.floor(secondsLeft / 86400);
               const hours = Math.floor((secondsLeft % 86400) / 3600);
               const minutes = Math.floor((secondsLeft % 3600) / 60);
               const seconds = secondsLeft % 60;
       
               console.log(`${days}d ${hours}h ${minutes}m ${seconds}s`);
-              setTimeleft(`${days}d ${hours}h ${minutes}m ${seconds}s`);
+              if (!isNaN(days) && !isNaN(hours) && !isNaN(minutes) && !isNaN(seconds)) {
+                setTimeleft(`${days}d ${hours}h ${minutes}m ${seconds}s`);
+              }
 
               if (secondsLeft > 0) {
                   setTimeout(() => printTime(secondsLeft - 1), 1000);  // Recursive call
@@ -183,27 +186,29 @@ const Staking: React.FC = () => {
           }
       
           printTime(seconds);
-      }
+      } 
 
-      ;
+      // Calculate the reward increment per second
+      const totalReward = rewardsMap[selectedTier][selectedTime]; // Ensure these variables are defined and accessible
+      const rewardIncrement = totalReward / 2592000;  // Fixed reward rate per second
+      
+      const realtimeRewards = JSON.parse(localStorage.getItem('realtimeRewards') || "0");
 
-        // Calculate the reward increment per second
-        const totalReward = rewardsMap[selectedTier][selectedTime]; // Ensure these variables are defined and accessible
-        const rewardIncrement = totalReward / 2592000;  // Fixed reward rate per second
-        
-        const realtimeRewards = JSON.parse(localStorage.getItem('realtimeRewards') || "0");
+      // Update the rewards
+      setRealtimeRewards(prev => {
+        const updatedRewards = prev + rewardIncrement;
+        localStorage.setItem('realtimeRewards', JSON.stringify(updatedRewards));
+        return updatedRewards;
+      });
+      
+      // Log the current reward rate
+      console.log(`Realtime Rewards Updated: ${realtimeRewards.toFixed(8)}`);
+      console.log(`Delta is ${delta}`);
 
-        // Update the rewards
-        setRealtimeRewards(prev => {
-          const updatedRewards = prev + rewardIncrement;
-          localStorage.setItem('realtimeRewards', JSON.stringify(updatedRewards));
-          return updatedRewards;
-        });
-        // Log the current reward rate
-        console.log(`Realtime Rewards Updated: ${realtimeRewards.toFixed(8)}`);
+      if (!isNaN(delta))
         countdown(delta, setTimeLeft);
 
-        // Optionally update UI or perform further actions with `realtimeRewards` and formatted time
+      // Optionally update UI or perform further actions with `realtimeRewards` and formatted time
     }
 
      
@@ -265,7 +270,6 @@ const Staking: React.FC = () => {
   const handleAmountToStake = (value: string) => {
     if (typeof value != "undefined") {
       setAmountToStake(parseEther(`${value}`));
-      console.log(`Amount to stake is ${value}`)
     }
   };
 
@@ -315,7 +319,7 @@ const Staking: React.FC = () => {
           localStorage.setItem('hasVisitedBefore', 'true');
 
           const expData = localStorage.getItem('expData');
-          console.log(expData)
+
           if (expData == null) {
             const now = new Date();
             let unlockDate = new Date(now.getTime());
@@ -329,29 +333,19 @@ const Staking: React.FC = () => {
       } else {
           console.log("Welcome back!");
       }
-
-      // Since the dependency array is empty, this effect will only run once after the initial render.
-      // Future renders will not trigger this effect.
   }, []);  // The empty array ensures this hook is only run on mount
 
   useEffect(() => {
     console.log(`Is user staked ${isUserStaked} realtime rewards ${realtimeRewards} stakedBalance ${stakedBalance}`)
-    // if (stakedBalance > 0 || realtimeRewards > 0 ) {
-    //   const expData = localStorage.getItem('expData');
-    //   console.log(expData)
-    //   if (expData == null) {
-    //     const now = new Date();
-    //     let unlockDate = new Date(now.getTime());
-    //     unlockDate.setDate(now.getDate() + 30);
-    //     unlockDate = unlockDate.toISOString().split('T', 1)[0];
-    //     console.log(`Unlock date is ${unlockDate}`)
-    //     localStorage.setItem('expData', JSON.stringify(unlockDate));        
-    //   }
-    // }
 
     async function updateRewardsLs() {
       if (realtimeRewards > 0)  {
-        localStorage.setItem('realtimeRewards', realtimeRewards.toString());
+        if (isUserStaked != "") {
+          localStorage.setItem('realtimeRewards', realtimeRewards.toString());
+        } else 
+        {
+          localStorage.setItem('realtimeRewards', "0");
+        } 
       }
     }
     const interval = setInterval(updateRewardsLs, 1000);
@@ -373,7 +367,7 @@ const Staking: React.FC = () => {
                   <span className="balance">
                   {!ctx.isSpanishCountry ? "Earn up to 10 Billion PRZS in 365 days" : "Gana hasta 10 Billones de PRZS en 365 días"}
                   </span>
-                  {stakedBalance == 0 ?
+                  {stakedBalance == 0 || typeof stakedBalance == "undefined" ?
                    <div className="tab-content mt-md-3" id="myTabContent">
                     <div
                       className="tab-pane fade show active"
@@ -425,7 +419,7 @@ const Staking: React.FC = () => {
                               </Select>
                               </Box>
                               </HStack>
-                              {stakedBalance == 0 ?
+                              {stakedBalance == 0 || typeof stakedBalance == "undefined"?
                                     <Button 
                                       mt={10}
                                       isDisabled={amountToStake == 0}
@@ -591,7 +585,10 @@ const Staking: React.FC = () => {
                         <HStack>
                         <Box w={"20%"} style={{marginBottom: "10px"}}>
                           <HStack >
-                            <h5 className="m-0" style={{width:"220px"}}>{realtimeRewards > 0 ? commify(realtimeRewards.toFixed(4)):0}</h5> 
+                            <h5 className="m-0" style={{width:"220px"}}>{
+                              isUserStaked ? realtimeRewards > 0 ? 
+                              commify(realtimeRewards.toFixed(4)) : 0 : 0
+                            }</h5> 
                           </HStack>
                         </Box>
                         <Box w={"50%"}>
@@ -637,16 +634,16 @@ const Staking: React.FC = () => {
                         <Box mt={!isMobile? "-100px" :"-100px"}>
                           <HStack>                       
                           <Button 
-                              isDisabled={stakedBalance == 0}
+                              isDisabled={stakedBalance == 0 || typeof stakedBalance == "undefined"}
                               w={"200px"}
-                              isDisabled={stakedBalance == 0}
+                              isDisabled={stakedBalance == 0 || typeof stakedBalance == "undefined"}
                               style={{marginLeft:"10px", border:"1px solid white", borderRadius:"10px"}}
                               onClick={() => unStake()}
                             > 
                             &nbsp;Unstake & Claim
                           </Button>                                   
                           </HStack>
-                          <Text style={{fontSize:"13px"}}>You will be able to claim your reward once the time expires.</Text>                          
+                          <Text style={{fontSize:"13px"}} ml={10}>You will be able to claim your reward once the time expires.</Text>                          
                           </Box>
                         </Box>
                         </HStack>
