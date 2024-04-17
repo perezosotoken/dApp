@@ -29,7 +29,7 @@ import TOKENABI from "../core/TokenABI.json";
 import PerezosoStakingAbi from "../core/PerezosoStaking.json";
 import { toast } from "react-toastify";
 
-import { formatEther } from "ethers";
+import { parseEther, formatEther } from "ethers";
 import { commify } from "../utils";
 import { isMobile } from "react-device-detect";
 import { rewardsMap, depositMap } from "../core/Constants";
@@ -173,7 +173,7 @@ const Staking: React.FC = () => {
     address: tokenAddress,
     abi:  TOKENABI,
     functionName: "approve",
-    args: [stakingAddress as Address, amountToStake * 10**18],
+    args: [stakingAddress as Address, amountToStake],
     onSuccess: () => {
       setIsWaitingForApproval(true);
       setTimeout(() => {
@@ -265,7 +265,7 @@ const Staking: React.FC = () => {
 
   const handleAmountToStake = (value: string) => {
     if (typeof value != "undefined") {
-      setAmountToStake(Number(value));
+      setAmountToStake(parseEther(`${value}`));
       console.log(`Amount to stake is ${value}`)
     }
   };

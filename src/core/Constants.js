@@ -1,3 +1,5 @@
+import {ethers} from "ethers";
+const { formatEther, parseEther } = ethers;
 
 export const rewardsMap = {
     0: {
@@ -27,8 +29,8 @@ export const rewardsMap = {
   };
 
 export  const depositMap = [
-    "1e9",
-    "1e10",
-    "1e11",
-    "1e12",
+    parseEther(`1000000000`),
+    parseEther(`10000000000`),
+    parseEther(`100000000000`),
+    parseEther(`1000000000000`),
 ]
