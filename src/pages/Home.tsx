@@ -16,14 +16,7 @@ import {
   Input,
   Button,
   Flex,
-  HStack,
-  Select,
-  SimpleGrid,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,       
+  HStack,     
   VStack
 } from '@chakra-ui/react';
 import { commify } from "../utils";
@@ -174,20 +167,20 @@ const HomePage: React.FC = () => {
                     <Box p={4} >
                       <VStack>
                         <Box>
-                        <Text fontSize={"22px"}>
-                          <b>{typeof totalStaked != "undefined" ? Number(formatEther(totalStaked) * 100 / totalSupply ).toFixed(2) : 0}% </b>
-                        </Text>
+                          <Text>
+                            <b>{typeof totalStaked != "undefined" ? Number(formatEther(totalStaked) * 100 / totalSupply ).toFixed(2) : 0}% </b>
+                          </Text>
                         </Box>
                         <Box>
                         <p style={{ fontSize:"13px"}}>
-                            {typeof totalStaked != "undefined" ? commify((Number(formatEther(totalStaked)).toFixed(2)), 2) : 0} of {commify(totalSupply, 2)}
+                            {typeof totalStaked != "undefined" ? commify(Number(formatEther(totalStaked)), 0) : 0} of {commify(totalSupply, 0)}
                           </p> 
                         </Box>
                         </VStack>
                     </Box>
                     <Box p={4}>
                       <Text fontSize={"lg"}>
-                        {Number(totalStakersPct).toFixed(2)}% ({commify(totalStakers, 2)} of 1000)
+                        {Number(totalStakersPct).toFixed(2)}% ({commify(totalStakers, 0)} of 1000)
                       </Text>
                     </Box>
                   </VStack>
