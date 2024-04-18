@@ -64,16 +64,16 @@ const HomePage: React.FC = () => {
             <div className="col-12 col-md-6 col-lg-9 text-center">
               <div className="hero-content">
                 <div className="intro text-center mb-5">
-                  <h1 className="mt-4">
+                  <h1 >
                     {!ctx.isSpanishCountry
-                      ? "Join the Perezoso Token Sweepstakes!"
+                      ? "Join our sweepstakes and stake your Perezoso!"
                       : "¡Únete al Sorteo de Tokens Perezoso!"}
                   </h1>
-                  <p style={{ color: "#fff" }}>
+                  <h4 style={{ color: "#fff" }}>
                     {!ctx.isSpanishCountry
-                      ? "Redefining digital value with efficiency!"
+                      ? "Win $50 daily and earn up to 10 Billion PRZS in 365 days!"
                       : "¡Redefiniendo el valor digital con eficiencia!"}
-                  </p>
+                  </h4>
                 </div>
                 <div style={{ margin: "auto", width: "auto" }}>
                 <Flex direction={"row"} ml={isMobile ? 30 : 130}>
