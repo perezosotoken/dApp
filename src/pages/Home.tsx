@@ -76,52 +76,65 @@ const HomePage: React.FC = () => {
                   </p>
                 </div>
                 <div style={{ margin: "auto", width: "auto" }}>
-                  <Flex direction={"row"} ml={isMobile ? 30 : 130}>
-                    <Flex direction={"column"} w={"full"}>
-                    <HStack w={"full"}>
-                      <Box w={"25%"}>
-                        <Text textAlign="left"><b>Staked</b></Text>
-                      </Box>
-                      <Box flex={1}>
-                        <Input 
-                          style={{
-                            height: "40px",
-                            backgroundColor: "gray", 
-                            padding: "5px",
-                            border: "1px solid white",
-                            textAlign: "left",
-                            fontSize: "16px",
-                            borderRadius: "10px",
-                            width: "100%" // Set to take full width of the parent container
-                          }}
-                          value={typeof totalStaked == "undefined" ? 0 : commify(formatEther(totalStaked))}
-                        />
-                      </Box>
-                    </HStack>
+                <Flex direction={"row"} ml={isMobile ? 30 : 130}>
+                <Flex direction={"column"} w={"full"}>
+                  {/* Staked Box */}
+                  <HStack w={"full"}>
+                    <Box w={"25%"}>
+                      <Text textAlign="left"><b>Staked</b></Text>
+                    </Box>
+                    <Box flex={1} position="relative">
+                      <Input 
+                        style={{
+                          height: "40px",
+                          backgroundColor: "gray",
+                          padding: "10px",
+                          border: "1px solid white",
+                          textAlign: "left",
+                          fontSize: "16px",
+                          borderRadius: "10px",
+                          width: '100%'
+                        }}
+                        value={typeof totalStaked === "undefined" ? 0 : commify(formatEther(totalStaked))}
+                      />
+                      <Image 
+                        src={logoPRZS} 
+                        width="25px" 
+                        style={{
+                          position: 'absolute',
+                          right: '5px', // Adjust this value as needed
+                          top: '50%',
+                          transform: 'translateY(-50%)'
+                        }} 
+                      />
+                    </Box>
 
-                    <HStack w={"full"} mt={4}>
-                      <Box w={"25%"}>
-                        <Text textAlign="left"><b>Stakers</b></Text>
-                      </Box>
-                      <Box flex={1}>
-                        <Input
-                          style={{
-                            height: "40px",
-                            backgroundColor: "gray", 
-                            padding: "5px",
-                            border: "1px solid white",
-                            textAlign: "left",
-                            fontSize: "16px",
-                            borderRadius: "10px",
-                            width: "100%" // Set to take full width of the parent container
-                          }}
-                          value={typeof totalStakers == "undefined" ? 0 : commify(totalStakers)}
-                        />
-                      </Box>
-                    </HStack>
-
-                    </Flex>
-                    <Box w={"30%"}>
+                  </HStack>
+                  
+                  
+                  {/* Stakers Box */}
+                  <HStack w={"full"} mt={4}>
+                    <Box w={"25%"}>
+                      <Text textAlign="left"><b>Stakers</b></Text>
+                    </Box>
+                    <Box flex={1}>
+                      <Input
+                        style={{
+                          height: "40px",
+                          backgroundColor: "gray",
+                          padding: "10px",
+                          border: "1px solid white",
+                          textAlign: "left",
+                          fontSize: "16px",
+                          borderRadius: "10px",
+                          width: '100%'
+                        }}
+                        value={typeof totalStakers === "undefined" ? 0 : commify(totalStakers)}
+                      />
+                    </Box>
+                  </HStack>
+                </Flex>
+                <Box w={"30%"}>
                       {!isMobile ? 
                         <Link
                           className="btn btn-bordered active smooth-anchor mb-2"
@@ -132,7 +145,7 @@ const HomePage: React.FC = () => {
                           {!ctx.isSpanishCountry ? "Stake" : "Acuñar"}
                         </Link> : <></>}
                     </Box>
-                  </Flex>
+              </Flex>                  
                 </div>
                 <div className="button-group">
                   <a
