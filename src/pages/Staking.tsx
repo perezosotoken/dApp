@@ -505,7 +505,7 @@ const Staking: React.FC = () => {
                           <HStack >
                             <h5 className="m-0" style={{width:"220px"}}>{
                               isUserStaked ? realtimeRewards > 0 ? 
-                              commify(realtimeRewards.toFixed(4)) : 0 : 0
+                              commify(realtimeRewards.toFixed(2)) : 0 : 0
                             }</h5> 
                           </HStack>
                         </Box>
