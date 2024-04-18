@@ -138,8 +138,9 @@ const Staking: React.FC = () => {
         const startTimeInSeconds = endTimeInSeconds - durationInSeconds;
         return startTimeInSeconds;
       }
-        
-      const startTime = calculateStartTime(unlockTime, 2592000);
+
+      const oneMonthInSeconds = 2592000;
+      const startTime = calculateStartTime(unlockTime, oneMonthInSeconds);
       
       console.log("Start Time:", startTime);
   
@@ -306,7 +307,6 @@ const Staking: React.FC = () => {
                               style={{border:"1px solid white", borderRadius:"10px", backgroundColor:"gray"}}
                               onChange={(ev) => handleSelectTier(ev.target.value)} 
                               mt={4} 
-                              // isDisabled={account == null}
                             >
                               <option value='"-1"'>Choose tier</option>
                               <option value='0'>Tier 1</option>
@@ -331,7 +331,6 @@ const Staking: React.FC = () => {
                                   style={{border:"1px solid white", borderRadius:"10px", backgroundColor:"gray"}}
                                   onChange={(ev) => handleSelectTime(ev.target.value)} 
                                   mt={4} 
-                                // isDisabled={account == null}
                               >
                                   <option value='0'>30  days</option>
                               </Select>
@@ -349,8 +348,6 @@ const Staking: React.FC = () => {
                                   </Button> : 
                                   <></>}                              
                             </SimpleGrid>
-
-
                           </div>
                         </div>
                         <div className="input-area col-lg-6 col-12 mb-3">
@@ -409,22 +406,6 @@ const Staking: React.FC = () => {
                             />&nbsp;&nbsp;<Image src={logoPRZS} width="25px"></Image>  
                           </div>
                         </div>
-                        {/* <div className="input-area col-lg-6 col-12 mb-3">
-                          { stakedBalance > 0 ?
-                          <div className="input-text">
-                            <label>Rewards</label><br/>
-                            <Input 
-                              mt={4} 
-                              value={commify(formatEther(accumulatedRewards?.toString() || 0))}
-                              height={35} 
-                              placeHolder="0.0000" 
-                              style={{ border:"1px solid white", borderRadius:"10px", backgroundColor:"gray"}} 
-                              width={180} 
-                            />  
-                                          
-                          </div> :
-                          <></> }
-                        </div> */}
                         <div className="input-area col-lg-6 col-12 mb-3">
                           <div className="input-text">
                             <label>Staked</label><br/>
@@ -457,39 +438,6 @@ const Staking: React.FC = () => {
                             </Button>                                                          
                             </Box> : <></> }                            
                           </div>
-                        </div>
-                        <div className="col-lg-6 col-12" style={{marginTop:"20px"}}>
-                        {/* {stakedBalance == 0 ?
-                        <label>Amount <Image src={logoPRZS} width="25px"></Image> (PRZS)</label> : <></>}
-                          <Box mb={20}>
-                          <HStack>
-                            {stakedBalance == 0 ?
-                            <NumberInput 
-                              mt={4} 
-                              height={40}
-                              min={0}
-                              step={100}
-                              max={formatEther(przsBalance?.toString() || 0)}
-                              width={"50%"} 
-                              onChange={value => handleAmountToStake(value)}
-                            >
-                              <NumberInputField 
-                                  height={40} 
-                                  style={{border:"1px solid white", borderRadius: "10px", backgroundColor:"gray"}}
-                              />
-                              <NumberInputStepper mr={5} h={10} pt={2}>
-                                  <NumberIncrementStepper />
-                                  <NumberDecrementStepper />
-                              </NumberInputStepper>
-                            </NumberInput> : <></>}
-
-                            </HStack>    
-                            <Box mt={stakedBalance > 0 && !isMobile ? 30 : 2} mt={10}>
-                              <HStack>
-
-                              </HStack>
-                            </Box>                             
-                          </Box>                       */}
                         </div>
                       </div>
                     </div>
@@ -526,17 +474,7 @@ const Staking: React.FC = () => {
                           <h4 className="m-0">-- -- --</h4>}
                         </Box>
                         <Box w={"50%"}>
-                          {/* <HStack>
-                            {realtimeRewards == 0 ?
-                            <Button 
-                              w={"200px"}
-                              isDisabled={realtimeRewards == 0}
-                              style={{marginLeft:"10px", border:"1px solid white", borderRadius:"10px"}}
-                              onClick={() => claim()}
-                            > 
-                            &nbsp;Claim 
-                          </Button> : <></>}
-                          </HStack> */}
+
                           
                         </Box>
                         </HStack>
