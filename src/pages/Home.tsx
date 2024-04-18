@@ -173,7 +173,7 @@ const HomePage: React.FC = () => {
                         </Box>
                         <Box>
                         <p style={{ fontSize:"13px"}}>
-                            {typeof totalStaked != "undefined" ? commify(Number(formatEther(totalStaked)), 0) : 0} of {commify(totalSupply, 0)}
+                            ({typeof totalStaked != "undefined" ? commify(Number(formatEther(totalStaked)), 0) : 0} of {commify(totalSupply, 0)})
                           </p> 
                         </Box>
                         </VStack>
