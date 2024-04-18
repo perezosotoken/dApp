@@ -38,7 +38,6 @@ const Staking: React.FC = () => {
   const ctx = useContext<LanguageContextType>(LanguageContext);
   const { address, connector, isConnected } = useAccount();
 
-  const [unlockTime, setUnlockTime] = useState("");
   const [amountToStake, setAmountToStake] = useState(0);
   const [isWaitingForApproval, setIsWaitingForApproval] = useState(false);
   const [selectedTier, setSelectedTier] = useState("0");
@@ -48,7 +47,6 @@ const Staking: React.FC = () => {
   const [timeLeft, setTimeLeft] = useState("");
   const [expDate, setExpDate] = useState("");
 
-    // Initialize state with value from localStorage
     const [realtimeRewards, setRealtimeRewards] = useState(() => {
       return JSON.parse(localStorage.getItem('realtimeRewards') || "0");
   });
@@ -60,14 +58,12 @@ const Staking: React.FC = () => {
     args: [address],
   });
 
-
-
   const { data: stakedBalance } = useContractRead({
     address: stakingAddress,
     abi: PerezosoStakingAbi.abi,
     functionName: "getStakedBalance",
     args: [address], 
-    watch: true,  // Ensure it doesn't refetch on every render automatically if not desired
+    watch: true,  
   });
 
   const { data: totalStakers, refetch } = useContractRead({
@@ -75,12 +71,9 @@ const Staking: React.FC = () => {
     abi: PerezosoStakingAbi.abi,
     functionName: "getTotalStakers",
     args: [address], 
-    watch: false,  // Ensure it doesn't refetch on every render automatically if not desired
+    watch: false, 
   });
 
-  // console.log(`Total stakers: ${totalStakers} realtimeTime rewards ${realtimeRewards} stakedBalance ${stakedBalance}`)
-
-  // Effect to trigger the refetch on mount and when address or stakingAddress changes
   useEffect(() => {
     refetch();
   }, [address, stakingAddress, refetch]);
@@ -93,15 +86,14 @@ const Staking: React.FC = () => {
     watch: true
   });
  
-  // const {data: unlockTime} = useContractRead({
-  //   address: stakingAddress,
-  //   // @ts-ignore
-  //   abi: PerezosoStakingAbi.abi,
-  //   functionName: "getUnlockTime",
-  //   args: [address], 
-  // });
+  const {data: unlockTime} = useContractRead({
+    address: stakingAddress,
+    // @ts-ignore
+    abi: PerezosoStakingAbi.abi,
+    functionName: "getUnlockTime",
+    args: [address], 
+  });
   
-
   const { isLoading: staking, write: stake } = useContractWrite({
     address: stakingAddress,
     abi: PerezosoStakingAbi.abi,
@@ -141,98 +133,55 @@ const Staking: React.FC = () => {
   });
 
   useEffect(() => {
-     
-    function countdown(seconds, setTimeleft) {
-      function printTime(secondsLeft) {
-            if (secondsLeft < 0) return; // Stop the countdown when less than zero
-             
-            const days = Math.floor(secondsLeft / 86400);
-            const hours = Math.floor((secondsLeft % 86400) / 3600);
-            const minutes = Math.floor((secondsLeft % 3600) / 60);
-            const seconds = secondsLeft % 60;
-
-            const dateString = `${days}d ${hours}h ${minutes}m ${seconds}s`;
- 
-
-            if (!isNaN(days) && !isNaN(hours) && !isNaN(minutes) && !isNaN(seconds)) {
-              setTimeleft(dateString);
-            }
-
-            if (secondsLeft > 0) {
-                setTimeout(() => printTime(secondsLeft - 1), 1000);  // Recursive call
-            }
-        }
-    
-        printTime(seconds);
-    } 
-
     function updateCountdown() {
-      // Retrieve the expiration date from localStorage
-      const expData = localStorage.getItem('expData');
-      if (expData != "") {
-        const now = new Date();
-        let unlockDate = new Date(now.getTime());
-        unlockDate.setDate(now.getDate() + 30);
-        unlockDate = unlockDate.toISOString().split('T', 1)[0];
-        // console.log(`Unlock date is ${unlockDate}`)
-        localStorage.setItem('expData', JSON.stringify(unlockDate));   
-        setExpDate(unlockDate);
-               
-      } else {
-        console.log(`No expiration data found ${expData}`)
+      function calculateStartTime(endTimeInSeconds, durationInSeconds) {
+        const startTimeInSeconds = endTimeInSeconds - durationInSeconds;
+        return startTimeInSeconds;
       }
+        
+      const startTime = calculateStartTime(unlockTime, 2592000);
+      
+      console.log("Start Time:", startTime);
   
-      // Parse the expiration date reliably
-      const unlockDate = new Date(expData);
-      if (!unlockDate) {
-          console.error("Failed to parse the expiration date.");
-          return;
+      function calculateAccumulatedRewards(startTimeInSeconds, rewardPerSecond) {
+        const currentTimeInSeconds = Math.floor(Date.now() / 1000);  // Get current time in seconds
+        const elapsedTimeInSeconds = currentTimeInSeconds - startTimeInSeconds;
+    
+        // Calculate the accumulated rewards
+        const accumulatedRewards = elapsedTimeInSeconds * rewardPerSecond;
+    
+        return accumulatedRewards;
       }
-
-      // Get the current date and timeLeft
-      const now = new Date();
+    
+      const rewardPerSecond = rewardsMap[selectedTier][selectedTime] / 2592000;  
       
-      console.log(`${unlockDate} - ${now}`)
-
-      // Calculate the timeLeft left until the unlock date in seconds
-      let delta = Math.floor((unlockDate - now) / 1000);
+      const accumulatedRewards = calculateAccumulatedRewards(startTime, rewardPerSecond);
   
-      // Check if the countdown has finished
-      if (delta <= 0) {
-          console.log("Countdown has finished.");
-          clearInterval(interval);  // Assuming 'interval' is the interval ID for setInterval
-          return;
+      setRealtimeRewards(accumulatedRewards);
+  
+      function calculateTimeLeft(unlockTime) {
+        const now = Math.floor(Date.now() / 1000);  
+    
+        let delta = unlockTime - now;
+        
+        const days = Math.floor(delta / 86400);
+        delta -= days * 86400;
+        const hours = Math.floor(delta / 3600) % 24;
+        delta -= hours * 3600;
+        const minutes = Math.floor(delta / 60) % 60;
+        delta -= minutes * 60;
+        const seconds = delta % 60;
+    
+        setTimeLeft(`${days}d ${hours}h ${minutes}m ${seconds}s`)
       }
 
-      // Calculate the reward increment per second
-      const totalReward = rewardsMap[selectedTier][selectedTime]; // Ensure these variables are defined and accessible
-      const rewardIncrement = totalReward / 2592000;  // Fixed reward rate per second
-      
-      // const realtimeRewards = JSON.parse(localStorage.getItem('realtimeRewards') || "0");
-
-      // Update the rewards
-      setRealtimeRewards(prev => {
-        const updatedRewards = prev + rewardIncrement;
-        localStorage.setItem('realtimeRewards', JSON.stringify(updatedRewards));
-        return updatedRewards;
-      });
-      
-      // Log the current reward rate
-      // console.log(`Realtime Rewards Updated: ${realtimeRewards.toFixed(8)}`);
-      console.log(`Delta is ${delta}`);
-
-      if (!isNaN(delta))
-        countdown(delta, setTimeLeft);
-
-      // Optionally update UI or perform further actions with `realtimeRewards` and formatted timeLeft
+      calculateTimeLeft(unlockTime);
     }
 
-     
-    // Update the countdown every 1 second
     const interval = setInterval(updateCountdown, 1000);
-    updateCountdown();  // Initial update
+    updateCountdown();  
     
-    return () => clearInterval(interval);  // Cleanup
+    return () => clearInterval(interval);  
   }, [unlockTime]);
 
   // @ts-ignore
@@ -294,7 +243,7 @@ const Staking: React.FC = () => {
     if (tierIndex >= 0 && tierIndex < depositMap.length) {
       return depositMap[tierIndex];
     } else {
-      return "0"; // Default or error value
+      return "0"; 
     }
   };
   
@@ -322,52 +271,6 @@ const Staking: React.FC = () => {
       return 0;
     }    
   }
-
-  useEffect(() => {
-      // Check if it's the first timeLeft the user has visited this component
-      const isFirstVisit = localStorage.getItem('hasVisitedBefore');
-
-      if (!isFirstVisit) {
-           
-          
-          // Now set the flag in localStorage so next timeLeft this won't run
-          localStorage.setItem('hasVisitedBefore', 'true');
-
-          const expData = localStorage.getItem('expData');
-
-          if (expData == null) {
-            const now = new Date();
-            let unlockDate = new Date(now.getTime());
-            unlockDate.setDate(now.getDate() + 30);
-            unlockDate = unlockDate.toISOString().split('T', 1)[0];
-
-            localStorage.setItem('expData', JSON.stringify(unlockDate));        
-          }          
-
-          // Perform any other actions for first-timeLeft visit
-      } else {
-          console.log("Welcome back!");
-      }
-  }, []);  // The empty array ensures this hook is only run on mount
-
-  useEffect(() => {
-    console.log(`Is user staked ${isUserStaked} realtime rewards ${realtimeRewards} stakedBalance ${stakedBalance}`)
-
-    async function updateRewardsLs() {
-      if (realtimeRewards > 0)  {
-        if (isUserStaked != "") {
-          localStorage.setItem('realtimeRewards', realtimeRewards.toString());
-        } else 
-        {
-          localStorage.setItem('realtimeRewards', "0");
-        } 
-      }
-    }
-    const interval = setInterval(updateRewardsLs, 1000);
-    updateRewardsLs();  // Initial update
-
-    return () => clearInterval(interval);  // Cleanup
-  }, [realtimeRewards, stakedBalance, isUserStaked])
 
   return(
     <>
