@@ -91,7 +91,7 @@ const HomePage: React.FC = () => {
                             border: "1px solid white",
                             textAlign: "left",
                             fontSize: "16px",
-                            borderRadius: "5px",
+                            borderRadius: "10px",
                             width: "100%" // Set to take full width of the parent container
                           }}
                           value={typeof totalStaked == "undefined" ? 0 : commify(formatEther(totalStaked))}
@@ -112,7 +112,7 @@ const HomePage: React.FC = () => {
                             border: "1px solid white",
                             textAlign: "left",
                             fontSize: "16px",
-                            borderRadius: "5px",
+                            borderRadius: "10px",
                             width: "100%" // Set to take full width of the parent container
                           }}
                           value={typeof totalStakers == "undefined" ? 0 : commify(totalStakers)}
