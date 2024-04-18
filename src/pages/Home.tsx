@@ -57,7 +57,7 @@ const HomePage: React.FC = () => {
   const stakeButtonMt = !isMobile ? "0px" : "10";
   const inputTextSize = isMobile ? "13px" : "16px";
 
-  const totalStakersPct = typeof totalStakers === "undefined" ? 0 : 1000 / Number(totalStakers);
+  const totalStakersPct = typeof totalStakers === "undefined" ? 0 : Number(totalStakers) * 100 / 1000;
   console.log(`Total stakers is ${totalStakersPct}`)
 
   const statsMarginTop1 = !isMobile ? "0px" : "300px";
@@ -175,7 +175,7 @@ const HomePage: React.FC = () => {
                       <VStack>
                         <Box>
                         <Text fontSize={"22px"}>
-                          {typeof totalStaked != "undefined" ? Number(totalSupply / formatEther(totalStaked)).toFixed(2) : 0}%
+                          <b>{typeof totalStaked != "undefined" ? Number(formatEther(totalStaked) * 100 / totalSupply ).toFixed(2) : 0}% </b>
                         </Text>
                         </Box>
                         <Box>
