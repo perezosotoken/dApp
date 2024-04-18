@@ -33,7 +33,7 @@ const HomePage: React.FC = () => {
   const ctx = useContext<LanguageContextType>(LanguageContext);
   const stakingAddress = "0xE2DF958c48F0245D823c2dCb012134CfDa9F8f9F";
   const tokenAddress = "0x53Ff62409B219CcAfF01042Bb2743211bB99882e";
-
+  const totalSupply = 420000000000000;
   const { address } = useAccount();
 
   const {data: totalStakers} = useContractRead({
@@ -56,6 +56,13 @@ const HomePage: React.FC = () => {
   const stakeButtonWidth = !isMobile ? "auto" : "220px";
   const stakeButtonMt = !isMobile ? "0px" : "10";
   const inputTextSize = isMobile ? "13px" : "16px";
+
+  const totalStakersPct = typeof totalStakers === "undefined" ? 0 : 1000 / Number(totalStakers);
+  console.log(`Total stakers is ${totalStakersPct}`)
+
+  const statsMarginTop1 = !isMobile ? "0px" : "300px";
+  const statsMarginTop2 = !isMobile ? "0px" : "500px";
+  const statsFontSize1 = !isMobile ? "12px" : "16px";
   return (
     <>
       <section className="hero-section">
@@ -75,7 +82,7 @@ const HomePage: React.FC = () => {
                       : "¡Redefiniendo el valor digital con eficiencia!"}
                   </h4>
                 </div>
-                <div style={{ margin: "auto", width: "auto" }}>
+                <div style={{ margin: "auto", width: "auto" }} >
                 <Flex direction={"row"} ml={isMobile ? 30 : 130}>
                 <Flex direction={"column"} w={"full"}>
                   {/* Staked Box */}
@@ -145,7 +152,49 @@ const HomePage: React.FC = () => {
                           {!ctx.isSpanishCountry ? "Stake" : "Acuñar"}
                         </Link> : <></>}
                     </Box>
-              </Flex>                  
+              </Flex>    
+              <Flex direction={"column"} w={"full"}>
+                <Box mt={"20"}>
+                  <Box ml={"auto"}>
+                  <h4>Staking summary (Phase 1)</h4>
+                  </Box>
+                <HStack w={"full"} justifyContent="space-between" align="stretch">
+                  {/* Left Side */}
+                  <VStack flex={1} justifyContent="space-between" style={{height: "100%"}}>
+                    <Box p={4}>
+                      <Text fontSize={"lg"}>Total supply staked:</Text>
+                    </Box>
+
+                    <Box p={4} marginTop={isMobile ? "45px": "20px"}>
+                      <Text fontSize={"lg"}>Stakers cap:</Text>
+                    </Box>
+                  </VStack>
+                  {/* Right Side */}
+                  <VStack flex={1} justifyContent="space-between" style={{height: "100%"}}>
+                    <Box p={4} >
+                      <VStack>
+                        <Box>
+                        <Text fontSize={"22px"}>
+                          {typeof totalStaked != "undefined" ? Number(totalSupply / formatEther(totalStaked)).toFixed(2) : 0}%
+                        </Text>
+                        </Box>
+                        <Box>
+                        <p style={{ fontSize:"13px"}}>
+                            {typeof totalStaked != "undefined" ? commify((Number(formatEther(totalStaked)).toFixed(2)), 2) : 0} of {commify(totalSupply, 2)}
+                          </p> 
+                        </Box>
+                        </VStack>
+                    </Box>
+                    <Box p={4}>
+                      <Text fontSize={"lg"}>
+                        {Number(totalStakersPct).toFixed(2)}% ({commify(totalStakers, 2)} of 1000)
+                      </Text>
+                    </Box>
+                  </VStack>
+                </HStack>
+                </Box>
+              </Flex>
+
                 </div>
                 <div className="button-group">
                   <a
