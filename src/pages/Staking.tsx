@@ -141,21 +141,19 @@ const Staking: React.FC = () => {
 
       const oneMonthInSeconds = 2592000;
       const startTime = calculateStartTime(unlockTime, oneMonthInSeconds);
-      
-      console.log("Start Time:", startTime);
-  
+        
       function calculateAccumulatedRewards(startTimeInSeconds, rewardPerSecond) {
-        const currentTimeInSeconds = Math.floor(Date.now() / 1000);  // Get current time in seconds
+
+        const currentTimeInSeconds = Math.floor(Date.now() / 1000); 
         const elapsedTimeInSeconds = currentTimeInSeconds - startTimeInSeconds;
-    
-        // Calculate the accumulated rewards
         const accumulatedRewards = elapsedTimeInSeconds * rewardPerSecond;
     
         return accumulatedRewards;
       }
     
       const rewardPerSecond = rewardsMap[selectedTier][selectedTime] / 2592000;  
-      
+
+
       const accumulatedRewards = calculateAccumulatedRewards(startTime, rewardPerSecond);
   
       setRealtimeRewards(accumulatedRewards);
@@ -183,7 +181,7 @@ const Staking: React.FC = () => {
     updateCountdown();  
     
     return () => clearInterval(interval);  
-  }, [unlockTime]);
+  }, [unlockTime, selectedTier, selectedTime]);
 
   // @ts-ignore
   const { isLoading: approving, write: approve } = useContractWrite({
