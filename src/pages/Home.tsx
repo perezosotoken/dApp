@@ -55,7 +55,7 @@ const HomePage: React.FC = () => {
 
   const stakeButtonWidth = !isMobile ? "auto" : "220px";
   const stakeButtonMt = !isMobile ? "0px" : "10";
-  const stakeButtonMl = !isMobile ? "0" : "50%";
+  const inputTextSize = isMobile ? "13px" : "16px";
   return (
     <>
       <section className="hero-section">
@@ -91,10 +91,10 @@ const HomePage: React.FC = () => {
                           padding: "10px",
                           border: "1px solid white",
                           textAlign: "left",
-                          fontSize: "16px",
                           borderRadius: "10px",
                           width: '100%'
                         }}
+                        fontSize={inputTextSize}
                         value={typeof totalStaked === "undefined" ? 0 : commify(formatEther(totalStaked))}
                       />
                       <Image 
@@ -125,10 +125,10 @@ const HomePage: React.FC = () => {
                           padding: "10px",
                           border: "1px solid white",
                           textAlign: "left",
-                          fontSize: "16px",
                           borderRadius: "10px",
                           width: '100%'
                         }}
+                        fontSize={inputTextSize}
                         value={typeof totalStakers === "undefined" ? 0 : commify(totalStakers)}
                       />
                     </Box>
