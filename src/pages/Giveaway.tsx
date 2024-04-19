@@ -195,7 +195,7 @@ const DashboardPage: React.FC = () => {
     address: tokenAddress,
     abi: TOKENABI,
     functionName: "approve",
-    args: [giveawayAddress as Address, priceToPay * 10 ** 18],
+    args: [giveawayAddress as Address,  parseEther(`${priceToPay}`)],
     onSuccess: () => {
       setIsWaitingForApproval(true);
       setTimeout(() => {
