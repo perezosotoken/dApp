@@ -411,7 +411,7 @@ const Staking: React.FC = () => {
                                   placeHolder="0.0000" 
                                   style={{ border:"1px solid white", borderRadius:"10px", backgroundColor:"gray"}} 
                                   width={180} 
-                              />&nbsp;&nbsp;<Image src={logoPRZS} width="25px"></Image>                                                           
+                              />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<Image src={logoPRZS} width="25px"></Image>                                                           
                             </Box>
                             </Box>
                             </Flex>
