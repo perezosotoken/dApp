@@ -293,42 +293,6 @@ const Staking: React.FC = () => {
     }    
   }
 
-  const labelPRZSSize = isMobile ? "small" : "md";
-
-  const NumberWithSubscript = ({ number }) => {
-    // Convert the number to a string and split it at the thousands and decimal
-    const parts = number.toString().split('.');
-    const integerPart = parts[0];
-    const thousands = integerPart.slice(-3);
-    const leading = integerPart.slice(0, integerPart.length - 3);
-    const decimalPart = parts[1];
-  
-    const leadingStyle = {
-      fontSize: '3vh', // main number size
-      // add additional styles if needed
-    };
-  
-    const scaledStyle = {
-      fontSize: '2vh', // smaller size for the thousands and decimals
-      marginLeft: '0.5vh', // spacing between the main number and the smaller parts
-      // add additional styles if needed
-    };
-  
-    return (
-      <HStack>
-      <div className="number-container" style={{ fontSize: '4vh' }}>
-        <b>
-        <span style={leadingStyle}>{leading}</span>
-        <span style={scaledStyle}>{thousands}</span>
-        {decimalPart && <span style={scaledStyle}>.{decimalPart}</span>}
-        </b>
-      </div>
-      <Image src={logoPRZS} width="15px" style={{ marginTop: '5px' }} />
-    </HStack>
-    );
-  };
-  
-
   return(
     <>
       <section className="hero-section">
@@ -431,7 +395,7 @@ const Staking: React.FC = () => {
                                   placeHolder="0.0000" 
                                   style={{ border:"1px solid white", borderRadius:"10px", backgroundColor:"gray"}} 
                                   width={180} 
-                              />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<Image src={logoPRZS} width="25px"></Image>                                                           
+                              />&nbsp;&nbsp;<Image src={logoPRZS} width="25px"></Image>                                                           
                             </Box>
                             </Box>
                             </Flex>
@@ -505,26 +469,34 @@ const Staking: React.FC = () => {
                   <Box className="card no-hover staking-card">
                     <SimpleGrid >
                         <HStack>
-                        <Box w={"5vh"} style={{marginBottom: "10px"}}>
+                        <Box w={"20%"} style={{marginBottom: "10px"}}>
                           <HStack >
-                          <NumberWithSubscript number={realtimeRewards.toFixed(3)} />
+                            <h5 className="m-0" style={{width:"220px"}}>{
+                              isUserStaked ? realtimeRewards > 0 ? 
+                              commify(realtimeRewards.toFixed(2)) : 0 : 0
+                            }</h5> 
+                          </HStack>
+                        </Box>
+                        <Box w={"50%"}>
+                          <HStack mt={-10}>
+                            &nbsp;&nbsp;<Text size={isMobile ? "small" : "md"}></Text>
                           </HStack>
                         </Box>
                         </HStack>
                       </SimpleGrid>                    
                       <SimpleGrid >
                         <HStack>
-                        <Box w={"auto"} mt={10}>
+                        <Box w={"50%"} mt={10}>
                           {stakedBalance > 0 ?
                           <HStack>
                             <h5 className="m-0">{timeLeft != "" ? timeLeft : expDate}</h5>
                           </HStack> : 
                           <h4 className="m-0">-- -- --</h4>}
                         </Box>
-                        {/* <Box w={"50%"}>
+                        <Box w={"50%"}>
 
                           
-                        </Box> */}
+                        </Box>
                         </HStack>
                       </SimpleGrid>
                     <SimpleGrid mt={20}>
