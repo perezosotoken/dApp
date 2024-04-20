@@ -32,7 +32,7 @@ import { toast } from "react-toastify";
 import { parseEther, formatEther } from "ethers";
 import { commify } from "../utils";
 import { isMobile } from "react-device-detect";
-import { rewardsMap, depositMap } from "../core/Constants";
+import { rewardsMap, depositMap, totalStakingTime, rewardSpeeds } from "../core/Constants";
 
 const Staking: React.FC = () => {
   const ctx = useContext<LanguageContextType>(LanguageContext);
@@ -46,7 +46,7 @@ const Staking: React.FC = () => {
   const stakingAddress = "0xE2DF958c48F0245D823c2dCb012134CfDa9F8f9F";
   const [timeLeft, setTimeLeft] = useState("");
   const [expDate, setExpDate] = useState("");
-
+  
     const [realtimeRewards, setRealtimeRewards] = useState(() => {
       return JSON.parse(localStorage.getItem('realtimeRewards') || "0");
   });
@@ -150,9 +150,31 @@ const Staking: React.FC = () => {
     
         return accumulatedRewards;
       }
-    
-      const rewardPerSecond = rewardsMap[selectedTier][selectedTime] / 2592000;  
 
+      let rewardPerSecond = 0;
+      console.log(`StakedBalance is ${commify(formatEther(typeof stakedBalance != "undefined" ? stakedBalance : 0))} Selected tier is ${selectedTier} Reward per second is ${rewardPerSecond}`);
+
+      if (stakedBalance == parseEther("1000000000")) {
+        setSelectedTier(0);
+        setSelectedTime("0");
+      } else if (stakedBalance == parseEther("10000000000")) {
+        setSelectedTier(1);
+        setSelectedTime(0);
+      }
+      else if (stakedBalance == parseEther("100000000000")) {
+        setSelectedTier(2);
+        setSelectedTime(0);
+      }
+      else if (stakedBalance == parseEther("1000000000000")) {
+        setSelectedTier(3);
+        setSelectedTime(0);
+      }
+
+      // console.log(rewardSpeeds[selectedTier])
+      // console.log(`Selected Time ${selectedTime} Selected Tier ${selectedTier}`)
+      // console.log(rewardSpeeds[selectedTier][selectedTime])
+    
+      rewardPerSecond = rewardsMap[selectedTier][selectedTime] / totalStakingTime;  
 
       const accumulatedRewards = calculateAccumulatedRewards(startTime, rewardPerSecond);
   

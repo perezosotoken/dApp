@@ -26,7 +26,7 @@ export const rewardsMap = {
       2: "4000000000",
       3: "10000000000",
     },
-  };
+  }; 
 
 export  const depositMap = [
     parseEther(`1000000000`),
@@ -34,3 +34,20 @@ export  const depositMap = [
     parseEther(`100000000000`),
     parseEther(`1000000000000`),
 ]
+
+export const totalStakingTime = 2592000;
+
+export const rewardSpeeds = {
+  0: {
+    0: 300000 / 2592000,
+  },
+  1: {
+    0: 3000000 / 2592000,
+  },
+  2: {
+    0: 30000000 / 2592000,
+  },
+  3: {
+    0: 300000000 / 2592000,
+  },  
+}
