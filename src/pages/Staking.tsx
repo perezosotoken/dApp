@@ -295,19 +295,37 @@ const Staking: React.FC = () => {
 
   const labelPRZSSize = isMobile ? "small" : "md";
 
-  function abbreviateNumber(value) {
-    let newValue = value;
-    if (value >= 1000 && value < 1000000) {
-        newValue = (value / 1000).toFixed(1) + 'K';
-    } else if (value >= 1000000 && value < 1000000000) {
-        newValue = (value / 1000000).toFixed(1) + 'M';
-    } else if (value >= 1000000000 && value < 1000000000000) {
-        newValue = (value / 1000000000).toFixed(1) + 'B';
-    } else if (value >= 1000000000000) {
-        newValue = (value / 1000000000000).toFixed(1) + 'T';
-    }
-    return newValue;
-  }
+  const NumberWithSubscript = ({ number }) => {
+    // Convert the number to a string and split it at the thousands and decimal
+    const parts = number.toString().split('.');
+    const integerPart = parts[0];
+    const thousands = integerPart.slice(-3);
+    const leading = integerPart.slice(0, integerPart.length - 3);
+    const decimalPart = parts[1];
+  
+    const leadingStyle = {
+      fontSize: '3vh', // main number size
+      // add additional styles if needed
+    };
+  
+    const scaledStyle = {
+      fontSize: '2vh', // smaller size for the thousands and decimals
+      marginLeft: '0.5vh', // spacing between the main number and the smaller parts
+      // add additional styles if needed
+    };
+  
+    return (
+      <HStack>
+      <div className="number-container" style={{ fontSize: '4vh' }}>
+        <span style={leadingStyle}>{leading}</span>
+        <span style={scaledStyle}>{thousands}</span>
+        <b>{decimalPart && <span style={scaledStyle}>.{decimalPart}</span>}</b>
+      </div>
+      <Image src={logoPRZS} width="15px" style={{ marginTop: '5px' }} />
+    </HStack>
+    );
+  };
+  
 
   return(
     <>
@@ -487,15 +505,9 @@ const Staking: React.FC = () => {
                         <HStack>
                         <Box w={"5vh"} style={{marginBottom: "10px"}}>
                           <HStack >
-                            <h5 className="m-0" style={{width:"220px"}}>{
-                              isUserStaked ? realtimeRewards > 0 ? 
-                              abbreviateNumber(realtimeRewards.toFixed(2)) : 0 : 0
-                            }</h5> 
+                          <NumberWithSubscript number={realtimeRewards.toFixed(3)} />
                           </HStack>
                         </Box>
-                        <Box w={"50%"}>
-                              <Image src={logoPRZS} width="15px" mt={-15}></Image> 
-                            </Box>
                         </HStack>
                       </SimpleGrid>                    
                       <SimpleGrid >
