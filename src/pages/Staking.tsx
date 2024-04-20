@@ -317,9 +317,11 @@ const Staking: React.FC = () => {
     return (
       <HStack>
       <div className="number-container" style={{ fontSize: '4vh' }}>
+        <b>
         <span style={leadingStyle}>{leading}</span>
         <span style={scaledStyle}>{thousands}</span>
-        <b>{decimalPart && <span style={scaledStyle}>.{decimalPart}</span>}</b>
+        {decimalPart && <span style={scaledStyle}>.{decimalPart}</span>}
+        </b>
       </div>
       <Image src={logoPRZS} width="15px" style={{ marginTop: '5px' }} />
     </HStack>
