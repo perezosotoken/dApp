@@ -293,30 +293,46 @@ const Staking: React.FC = () => {
     }    
   }
 
+  const labelPRZSSize = isMobile ? "small" : "md";
+
+  function abbreviateNumber(value) {
+    let newValue = value;
+    if (value >= 1000 && value < 1000000) {
+        newValue = (value / 1000).toFixed(1) + 'K';
+    } else if (value >= 1000000 && value < 1000000000) {
+        newValue = (value / 1000000).toFixed(1) + 'M';
+    } else if (value >= 1000000000 && value < 1000000000000) {
+        newValue = (value / 1000000000).toFixed(1) + 'B';
+    } else if (value >= 1000000000000) {
+        newValue = (value / 1000000000000).toFixed(1) + 'T';
+    }
+    return newValue;
+  }
+
   return(
     <>
       <section className="hero-section">
-        <div className="staking-area">
-          <div className="container">
-            <div className="row justify-content-center">
-              <div className="col-12 col-md-7">
-                <div className="card no-hover staking-card single-staking">
+        <Box className="staking-area">
+          <Box className="container">
+            <Box className="row justify-content-center">
+              <Box className="col-12 col-md-7">
+                <Box className="card no-hover staking-card single-staking">
                   <h3 className="m-0">
                     {!ctx.isSpanishCountry ? "Stake your Perezoso token" : "Acuña tu token Perezoso"}</h3>
                   <span className="balance">
                   {!ctx.isSpanishCountry ? "Earn up to 10 Billion PRZS in 365 days" : "Gana hasta 10 Billones de PRZS en 365 días"}
                   </span>
                   {stakedBalance == 0 || typeof stakedBalance == "undefined" ?
-                   <div className="tab-content mt-md-3" id="myTabContent">
-                    <div
+                   <Box className="tab-content mt-md-3" id="myTabContent">
+                    <Box
                       className="tab-pane fade show active"
                       id="tab-one"
                       role="tabpanel"
                       aria-labelledby="tab-one-tab"
                     >
-                      <div className="input-box my-4 d-flex row" >
-                        <div className="input-area col-lg-6 col-12 mb-3">
-                          <div className="input-text">
+                      <Box className="input-box my-4 d-flex row" >
+                        <Box className="input-area col-lg-6 col-12 mb-3">
+                          <Box className="input-text">
                             <label>{!ctx.isSpanishCountry ? "Choose deposit amount" : "Elija el monto del depósito"} </label>
                             <Select 
                               placeholder='' 
@@ -334,10 +350,10 @@ const Staking: React.FC = () => {
                               <option value='2'>Tier 3</option>
                               <option value='3'>Tier 4</option>
                             </Select>
-                          </div>
-                        </div>
-                        <div className="input-area col-lg-6 col-12 mb-3">
-                          <div className="input-text">
+                          </Box>
+                        </Box>
+                        <Box className="input-area col-lg-6 col-12 mb-3">
+                          <Box className="input-text">
                             <label>Choose time</label>
                             <SimpleGrid>
                               <HStack>
@@ -368,12 +384,12 @@ const Staking: React.FC = () => {
                                   </Button> : 
                                   <></>}                              
                             </SimpleGrid>
-                          </div>
-                        </div>
-                        <div className="input-area col-lg-6 col-12 mb-3">
+                          </Box>
+                        </Box>
+                        <Box className="input-area col-lg-6 col-12 mb-3">
                             
                             <Flex alignContent={"left"} direction={"column"}>
-                            <div className="input-text">
+                            <Box className="input-text">
                             <label>You stake:</label><br/>
                               <Input 
                                   mt={4} 
@@ -384,9 +400,9 @@ const Staking: React.FC = () => {
                                   style={{ border:"1px solid white", borderRadius:"10px", backgroundColor:"gray"}} 
                                   width={180} 
                               />&nbsp;&nbsp;<Image src={logoPRZS} width="25px"></Image>                                                         
-                            </div>              
+                            </Box>              
                             <Box mt={10}>                
-                            <div className="input-text">
+                            <Box className="input-text">
                             <label>You get:</label><br/>
                               <Input 
                                   mt={4} 
@@ -396,25 +412,25 @@ const Staking: React.FC = () => {
                                   style={{ border:"1px solid white", borderRadius:"10px", backgroundColor:"gray"}} 
                                   width={180} 
                               />&nbsp;&nbsp;<Image src={logoPRZS} width="25px"></Image>                                                           
-                            </div>
+                            </Box>
                             </Box>
                             </Flex>
-                        </div>
-                      </div>
-                    </div>
-                  </div> : 
+                        </Box>
+                      </Box>
+                    </Box>
+                  </Box> : 
                   <></>}
-                  <div className="tab-content mt-md-3" id="myTabContent">
+                  <Box className="tab-content mt-md-3" id="myTabContent">
                     <h4>Your wallet</h4>
-                    <div
+                    <Box
                       className="tab-pane fade show active"
                       id="tab-one"
                       role="tabpanel"
                       aria-labelledby="tab-one-tab"
                     >
-                      <div className="input-box my-4 d-flex row">
-                        <div className="input-area col-lg-6 col-12 mb-3">
-                          <div className="input-text">
+                      <Box className="input-box my-4 d-flex row">
+                        <Box className="input-area col-lg-6 col-12 mb-3">
+                          <Box className="input-text">
                             <label>Balance</label><br/>
                             <Input 
                               mt={4} 
@@ -424,10 +440,10 @@ const Staking: React.FC = () => {
                               style={{ border:"1px solid white", borderRadius:"10px", backgroundColor:"gray"}} 
                               width={180} 
                             />&nbsp;&nbsp;<Image src={logoPRZS} width="25px"></Image>  
-                          </div>
-                        </div>
-                        <div className="input-area col-lg-6 col-12 mb-3">
-                          <div className="input-text">
+                          </Box>
+                        </Box>
+                        <Box className="input-area col-lg-6 col-12 mb-3">
+                          <Box className="input-text">
                             <label>Staked</label><br/>
                             <Input 
                               mt={4} 
@@ -457,53 +473,51 @@ const Staking: React.FC = () => {
                               &nbsp;Unstake & Claim
                             </Button>                                                          
                             </Box> : <></> }                            
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div> 
-                </div>
-              </div>
-              <div className="col-12 col-md-5">
-                <div className="staking-items mt-4 mt-md-0">
-                  <div className="card no-hover staking-card">
+                          </Box>
+                        </Box>
+                      </Box>
+                    </Box>
+                  </Box> 
+                </Box>
+              </Box>
+              <Box className="col-12 col-md-5">
+                <Box className="staking-items mt-4 mt-md-0">
+                  <Box className="card no-hover staking-card">
                     <SimpleGrid >
                         <HStack>
-                        <Box w={"20%"} style={{marginBottom: "10px"}}>
+                        <Box w={"5vh"} style={{marginBottom: "10px"}}>
                           <HStack >
                             <h5 className="m-0" style={{width:"220px"}}>{
                               isUserStaked ? realtimeRewards > 0 ? 
-                              commify(realtimeRewards.toFixed(2)) : 0 : 0
+                              abbreviateNumber(realtimeRewards.toFixed(2)) : 0 : 0
                             }</h5> 
                           </HStack>
                         </Box>
                         <Box w={"50%"}>
-                          <HStack mt={-10}>
-                            <p>&nbsp;&nbsp;(PRZS)</p>
-                          </HStack>
-                        </Box>
+                              <Image src={logoPRZS} width="15px" mt={-15}></Image> 
+                            </Box>
                         </HStack>
                       </SimpleGrid>                    
                       <SimpleGrid >
                         <HStack>
-                        <Box w={"50%"} mt={10}>
+                        <Box w={"auto"} mt={10}>
                           {stakedBalance > 0 ?
                           <HStack>
                             <h5 className="m-0">{timeLeft != "" ? timeLeft : expDate}</h5>
                           </HStack> : 
                           <h4 className="m-0">-- -- --</h4>}
                         </Box>
-                        <Box w={"50%"}>
+                        {/* <Box w={"50%"}>
 
                           
-                        </Box>
+                        </Box> */}
                         </HStack>
                       </SimpleGrid>
                     <SimpleGrid mt={20}>
                         <HStack>
                         <Box w={"50%"}>
                           <HStack>
-                            <p>Time left</p>
+                            <Text>Time left</Text>
                           </HStack>
                         </Box>
                         <Box w={"50%"} w={150}>
@@ -524,17 +538,17 @@ const Staking: React.FC = () => {
                         </Box>
                         </HStack>
                       </SimpleGrid>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+                  </Box>
+                </Box>
+              </Box>
+            </Box>
+          </Box>
+        </Box>
       </section>
       {(staking ||
         approving ||
         isWaitingForApproval) && (
-        <div className="loader">
+        <Box className="loader">
           <CirclesWithBar
             height="100"
             width="100"
@@ -552,7 +566,7 @@ const Staking: React.FC = () => {
               isWaitingForApproval
             }
           />
-        </div>
+        </Box>
       )}
     </>
   );
