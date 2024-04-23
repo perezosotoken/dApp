@@ -255,7 +255,7 @@ const Staking: React.FC = () => {
 
   const handleAmountToStake = (value: string) => {
     if (typeof value != "undefined") {
-      setAmountToStake(parseEther(`${value}`));
+      setAmountToStake(value);
     }
   };
 

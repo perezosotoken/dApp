@@ -29,10 +29,10 @@ export const rewardsMap = {
   }; 
 
 export  const depositMap = [
-    parseEther(`1000000000`),
-    parseEther(`10000000000`),
-    parseEther(`100000000000`),
-    parseEther(`1000000000000`),
+    `1000000000`,
+    `10000000000`,
+    `100000000000`,
+    `1000000000000`,
 ]
 
 export const totalStakingTime = 2592000;
