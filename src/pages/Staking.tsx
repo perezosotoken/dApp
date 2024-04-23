@@ -132,6 +132,7 @@ const Staking: React.FC = () => {
     },
   });
 
+
   useEffect(() => {
     function updateCountdown() {
       function calculateStartTime(endTimeInSeconds, durationInSeconds) {
@@ -273,7 +274,7 @@ const Staking: React.FC = () => {
     console.log(`Selected tier is ${value}`)
     if (Number(value) >= 0) {
        
-      handleAmountToStake(getDepositAmount(value));
+      handleAmountToStake(parseEther(`${getDepositAmount(value)}`));
       console.log(`${getDepositAmount(value)}`)
     } else {
       handleAmountToStake(0);
@@ -292,6 +293,8 @@ const Staking: React.FC = () => {
       return 0;
     }    
   }
+
+  const amountToStakeReadable = commify(formatEther(amountToStake));
 
   return(
     <>
