@@ -381,7 +381,7 @@ const Staking: React.FC = () => {
                               <Input 
                                   mt={4} 
                                   placeholder="--"
-                                  value={commify(amountToStake)}
+                                  value={commify(amountToStakeReadable)}
                                   height={35} 
                                   placeHolder="0.0000" 
                                   style={{ border:"1px solid white", borderRadius:"10px", backgroundColor:"gray"}} 
