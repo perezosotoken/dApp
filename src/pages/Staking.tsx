@@ -1,12 +1,12 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { LanguageContext, LanguageContextType } from "../core/LanguageProvider";
 import { CirclesWithBar } from "react-loader-spinner";
 
 import { 
     Heading, 
     Box,
-    Stack, 
+    // Stack, 
     Image,
     Text,
     Input,
@@ -15,43 +15,176 @@ import {
     HStack,
     Select,
     SimpleGrid,
-    NumberInput,
-    NumberInputField,
-    NumberInputStepper,
-    NumberIncrementStepper,
-    NumberDecrementStepper,       
-    VStack
+    VStack,
+    // NumberInput,
+    // NumberInputField,
+    // NumberInputStepper,
+    // NumberIncrementStepper,
+    // NumberDecrementStepper,       
+    // VStack
 } from '@chakra-ui/react';
 
 import { Address, useAccount, useContractRead, useContractWrite } from "wagmi";
 import logoPRZS from "../../public/assets/images/logo.png";
 import TOKENABI from "../core/TokenABI.json";
+import StakingRewardsArtifact from "../core/StakingRewards.json";
+
 import PerezosoStakingAbi from "../core/PerezosoStaking.json";
 import { toast } from "react-toastify";
 
 import { parseEther, formatEther } from "ethers";
 import { commify } from "../utils";
 import { isMobile } from "react-device-detect";
-import { rewardsMap, depositMap, totalStakingTime, rewardSpeeds } from "../core/Constants";
+import { rewardsMap, depositMap, totalStakingTime } from "../core/Constants";
 
 const Staking: React.FC = () => {
   const ctx = useContext<LanguageContextType>(LanguageContext);
   const { address, connector, isConnected } = useAccount();
 
-  const [amountToStake, setAmountToStake] = useState(0);
+  const [amountToStake, setAmountToStake] = useState(parseEther(`${1000000}`));
   const [isWaitingForApproval, setIsWaitingForApproval] = useState(false);
-  const [selectedTier, setSelectedTier] = useState("0");
-  const [selectedTime, setSelectedTime] = useState("0");
+  const [selectedTier, setSelectedTier] = useState("1");
+
+  const [selectedTierV1, setSelectedTierV1] = useState("0");
+ 
+  const [selectedTime, setSelectedTime] = useState("2592000");
+  const [selectedTimeV1, setSelectedTimeV1] = useState("0");
+  const [selectedStake, setSelectedStake] = useState("0");
+
+  const [accumulatedRewards, setAccumulatedRewards] = useState(0);
+
   const tokenAddress = "0x53Ff62409B219CcAfF01042Bb2743211bB99882e";
   const stakingAddress = "0xE2DF958c48F0245D823c2dCb012134CfDa9F8f9F";
+  const stakingV2Address = "0x59325609F0Bab01B75da9b5929F108A8E85EF305";
+
   const [timeLeft, setTimeLeft] = useState("");
   const [expDate, setExpDate] = useState("");
-  
-    const [realtimeRewards, setRealtimeRewards] = useState(() => {
-      return JSON.parse(localStorage.getItem('realtimeRewards') || "0");
+  const [baseAPR, setBaseAPR] = useState(0);
+  const [tierAPR, setTierAPR] = useState(0);
+
+  const { data: realtimeRewards, refetch: refetchRewards } = useContractRead({
+    address: stakingV2Address,
+    abi: StakingRewardsArtifact.abi,
+    functionName: "earned",
+    args: [address],
+    watch: true,
   });
 
-  const {data: przsBalance, refetch: refetchPrzsBalance} = useContractRead({
+  const {data: stakingContractBalance, refetch: refetchStakingContractBalance} = useContractRead({
+    address: tokenAddress,
+    abi: TOKENABI,
+    functionName: "balanceOf",
+    args: [stakingV2Address],
+  });
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refetchStakingContractBalance();
+    }
+    , 5000);
+
+    return () => clearInterval(interval);
+  }, [stakingV2Address]);
+
+  useEffect(() => {
+    const key1 = `${2592000}`;
+    const key2 = `${2592000 * 3}`;
+    const key3 = `${2592000 * 6}`;
+    const key4 = `${2592000 * 12}`;
+    
+    const multipliers = {
+      [key1]: 1,
+      [key2]: 2,
+      [key3]: 3,
+      [key4]: 6,
+    };
+    
+    
+    const calculateAPR = async () => {
+      if (stakingContractBalance) {
+        // console.log(`${parseEther(`${13e12}`)} / ${BigInt(stakingContractBalance)}`)
+        const baseAPR = (parseEther(`${13e12}`) / BigInt(stakingContractBalance)) * 100n;  
+        const tierAPR = baseAPR * BigInt(multipliers[selectedTime]);
+        setBaseAPR(Number(baseAPR));
+        setTierAPR(Number(tierAPR));
+
+        // console.log(`Tier APR is ${tierAPR} base APR is ${baseAPR} staking contract balance is ${stakingContractBalance} multiplier ${multipliers[selectedTime]}`)
+      } 
+    }
+  
+    const interval = setInterval(() => {
+      calculateAPR();
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [stakingContractBalance, selectedTime]);
+      
+  // const { data: earnedOnStake, refetch: refetchEarnedOnStake } = useContractRead({
+  //   address: stakingV2Address,
+  //   abi: StakingRewardsArtifact.abi,
+  //   functionName: "earnedOnStake",
+  //   args: [address, selectedStake],
+  //   watch: true,
+  // });
+
+  // console.log(`Earned on stake #${selectedStake} ${earnedOnStake}`)
+  // useEffect(() => {
+
+
+  //   console.log(`Earned on stake #${selectedStake} ${earnedOnStake}`)
+  //   setEarnedOnStake(earnedOnStake);
+  // }, [selectedStake]);
+
+
+  const {data: stakesCount } = useContractRead({
+    address: stakingV2Address,
+    abi: StakingRewardsArtifact.abi,
+    functionName: "stakesCount",
+    args: [address],
+  });
+
+  // console.log(`Stakes count is ${stakesCount} selected stake is ${selectedStake} realtime rewards is ${realtimeRewards}`)
+  // const fetchRewardsByPosition = async (position) => {
+  //   const { data: earnedOnStake } = await useContractRead({
+  //     address: stakingV2Address,
+  //     abi: StakingRewardsArtifact.abi,
+  //     functionName: "earnedOnStake",
+  //     args: [address, position],
+  //     watch: true,
+  //   });
+
+  //   console.log(`Earned on stake #${position} ${earnedOnStake}`)
+  // }
+
+  // Setup an interval to refetch rewards every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refetchRewards();  // This will refetch the contract read
+      // for (let i = 0; i < stakesCount; i++) {
+      //   console.log(`Fetching position ${i}`)
+      //   fetchRewardsByPosition(i);
+      // }
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [stakesCount]);  // Depend on refetch to reset the interval when it changes
+
+  const {data: stakes } = useContractRead({
+    address: stakingV2Address,
+    abi: StakingRewardsArtifact.abi,
+    functionName: "getAllStakes",
+    args: [address],
+  });
+
+  // console.log(StakingRewardsArtifact.abi)
+  // console.log(`Reading from  ${stakingV2Address}`)
+  // console.log(stakes)
+  
+  const totalStaked = stakes?.reduce((acc, stake) => acc + stake.amount, 0n) || 0;
+
+  // console.log(`Got realtime rewards ${realtimeRewards} stakes count is ${stakesCount} selected stake is ${selectedStake}`)
+
+  const {data: przsBalance} = useContractRead({
     address: tokenAddress,
     abi: TOKENABI,
     functionName: "balanceOf",
@@ -78,7 +211,7 @@ const Staking: React.FC = () => {
     refetch();
   }, [address, stakingAddress, refetch]);
 
-  const { data: isUserStaked  } = useContractRead({
+  const { data: isUserStaked } = useContractRead({
     address: stakingAddress,
     abi: PerezosoStakingAbi.abi,
     functionName: "isUserStaked",
@@ -94,11 +227,52 @@ const Staking: React.FC = () => {
     args: [address], 
   });
   
+  const {isLoading: updatingRewards, write: updateMyRewards} = useContractWrite({
+    address: stakingV2Address,
+    abi: StakingRewardsArtifact.abi,
+    functionName: "updateMyRewards",
+    args: [],
+    onSuccess() {
+      toast("Successfully refreshed rewards!");
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 5000);    
+    },
+    onError() {
+      if (!isConnected) {
+        toast("Please connect your wallet first");
+        return;
+      }
+      toast("Error, Transaction unsuccessful.");
+    },
+  });
+
+  const {isLoading: gettingRewards, write: getRewards} = useContractWrite({
+    address: stakingV2Address,
+    abi: StakingRewardsArtifact.abi,
+    functionName: "getReward",
+    args: [],
+    onSuccess() {
+      toast("Successfully claimed your rewards!");
+      setTimeout(() => {
+        window.location.reload();
+      }, 5000);    
+    },
+    onError() {
+      if (!isConnected) {
+        toast("Please connect your wallet first");
+        return;
+      }
+      toast("Error, Transaction unsuccessful.");
+    },
+  });
+
+
   const { isLoading: staking, write: stake } = useContractWrite({
-    address: stakingAddress,
-    abi: PerezosoStakingAbi.abi,
+    address: stakingV2Address,
+    abi: StakingRewardsArtifact.abi,
     functionName: "stake",
-    args: [selectedTier, selectedTime],
+    args: [amountToStake, selectedTime],
     onSuccess() {
       toast("Successfully staked your PRZS!");
       const now = new Date();
@@ -112,6 +286,7 @@ const Staking: React.FC = () => {
       }, 5000);
     },
     onError(data) {
+      console.log(data?.stack)
       if (!isConnected) {
         toast("Please connect your wallet first");
         return;
@@ -124,7 +299,7 @@ const Staking: React.FC = () => {
         toast("Staked amount does not meet any tier minimum.");
         return;
       }
-      if (data?.stack?.includes("ransfer amount exceeds balance")) {
+      if (data?.stack?.includes("transfer amount exceeds balance")) {
         toast("Not enough PRZS in your wallet.");
         return;
       }
@@ -145,42 +320,43 @@ const Staking: React.FC = () => {
         
       function calculateAccumulatedRewards(startTimeInSeconds, rewardPerSecond) {
 
+        // console.log(`Got rewards per second ${rewardPerSecond}`)
         const currentTimeInSeconds = Math.floor(Date.now() / 1000); 
         const elapsedTimeInSeconds = currentTimeInSeconds - startTimeInSeconds;
         const accumulatedRewards = elapsedTimeInSeconds * rewardPerSecond;
-    
+        
+
         return accumulatedRewards;
       }
 
       let rewardPerSecond = 0;
-      console.log(`StakedBalance is ${commify(formatEther(typeof stakedBalance != "undefined" ? stakedBalance : 0))} Selected tier is ${selectedTier} Reward per second is ${rewardPerSecond}`);
+      // console.log(`StakedBalance is ${commify(formatEther(typeof stakedBalance != "undefined" ? stakedBalance : 0))} Selected tier is ${selectedTier} Reward per second is ${rewardPerSecond}`);
 
       if (stakedBalance == parseEther("1000000000")) {
-        setSelectedTier(0);
-        setSelectedTime("0");
+        setSelectedTierV1(0);
+        setSelectedTimeV1("0");
       } else if (stakedBalance == parseEther("10000000000")) {
-        setSelectedTier(1);
-        setSelectedTime(0);
+        setSelectedTierV1(1);
+        setSelectedTimeV1(0);
       }
       else if (stakedBalance == parseEther("100000000000")) {
-        setSelectedTier(2);
-        setSelectedTime(0);
+        setSelectedTierV1(2);
+        setSelectedTimeV1(0);
       }
       else if (stakedBalance == parseEther("1000000000000")) {
-        setSelectedTier(3);
-        setSelectedTime(0);
+        setSelectedTierV1(3);
+        setSelectedTimeV1(0);
       }
+      rewardPerSecond = rewardsMap[selectedTierV1][selectedTimeV1] / totalStakingTime;    
 
       // console.log(rewardSpeeds[selectedTier])
       // console.log(`Selected Time ${selectedTime} Selected Tier ${selectedTier}`)
       // console.log(rewardSpeeds[selectedTier][selectedTime])
-    
-      rewardPerSecond = rewardsMap[selectedTier][selectedTime] / totalStakingTime;  
-
       const accumulatedRewards = calculateAccumulatedRewards(startTime, rewardPerSecond);
-  
-      setRealtimeRewards(accumulatedRewards);
-  
+
+      setAccumulatedRewards(accumulatedRewards);
+      
+      // console.log(`Rewards per second ${rewardPerSecond} Staked balance ${stakedBalance} Got accumulated rewards ${accumulatedRewards}`)
       function calculateTimeLeft(unlockTime) {
         const now = Math.floor(Date.now() / 1000);  
     
@@ -211,7 +387,7 @@ const Staking: React.FC = () => {
     address: tokenAddress,
     abi:  TOKENABI,
     functionName: "approve",
-    args: [stakingAddress as Address, amountToStake],
+    args: [stakingV2Address as Address, amountToStake],
     onSuccess: () => {
       setIsWaitingForApproval(true);
       setTimeout(() => {
@@ -253,13 +429,40 @@ const Staking: React.FC = () => {
     },
   });
 
+  
+  // const handleAmountToStake = (value) => {
+  //   // console.log(`Got value ${parseEther(`${parseFloat(Number(value))}`)}`)
+  //   if (typeof value != "undefined") {
+  //     setAmountToStake(parseEther(`${value}`));
+  //   }
+  // };
 
-  const handleAmountToStake = (value: string) => {
-    if (typeof value != "undefined") {
-      setAmountToStake(value);
+  const handleAmountToStake = (value) => {
+    if (value === "") {
+      setAmountToStake("0");
+    } else {
+      // Assuming ethers is available
+      try {
+        const formattedValue = parseEther(value);
+        setAmountToStake(formattedValue);
+      } catch (error) {
+        console.error("Error formatting value:", error);
+      }
     }
   };
 
+  
+  const handleStakeAll = () => {
+    console.log(`Staking all ${przsBalance}`)
+    setAmountToStake(przsBalance);
+  }
+  useEffect(() => {
+    if (amountToStake > 0) {
+      // Trigger any action that depends on updated amountToStake
+      // console.log(`Amount to stake updated: ${amountToStake}`);
+    }
+  }, [amountToStake]); // This effect runs whenever amountToStake changes
+  
   const getDepositAmount = (tier: string) => {
     const tierIndex = Number(tier);
     if (tierIndex >= 0 && tierIndex < depositMap.length) {
@@ -271,7 +474,7 @@ const Staking: React.FC = () => {
   
   const handleSelectTier = (value: string) => {
     setSelectedTier(value);
-    console.log(`Selected tier is ${value}`)
+    // console.log(`Selected tier is ${value}`)
     if (Number(value) >= 0) {
        
       handleAmountToStake(parseEther(`${getDepositAmount(value)}`));
@@ -296,6 +499,17 @@ const Staking: React.FC = () => {
 
   const amountToStakeReadable = commify(formatEther(amountToStake));
 
+  // useEffect(() => {
+  //   if (amountToStake > 0) {
+  //     // Trigger any action that depends on updated amountToStake
+  //     console.log(`Amount to stake updated: ${amountToStake}`);
+  //   }
+  // }, [amountToStake]); // This effect runs whenever amountToStake changes
+  let isSelectedPositionUnlocked = false;
+  if (stakes) {
+    isSelectedPositionUnlocked = stakes[selectedStake]?.lockTime < Math.floor(Date.now() / 1000);
+  }
+
   return(
     <>
       <section className="hero-section">
@@ -305,12 +519,263 @@ const Staking: React.FC = () => {
               <Box className="col-12 col-md-7">
                 <Box className="card no-hover staking-card single-staking">
                   <h3 className="m-0">
-                    {!ctx.isSpanishCountry ? "Stake your Perezoso token" : "Acuña tu token Perezoso"}</h3>
-                  <span className="balance">
-                  {!ctx.isSpanishCountry ? "Earn up to 10 Billion PRZS in 365 days" : "Gana hasta 10 Billones de PRZS en 365 días"}
-                  </span>
+                    {!ctx.isSpanishCountry ? "Perezoso Farming (Phase 2)" : "Acuña tu token Perezoso"}</h3>
+
+                  <Box className="tab-content mt-md-3" id="myTabContent">
+                    <Box
+                      className="tab-pane fade show active"
+                      id="tab-one"
+                      role="tabpanel"
+                      aria-labelledby="tab-one-tab"
+                    >
+                      <Box className="input-box my-4 d-flex row" >
+                        
+                      <Box className="input-area col-lg-6 col-12 mb-3">
+                        <h4>Your wallet</h4>
+                        <Box className="input-text">
+                            <label>Balance</label><br/>
+                            <Input 
+                              mt={4} 
+                              value={commify(formatEther(przsBalance?.toString() || 0), 4)}
+                              height={35} 
+                              placeHolder="0.0000" 
+                              style={{ border:"1px solid white", borderRadius:"10px", backgroundColor:"gray"}} 
+                              width={180} 
+                            />&nbsp;&nbsp;<Image src={logoPRZS} width="25px"></Image>  
+                            </Box>
+                          </Box>
+                        <Box className="input-area col-lg-6 col-12 mb-3">
+                          <h4>Your stakes</h4>
+                          {stakesCount > 0 ? 
+                          <>
+                          <label>Positions</label><br/>
+                          <Select
+                            width={220} 
+                            border="1px solid" 
+                            borderRadius={"10px"} 
+                            onChange={(event) => setSelectedStake(event.target.value)} 
+                          >
+                            {stakes?.map((stake, index) => {
+
+                              // const options = {
+                              //   weekday: "long",
+                              //   year: "numeric",
+                              //   month: "long",
+                              //   day: "numeric",
+                              // };
+                              
+                              // options.timeZone = "UTC";
+                              // options.timeZoneName = "short";
+
+                              return (
+                                <>
+                                  <option key={index} value={index}>
+                                    #{index+1} - Unlock on : {new Date(Number(stake.lockEnd) * 1000).toLocaleString("en-US", {
+                                      year: 'numeric', // Use 'numeric' or '2-digit'
+                                      month: 'long',   // Use 'numeric', '2-digit', 'narrow', 'short', or 'long'
+                                      day: 'numeric'   // Use 'numeric' or '2-digit'
+                                    })}
+                                  </option>
+                                  <br />
+                                  {index == 0 ? <Heading as="h4" size="md">Details</Heading> : <>test</> }                
+                                </>
+                            )})}
+                            </Select> 
+                          </>
+                            : <>No data</>} 
+                          <br />
+                          <Heading as="h4" size="md">Summary</Heading>
+                          <SimpleGrid>
+                            <HStack>
+                              <Box w={"40%"}>
+                                <Text style={{fontSize:"14px"}}>Total staked</Text>
+                              </Box>
+                              <Box w={"60%"} >
+                                <Text style={{fontSize:"11px"}} height={"20px"}>
+                                  <HStack>
+                                    <Text style={{fontSize:"12px", color:"lightgray"}} fontWeight={"bold"}>
+                                      {commify(formatEther(totalStaked), 4)} 
+                                    </Text>
+                                    <Image src={logoPRZS} width="15px" mt={-25}></Image>
+                                  </HStack>
+                                </Text>
+                              </Box>
+                            </HStack>
+                            <HStack>
+                              <Box w={"40%"}>
+                                <Text style={{fontSize:"14px"}}>Total positions</Text>
+                              </Box>
+                              <Box w={"60%"}>
+                                <Text style={{fontSize:"13px"}}>{Number(stakesCount)}</Text>
+                              </Box>
+                            </HStack>
+                          </SimpleGrid>
+ 
+                              <>
+                              
+                          {stakesCount > 0 ?
+                          <Box>
+                            <Heading as="h4" size="md">Position details</Heading>
+                            <SimpleGrid >
+                              <HStack>
+                              <Box w={"50%"} >
+                                <Text style={{fontSize:"14px"}}>Position</Text>
+                              </Box>
+                              <Box w={"50%"} >
+                                <Text style={{fontSize:"13px"}}>#{Number(selectedStake) +1}</Text>
+                              </Box>
+                              </HStack>
+                              <HStack>
+                              <Box w={"50%"} >
+                                <Text style={{fontSize:"14px"}}>Unlocks on</Text>
+                              </Box>
+                              <Box w={"50%"} >
+                                <Box><label style={{fontSize:"13px"}}><b>{new Date(Number(stakes[selectedStake]?.lockEnd) * 1000).toLocaleString("en-US", { hour12: false })}</b></label></Box>
+                              </Box>
+                              </HStack>
+                              <HStack>
+                              <Box w={"50%"} >
+                                <Text style={{fontSize:"13px"}}>Amount staked</Text>
+                              </Box>
+                              <Box w={"50%"} >
+                                <Box ><label style={{fontSize:"13px"}}><b>{commify(formatEther(stakes[selectedStake]?.amount), 4)}</b></label></Box>
+                              </Box>
+                              </HStack>
+                              <HStack>
+                                <Box w={"50%"} >
+                                  <Text style={{fontSize:"13px"}}>Multiplier</Text>
+                                </Box>
+                                <Box w={"50%"} >
+                                  <Box><label style={{fontSize:"13px"}}><b>{Number(stakes[selectedStake]?.multiplier)}x</b></label></Box>
+                                </Box>
+                              </HStack>
+                              <Box w="100%">
+                                <Button 
+                                  mt={10}
+                                  w={180} 
+                                  style={{border:"1px solid white", borderRadius:"10px"}}
+                                  onClick={() => getRewards()}
+                                  isDisabled={!isSelectedPositionUnlocked}
+                                  >Exit
+                                  </Button>
+                              </Box>
+                            </SimpleGrid>
+                            </Box>
+                          : <></>}
+                          </>
+                        </Box>
+                        <Box className="input-area col-lg-6 col-12 mb-3"  marginTop={!isMobile && stakesCount > 0 ? -350 : isMobile ? -50 : -110  }>
+                        <br /> <br />
+                        <Heading as="h4" size="md">New position</Heading>
+                        <Box className="input-text" >
+                            <label>Choose time</label>
+                            <SimpleGrid>
+                              <HStack>
+                              <Box w={"60%"}>
+                                <Select
+                                  placeholder='' 
+                                  defaultValue={0}
+                                  width={"100%"} 
+                                  height={40}
+                                  fontSize={13}
+                                  style={{border:"1px solid white", borderRadius:"10px", backgroundColor:"gray"}}
+                                  onChange={(ev) => handleSelectTime(ev.target.value)} 
+                                  mt={4} 
+                                >
+                                  <option value={2592000}>30  days</option>
+                                  <option value={2592000 * 3}>90  days</option>
+                                  <option value={2592000 * 6}>180 days</option>
+                                  <option value={2592000 * 12}>365 days</option>
+                              </Select>
+                              </Box>
+                              </HStack>
+                            </SimpleGrid>
+                          </Box>
+                          <br />
+                          <Box className="input-text">
+                            <label>{!ctx.isSpanishCountry ? "Choose deposit amount" : "Elija el monto del depósito"} </label>
+                            {/* <Select 
+                              placeholder='' 
+                              defaultValue={-1}
+                              width={"50%"} 
+                              height={40}
+                              fontSize={13}
+                              style={{border:"1px solid white", borderRadius:"10px", backgroundColor:"gray"}}
+                              onChange={(ev) => handleSelectTier(ev.target.value)} 
+                              mt={4} 
+                            >
+                              <option value='"-1"'>Choose tier</option>
+                              <option value='0'>Tier 1</option>
+                              <option value='1'>Tier 2</option>
+                              <option value='2'>Tier 3</option>
+                              <option value='3'>Tier 4</option>
+                            </Select> */}
+                          <HStack>
+                          <Input 
+                              type="number"
+                              mt={4} 
+                              height={35}
+                              min={1000000}
+                              step={1000000}
+                              value={amountToStake ? formatEther(amountToStake) : ""}  // Display the formatted value if amountToStake is not zero
+                              style={{ border:"1px solid white", borderRadius:"10px", backgroundColor:"gray"}} 
+                              width={180} 
+                              onChange={(ev) => handleAmountToStake(ev.target.value)}  // Handle the input change
+                            />
+
+                              <Button size="sm" borderRadius={10} mt={5} onClick={() => handleStakeAll()}>Max</Button>
+                          </HStack>
+                          </Box>
+                          <Button 
+                            mt={10}
+                            isDisabled={amountToStake == 0}
+                            width={"180px"} 
+                            style={{ border:"1px solid white", borderRadius:"10px"}}
+                            onClick={() => approve()}
+                          > 
+                          &nbsp;Stake 
+                          </Button> 
+                        </Box>
+                        <Box className="input-area col-lg-6 col-12 mb-3" >
+                          {/* <Text>test</Text>
+                          <br />      */}
+                          <Flex alignContent={"left"} direction={"column"}>
+                            {/* <Box className="input-text">
+                            <label>You stake:</label><br/>
+                              <Input 
+                                  mt={4} 
+                                  placeholder="--"
+                                  value={commify(amountToStakeReadable)}
+                                  height={35} 
+                                  placeHolder="0.0000" 
+                                  style={{ border:"1px solid white", borderRadius:"10px", backgroundColor:"gray"}} 
+                                  width={180} 
+                              />&nbsp;&nbsp;<Image src={logoPRZS} width="25px"></Image>                                                         
+                            </Box>               */}
+                            {/* <Box mt={10}>                
+                            <Box className="input-text">
+                            <label>You get:</label><br/>
+                              <Input 
+                                  mt={4} 
+                                  value={commify(getRewardsFromMap(selectedTier, selectedTime))}
+                                  height={35} 
+                                  placeHolder="0.0000" 
+                                  style={{ border:"1px solid white", borderRadius:"10px", backgroundColor:"gray"}} 
+                                  width={180} 
+                              />&nbsp;&nbsp;<Image src={logoPRZS} width="25px"></Image>                                                           
+                            </Box>
+                            </Box> */}
+                            </Flex>
+                        </Box>
+                      </Box>
+                    </Box>
+                  </Box>                   
                   {stakedBalance == 0 || typeof stakedBalance == "undefined" ?
                    <Box className="tab-content mt-md-3" id="myTabContent">
+                    <Heading as="h4" size="md">Phase 1 (Old)</Heading>
+                    <Text style={{fontSize:"13px", marginTop:"-20px"}}>
+                      {!ctx.isSpanishCountry ? "Earn up to 300M PRZS in 30 days" : "Gana hasta 300 millones de PRZS en 30 días"}
+                    </Text>
                     <Box
                       className="tab-pane fade show active"
                       id="tab-one"
@@ -344,7 +809,7 @@ const Staking: React.FC = () => {
                             <label>Choose time</label>
                             <SimpleGrid>
                               <HStack>
-                              <Box w={"60%"}>
+                              <Box w={"70%"}>
                                 <Select 
                                   placeholder='' 
                                   defaultValue={0}
@@ -355,26 +820,14 @@ const Staking: React.FC = () => {
                                   onChange={(ev) => handleSelectTime(ev.target.value)} 
                                   mt={4} 
                               >
-                                  <option value='0'>30  days</option>
+                                  <option value='0'>30 days</option>
                               </Select>
                               </Box>
-                              </HStack>
-                              {stakedBalance == 0 || typeof stakedBalance == "undefined"?
-                                    <Button 
-                                      mt={10}
-                                      isDisabled={amountToStake == 0}
-                                      width={"60%"} 
-                                      style={{ border:"1px solid white", borderRadius:"10px"}}
-                                      onClick={() => approve()}
-                                  > 
-                                  &nbsp;Stake 
-                                  </Button> : 
-                                  <></>}                              
+                              </HStack>                             
                             </SimpleGrid>
                           </Box>
                         </Box>
                         <Box className="input-area col-lg-6 col-12 mb-3">
-                            
                             <Flex alignContent={"left"} direction={"column"}>
                             <Box className="input-text">
                             <label>You stake:</label><br/>
@@ -389,7 +842,7 @@ const Staking: React.FC = () => {
                               />&nbsp;&nbsp;<Image src={logoPRZS} width="25px"></Image>                                                         
                             </Box>              
                             <Box mt={10}>                
-                            <Box className="input-text">
+                            <Box className="input-text" >
                             <label>You get:</label><br/>
                               <Input 
                                   mt={4} 
@@ -403,21 +856,9 @@ const Staking: React.FC = () => {
                             </Box>
                             </Flex>
                         </Box>
-                      </Box>
-                    </Box>
-                  </Box> : 
-                  <></>}
-                  <Box className="tab-content mt-md-3" id="myTabContent">
-                    <h4>Your wallet</h4>
-                    <Box
-                      className="tab-pane fade show active"
-                      id="tab-one"
-                      role="tabpanel"
-                      aria-labelledby="tab-one-tab"
-                    >
-                      <Box className="input-box my-4 d-flex row">
                         <Box className="input-area col-lg-6 col-12 mb-3">
-                          <Box className="input-text">
+                        <h4>Your wallet</h4>
+                        <Box className="input-text">
                             <label>Balance</label><br/>
                             <Input 
                               mt={4} 
@@ -427,10 +868,7 @@ const Staking: React.FC = () => {
                               style={{ border:"1px solid white", borderRadius:"10px", backgroundColor:"gray"}} 
                               width={180} 
                             />&nbsp;&nbsp;<Image src={logoPRZS} width="25px"></Image>  
-                          </Box>
-                        </Box>
-                        <Box className="input-area col-lg-6 col-12 mb-3">
-                          <Box className="input-text">
+                          <Box className="input-text" mt={10}>
                             <label>Staked</label><br/>
                             <Input 
                               mt={4} 
@@ -439,7 +877,8 @@ const Staking: React.FC = () => {
                               placeHolder="0.0000" 
                               style={{ border:"1px solid white", borderRadius:"10px", backgroundColor:"gray"}} 
                               width={180} 
-                            />&nbsp;&nbsp;<Image src={logoPRZS} width="25px"></Image>  
+                            />&nbsp;&nbsp;
+                            <Image src={logoPRZS} width="25px"></Image>  
                             { stakedBalance > 0 && !isMobile ?
                             <Box mt={10} ml={-10}>
                               <Button 
@@ -460,25 +899,154 @@ const Staking: React.FC = () => {
                               &nbsp;Unstake & Claim
                             </Button>                                                          
                             </Box> : <></> }                            
-                          </Box>
+                          </Box>                        
+                        </Box>
+                        
                         </Box>
                       </Box>
                     </Box>
-                  </Box> 
+                  </Box> : 
+                  <></>}
+                  {/* <Box className="tab-content mt-md-3" id="myTabContent">
+                    
+                    <Box
+                      className="tab-pane fade show active"
+                      id="tab-one"
+                      role="tabpanel"
+                      aria-labelledby="tab-one-tab"
+                    >
+                      <Box className="input-box my-4 d-flex row">
+                        <Box className="input-area col-lg-6 col-12 mb-3">
+
+                        </Box>
+                        <Box className="input-area col-lg-6 col-12 mb-3">
+
+                        </Box>
+                      </Box>
+                    </Box>
+                  </Box>  */}
                 </Box>
               </Box>
               <Box className="col-12 col-md-5">
-                <Box className="staking-items mt-4 mt-md-0">
+              <Box className="staking-items mt-4 mt-md-0" >
+                  <Box className="card no-hover staking-card" border="1px solid" >
+                  <Heading as="h5" size="md" mt={-20}>Phase 2 (Current)</Heading>
+                  <SimpleGrid>
+                  <Box w="50%" >
+                    
+                    <HStack><Heading as="h4">APR</Heading> <label fontSize={"md"} fontColor="gray" mt={-2}>{commify(Number(tierAPR))}%</label></HStack>
+                  </Box>
+                </SimpleGrid>
+
+                    <SimpleGrid >
+                      <HStack>
+                      <Box w={"50%"} style={{marginBottom: "10px"}} >
+                      <Heading as="h4" size="md">
+                         Total Earned:
+                        </Heading>
+                        <HStack> 
+                          <SimpleGrid>
+                            <HStack>
+                              <Box w="160px" textAlign="right" mr={80}>
+                              <Heading as="h6" style={{color:"lightgray"}}>
+                                {stakesCount > 0 ? realtimeRewards > 0 ? 
+                                  commify(formatEther(realtimeRewards), 4) : 0 : 0}
+                                </Heading>
+                              </Box>
+                              <Image src={logoPRZS} width="15px" mt={-5} ml={-80}></Image>
+                            </HStack>
+                          </SimpleGrid>
+                          
+                      </HStack>
+                      </Box>
+                      <Box w={"50%"}>
+                        <HStack mt={-10}>
+                          &nbsp;&nbsp;<Text size={isMobile ? "small" : "md"}></Text>
+                        </HStack>
+                      </Box>
+                      </HStack>
+                      </SimpleGrid>                    
+                      <SimpleGrid >
+                        <HStack>
+                        <Box w={"50%"} mt={10}>
+                          {/* {stakedBalance > 0 ?
+                          <HStack>
+                            <h5 className="m-0">{timeLeft != "" ? timeLeft : expDate}</h5>
+                          </HStack> : 
+                          <h4 className="m-0">-- -- --</h4>} */}
+
+                        </Box>
+                        <Box w={"50%"}>
+
+                            
+                        </Box>
+                        </HStack>
+                      </SimpleGrid>
+                    <SimpleGrid mt={20}>
+                        <HStack>
+                        <Box w={"50%"}>
+                          {/* <HStack>
+                            <Text>Time left</Text>
+                          </HStack> */}
+                        </Box>
+                        <Box w={"50%"} w={150}>
+                        <Box mt={!isMobile? "-100px" :"-100px"}>
+                          <HStack>                       
+                          {/* <Button 
+                              isDisabled={stakedBalance == 0 || typeof stakedBalance == "undefined"}
+                              w={"200px"}
+                              isDisabled={stakedBalance == 0 || typeof stakedBalance == "undefined"}
+                              style={{marginLeft:"10px", border:"1px solid white", borderRadius:"10px"}}
+                              onClick={() => unStake()}
+                            > 
+                            &nbsp;Unstake & Claim
+                          </Button>                                    */}
+
+                            {stakesCount > 0 ?
+                          <Button 
+                            size="sm" 
+                            borderRadius={10} 
+                            mt={10} 
+                            ml={60}
+                            onClick={() => getRewards()}
+                          >Get Reward</Button> : <></>}
+                          </HStack>
+                          {/* <Text style={{fontSize:"13px"}} ml={10}>You will be able to claim your reward once the countdown ends.</Text>                           */}
+                          </Box>
+                          {stakesCount > 0 ?<Button 
+                            size="sm" 
+                            borderRadius={10} 
+                            mt={10} 
+                            ml={60}
+                            onClick={() => updateMyRewards()}
+                          >Refresh</Button> : <></>}
+                           
+                        </Box>
+                        </HStack>
+                      </SimpleGrid>
+                  </Box>
+                </Box>
+                <br />
+                <Box className="staking-items mt-4 mt-md-0" >
                   <Box className="card no-hover staking-card">
+                  <Heading as="h4" size="md" mt={-20}>Phase 1 (Old)</Heading>
                     <SimpleGrid >
                         <HStack>
-                        <Box w={"20%"} style={{marginBottom: "10px"}}>
-                          <HStack >
-                            <h5 className="m-0" style={{width:"220px"}}>{
-                              isUserStaked ? realtimeRewards > 0 ? 
-                              commify(realtimeRewards.toFixed(2)) : 0 : 0
-                            }</h5> 
-                          </HStack>
+                        <Box w={"50%"} style={{marginBottom: "10px"}} >
+                          <HStack> 
+                          <SimpleGrid>
+                            <HStack>
+                              <Box w="160px" textAlign="right" mr={80}>
+                              <Heading as="h6" style={{color:"lightgray"}}>
+                                {stakedBalance > 0 ? accumulatedRewards > 0 ? 
+                                  commify(accumulatedRewards, 2) : 0 : 0}
+                                </Heading>
+                              </Box>
+                              <Image src={logoPRZS} width="15px" mt={-5} ml={-80}></Image>
+                            </HStack>
+                          </SimpleGrid>
+                          
+                      </HStack>                          
                         </Box>
                         <Box w={"50%"}>
                           <HStack mt={-10}>
@@ -492,17 +1060,16 @@ const Staking: React.FC = () => {
                         <Box w={"50%"} mt={10}>
                           {stakedBalance > 0 ?
                           <HStack>
-                            <h5 className="m-0">{timeLeft != "" ? timeLeft : expDate}</h5>
+                            <Heading as="h5" className="m-0" fontColor="lightgray">{timeLeft != "" ? timeLeft : expDate}</Heading>
                           </HStack> : 
                           <h4 className="m-0">-- -- --</h4>}
                         </Box>
                         <Box w={"50%"}>
-
-                          
+                           
                         </Box>
                         </HStack>
                       </SimpleGrid>
-                    <SimpleGrid mt={20}>
+                      <SimpleGrid mt={20}>
                         <HStack>
                         <Box w={"50%"}>
                           <HStack>
@@ -510,7 +1077,7 @@ const Staking: React.FC = () => {
                           </HStack>
                         </Box>
                         <Box w={"50%"} w={150}>
-                        <Box mt={!isMobile? "-100px" :"-100px"}>
+                          <Box mt={!isMobile? "-100px" :"-100px"}>
                           <HStack>                       
                           <Button 
                               isDisabled={stakedBalance == 0 || typeof stakedBalance == "undefined"}
@@ -523,7 +1090,7 @@ const Staking: React.FC = () => {
                           </Button>                                   
                           </HStack>
                           <Text style={{fontSize:"13px"}} ml={10}>You will be able to claim your reward once the countdown ends.</Text>                          
-                          </Box>
+                        </Box>
                         </Box>
                         </HStack>
                       </SimpleGrid>

@@ -7,7 +7,7 @@ import { LanguageProvider } from "./core/LanguageProvider";
 import { createWeb3Modal, defaultWagmiConfig } from "@web3modal/wagmi/react";
 
 import { WagmiConfig } from "wagmi";
-import { bsc } from "viem/chains";
+import { bsc, localhost } from "viem/chains";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { switchNetwork, watchNetwork } from "wagmi/actions";
@@ -22,7 +22,7 @@ function App() {
     icons: ["https://avatars.githubusercontent.com/u/37784886"],
   };
 
-  const chains = [bsc];
+  const chains = [bsc, localhost];
   const wagmiConfig = defaultWagmiConfig({
     chains,
     projectId,
@@ -32,15 +32,18 @@ function App() {
   createWeb3Modal({ wagmiConfig, projectId, chains });
 
   watchNetwork(async (network) => {
+    console.log(`Network is ${network.chain?.name}`)
     if (network.chain?.name != "bsc") {
-      try {
-        await switchNetwork({
-          chainId: 56,
-        });
-      } catch (e) {
-        console.error(e);
-      }
+      await switchNetwork({
+        chainId: 56,
+      });
     }
+    // if (network.chain?.name != "localhost") {
+    //   await switchNetwork({
+    //     chainId: 1337,
+    //   });
+    // }
+    
   });
 
   return (
