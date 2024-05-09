@@ -16,11 +16,11 @@ import {
     Select,
     SimpleGrid,
     VStack,
-    // NumberInput,
-    // NumberInputField,
-    // NumberInputStepper,
-    // NumberIncrementStepper,
-    // NumberDecrementStepper,       
+    NumberInput,
+    NumberInputField,
+    NumberInputStepper,
+    NumberIncrementStepper,
+    NumberDecrementStepper,       
     // VStack
 } from '@chakra-ui/react';
 
@@ -33,7 +33,7 @@ import PerezosoStakingAbi from "../core/PerezosoStaking.json";
 import { toast } from "react-toastify";
 
 import { parseEther, formatEther } from "ethers";
-import { commify } from "../utils";
+import { commify, formatNumber } from "../utils";
 import { isMobile } from "react-device-detect";
 import { rewardsMap, depositMap, totalStakingTime } from "../core/Constants";
 import BigNumber from "bignumber.js";
@@ -42,7 +42,7 @@ const Staking: React.FC = () => {
   const ctx = useContext<LanguageContextType>(LanguageContext);
   const { address, connector, isConnected } = useAccount();
 
-  const [amountToStake, setAmountToStake] = useState(parseEther(`${1000000}`));
+  const [amountToStake, setAmountToStake] = useState(parseEther(`${0}`));
   const [isWaitingForApproval, setIsWaitingForApproval] = useState(false);
   const [selectedTier, setSelectedTier] = useState("1");
 
@@ -120,18 +120,18 @@ const Staking: React.FC = () => {
 
         // Assuming weeklyRewards and stakingContractBalance are provided
         // If there's a multiplier based on staking time
-        const tierAPR2 = baseAPR * multipliers[selectedTime];
+        // const tierAPR2 = baseAPR * multipliers[selectedTime];
 
         // Convert APR from percentage to decimal for exponential calculation
-        const aprDecimal = tierAPR2 / 100;
+        // const aprDecimal = tierAPR2 / 100;
 
-        // Calculate APY using continuous compounding formula
-        const apy = (Math.exp(aprDecimal) - 1) * 100;  // Convert it back to percentage
+        // // Calculate APY using continuous compounding formula
+        // const apy = (Math.exp(aprDecimal) - 1) * 100;  // Convert it back to percentage
 
-        const tierAPYReadable = commify(apy);
+        // const tierAPYReadable = commify(apy);
 
-        console.log(`Tier APR: ${tierAPR2.toFixed(2)}%`);
-        console.log(`Tier APY (continuously compounded): ${tierAPYReadable}%`);        
+        // console.log(`Tier APR: ${tierAPR2.toFixed(2)}%`);
+        // console.log(`Tier APY (continuously compounded): ${tierAPYReadable}%`);        
       } 
     }
   
@@ -473,27 +473,27 @@ const Staking: React.FC = () => {
   // };
 
   const handleAmountToStake = (value) => {
-    if (value === "") {
-      setAmountToStake("0");
+    if (value == "") {
+      setAmountToStake(parseEther("0")); // Ensure this is a BigNumber
     } else {
-      // Assuming ethers is available
       try {
-        const formattedValue = parseEther(value);
+        const formattedValue = parseEther(`${value}`);
         setAmountToStake(formattedValue);
       } catch (error) {
         console.error("Error formatting value:", error);
       }
     }
   };
-
+  
   const handleSetSelectedStake = (value) => {
     setSelectedTime(stakes[value].lockPeriod);
     setSelectedStake(value);
   }
   
   const handleStakeAll = () => {
-    setAmountToStake(przsBalance);
+    handleAmountToStake(przsBalance);
   }
+
   useEffect(() => {
     if (amountToStake > 0) {
       // Trigger any action that depends on updated amountToStake
@@ -535,14 +535,14 @@ const Staking: React.FC = () => {
     }    
   }
 
-  const amountToStakeReadable = commify(formatEther(amountToStake));
+  const amountToStakeReadable = formatEther(amountToStake);
   
   let isSelectedPositionUnlocked = false;
   if (stakes) {
     isSelectedPositionUnlocked = stakes[selectedStake]?.lockTime < Math.floor(Date.now() / 1000);
   }
 
-  return(
+   return(
     <>
       <section className="hero-section">
         <Box className="staking-area">
@@ -734,21 +734,35 @@ const Staking: React.FC = () => {
                               <option value='3'>Tier 4</option>
                             </Select> */}
                           <HStack>
+                          {/* <Input 
+                            type="number"
+                            mt={4} 
+                            height={35}
+                            // step={1} // Allow finer control, adjust based on expected input granularity
+                            value={amountToStakeReadable} // Display the formatted value
+                            style={{ border: "1px solid white", borderRadius: "10px", backgroundColor: "gray" }} 
+                            width={180} 
+                            // onChange={(ev) => handleAmountToStake(ev.target.value)} // Handle the input change
+                          /> */}
                           <Input 
-                              type="number"
-                              mt={4} 
-                              height={35}
-                              min={10000000}
-                              step={100000000}
-                              value={amountToStake ? formatEther(amountToStake) : ""}  // Display the formatted value if amountToStake is not zero
-                              style={{ border:"1px solid white", borderRadius:"10px", backgroundColor:"gray"}} 
-                              width={180} 
-                              onChange={(ev) => handleAmountToStake(ev.target.value)}  // Handle the input change
-                            />
-
-                              <Button size="sm" borderRadius={10} mt={5} onClick={() => handleStakeAll()}>Max</Button>
+                            type="text"
+                            mt={4} 
+                            height={35}
+                            placeholder={"type here..."} // Display the formatted value
+                            style={{ border: "1px solid white", borderRadius: "10px", backgroundColor: "gray" }} 
+                            width={180} 
+                            onChange={(ev) => handleAmountToStake(ev.target.value)}
+                           >
+                          {/* <NumberInputField /> */}
+                          {/* <NumberInputStepper mr={10}>
+                            <NumberIncrementStepper />
+                            <NumberDecrementStepper />
+                          </NumberInputStepper> */}
+                        </Input>
+                            <Button size="sm" borderRadius={10} mt={5} onClick={() => handleStakeAll()}>Max</Button>
                           </HStack>
                           </Box>
+                          <VStack mr={95}>
                           <Button 
                             mt={10}
                             isDisabled={amountToStake == 0}
@@ -758,6 +772,12 @@ const Staking: React.FC = () => {
                           > 
                           &nbsp;Stake 
                           </Button> 
+                          <Box w="200px" ml={30}>
+                           {amountToStakeReadable > 0 ?  <Text style={{fontSize:"16px"}} color="lightgray">({formatNumber(Number(amountToStakeReadable))})</Text> : <></>}
+                          </Box>
+                          </VStack>
+
+                          
                         </Box>
                         <Box className="input-area col-lg-6 col-12 mb-3" >
                           {/* <Text>test</Text>
