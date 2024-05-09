@@ -718,8 +718,8 @@ const Staking: React.FC = () => {
                               type="number"
                               mt={4} 
                               height={35}
-                              min={1000000}
-                              step={1000000}
+                              min={10000000}
+                              step={10000000}
                               value={amountToStake ? formatEther(amountToStake) : ""}  // Display the formatted value if amountToStake is not zero
                               style={{ border:"1px solid white", borderRadius:"10px", backgroundColor:"gray"}} 
                               width={180} 
