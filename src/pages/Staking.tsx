@@ -55,7 +55,7 @@ const Staking: React.FC = () => {
 
   const tokenAddress = "0xD83207C127c910e597b8ce77112ED0a56c8C9CD0";
   const stakingAddress = "0xE2DF958c48F0245D823c2dCb012134CfDa9F8f9F";
-  const stakingV2Address = "0xcf7e1668ce15a1df5ea8bd8774030de1e4e0ab6e";
+  const stakingV2Address = "0xe9FD4Aa4cC5A8e4884d88C5E81195B3c4F91ACC8";
 
   const [timeLeft, setTimeLeft] = useState("");
   const [expDate, setExpDate] = useState("");
