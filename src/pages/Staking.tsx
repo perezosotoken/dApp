@@ -55,7 +55,7 @@ const Staking: React.FC = () => {
 
   const tokenAddress = "0xD83207C127c910e597b8ce77112ED0a56c8C9CD0";
   const stakingAddress = "0xE2DF958c48F0245D823c2dCb012134CfDa9F8f9F";
-  const stakingV2Address = "0x1958aAEE0b7aDC4EC3554F546B6d909b408646d3";
+  const stakingV2Address = "0x38da9dA76046d31467772Daf85cc97c2D731EC46";
 
   const [timeLeft, setTimeLeft] = useState("");
   const [expDate, setExpDate] = useState("");
@@ -103,7 +103,7 @@ const Staking: React.FC = () => {
     const calculateAPR = async () => {
       if (stakingContractBalance) {
 
-        // console.log(`${parseEther(`${250_000_000_000}`)} / ${parseEther(formatEther(stakingContractBalance)) - parseEther(`${250_000_000_000}`)}`)
+        console.log(`${parseEther(`${250_000_000_000}`)} / ${parseEther(formatEther(stakingContractBalance)) - parseEther(`${250_000_000_000}`)}`)
         
         const baseAPR =  Number(parseEther(`${250_000_000_000}`)) / Number(formatEther(parseEther(formatEther(stakingContractBalance)) - parseEther(`${250_000_000_000}`)))
         const tierAPR = commify(((formatEther(baseAPR) * multipliers[selectedTime]) * 100), 2);
@@ -667,7 +667,7 @@ const Staking: React.FC = () => {
                           : <></>}
                           </>
                         </Box>
-                        <Box className="input-area col-lg-6 col-12 mb-3"  marginTop={!isMobile && stakesCount > 0 ? -380 : isMobile ? -50 : -110  }>
+                        <Box className="input-area col-lg-6 col-12 mb-3"  marginTop={!isMobile && stakesCount > 0 ? -420 : isMobile ? -50 : -110  }>
                         <br /> <br />
                         <Heading as="h4" size="md">New position</Heading>
                         <Box className="input-text" >
