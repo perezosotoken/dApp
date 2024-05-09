@@ -55,7 +55,7 @@ const Staking: React.FC = () => {
 
   const tokenAddress = "0x53Ff62409B219CcAfF01042Bb2743211bB99882e";
   const stakingAddress = "0xE2DF958c48F0245D823c2dCb012134CfDa9F8f9F";
-  const stakingV2Address = "0x59325609F0Bab01B75da9b5929F108A8E85EF305";
+  const stakingV2Address = "0x5b821d50C0E86b782237fb87456295eD626814eE";
 
   const [timeLeft, setTimeLeft] = useState("");
   const [expDate, setExpDate] = useState("");
@@ -70,7 +70,8 @@ const Staking: React.FC = () => {
     watch: true,
   });
 
-  const {data: stakingContractBalance, refetch: refetchStakingContractBalance} = useContractRead({
+  const {data: stakingContractBalance, refetch: refetchStakingContractBalance} = 
+  useContractRead({
     address: tokenAddress,
     abi: TOKENABI,
     functionName: "balanceOf",
@@ -99,16 +100,18 @@ const Staking: React.FC = () => {
       [key4]: 6,
     };
     
-    
     const calculateAPR = async () => {
       if (stakingContractBalance) {
-        // console.log(`${parseEther(`${13e12}`)} / ${BigInt(stakingContractBalance)}`)
-        const baseAPR = (parseEther(`${13e12}`) / BigInt(stakingContractBalance)) * 100n;  
+
+        console.log(`${parseEther(`${13e12}`)} / ${BigInt(stakingContractBalance) - parseEther(`${13e12}`)}`)
+        
+        const baseAPR = (parseEther(`${13e12}`) / BigInt(stakingContractBalance) - parseEther(`${13e12}`)) * 100n;  
         const tierAPR = baseAPR * BigInt(multipliers[selectedTime]);
+
         setBaseAPR(Number(baseAPR));
         setTierAPR(Number(tierAPR));
 
-        // console.log(`Tier APR is ${tierAPR} base APR is ${baseAPR} staking contract balance is ${stakingContractBalance} multiplier ${multipliers[selectedTime]}`)
+        console.log(`Tier APR is ${tierAPR} base APR is ${baseAPR} staking contract balance is ${stakingContractBalance} multiplier ${multipliers[selectedTime]}`)
       } 
     }
   
