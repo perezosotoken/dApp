@@ -105,7 +105,7 @@ const Staking: React.FC = () => {
 
         console.log(`${parseEther(`${13e12}`)} / ${BigInt(stakingContractBalance) - parseEther(`${13e12}`)}`)
         
-        const baseAPR = (parseEther(`${13e12}`) / BigInt(stakingContractBalance) - parseEther(`${13e12}`)) * 100n;  
+        const baseAPR = (parseEther(`${13e12}`) / BigInt(stakingContractBalance)) * 100n;  
         const tierAPR = baseAPR * BigInt(multipliers[selectedTime]);
 
         setBaseAPR(Number(baseAPR));
