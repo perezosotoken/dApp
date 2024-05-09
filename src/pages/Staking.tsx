@@ -626,7 +626,7 @@ const Staking: React.FC = () => {
                                 <Text style={{fontSize:"11px"}} height={"20px"}>
                                   <HStack>
                                     <Text style={{fontSize:"12px", color:"lightgray"}} fontWeight={"bold"}>
-                                      {commify(formatEther(totalStaked), 4)} 
+                                      {formatNumber(Number(formatEther(totalStaked)))} 
                                     </Text>
                                     <Image src={logoPRZS} width="15px" mt={-25}></Image>
                                   </HStack>
@@ -670,7 +670,7 @@ const Staking: React.FC = () => {
                                 <Text style={{fontSize:"13px"}}>Amount staked</Text>
                               </Box>
                               <Box w={"50%"} >
-                                <Box ><label style={{fontSize:"13px"}}><b>{commify(formatEther(stakes[selectedStake]?.amount), 4)}</b></label></Box>
+                                <Box ><label style={{fontSize:"13px"}}><b>{ formatNumber(Number(formatEther(stakes[selectedStake]?.amount)))}</b></label></Box>
                               </Box>
                               </HStack>
                               <HStack>
