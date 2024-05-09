@@ -106,12 +106,12 @@ const Staking: React.FC = () => {
         // console.log(`${parseEther(`${250_000_000_000}`)} / ${parseEther(formatEther(stakingContractBalance)) - parseEther(`${250_000_000_000}`)}`)
         
         const baseAPR =  Number(parseEther(`${250_000_000_000}`)) / Number(formatEther(parseEther(formatEther(stakingContractBalance)) - parseEther(`${250_000_000_000}`)))
-        const tierAPR = commify(((formatEther(baseAPR) * multipliers[selectedTime]) * 100), 2);
+        const tierAPR = commify(((Number(formatEther(baseAPR)) * multipliers[selectedTime]) * 100), 2);
 
-        setBaseAPR(Number(baseAPR));
-        setTierAPR(Number(tierAPR));
+        setBaseAPR(Number(formatEther(baseAPR)));
+        setTierAPR(Number(0));
 
-        // console.log(`Tier APR is ${tierAPR} base APR is ${baseAPR} staking contract balance is ${stakingContractBalance} multiplier ${multipliers[selectedTime]}`)
+        console.log(`Tier APR is ${tierAPR} base APR is ${baseAPR} staking contract balance is ${stakingContractBalance} multiplier ${multipliers[selectedTime]}`)
       } 
     }
   
