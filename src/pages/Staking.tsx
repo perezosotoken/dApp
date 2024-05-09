@@ -491,7 +491,7 @@ const Staking: React.FC = () => {
   }
   
   const handleStakeAll = () => {
-    handleAmountToStake(przsBalance);
+    setAmountToStake(przsBalance);
   }
 
   useEffect(() => {
@@ -769,11 +769,12 @@ const Staking: React.FC = () => {
                             width={"180px"} 
                             style={{ border:"1px solid white", borderRadius:"10px"}}
                             onClick={() => approve()}
+                            ml={isMobile ? -50 : 0}
                           > 
                           &nbsp;Stake 
                           </Button> 
-                          <Box w="200px" ml={30}>
-                           {amountToStakeReadable > 0 ?  <Text style={{fontSize:"16px"}} color="lightgray">({formatNumber(Number(amountToStakeReadable))})</Text> : <></>}
+                          <Box w="200px" ml={isMobile ? -50 : 30} pb={20} mt={10}>
+                           {amountToStakeReadable > 0 ?  <Text style={{fontSize:"16px"}} color="lightgray">(Staking: {formatNumber(Number(amountToStakeReadable))})</Text> : <></>}
                           </Box>
                           </VStack>
 
