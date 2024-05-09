@@ -113,7 +113,7 @@ const Staking: React.FC = () => {
         const baseAPR = ((numerator / balanceWithoutRewards)) * 100;
 
         const tierAPR = baseAPR * multipliers[selectedTime];
-        const tierAPRReadable = commify(tierAPR, 2);
+        const tierAPRReadable = commify(tierAPR * 52, 2);
 
         setBaseAPR(baseAPR);
         setTierAPR(tierAPRReadable);
@@ -1036,7 +1036,7 @@ const Staking: React.FC = () => {
                     <HStack>
                       <Box w="50%">
                       <Heading as="h4" size="md">
-                         Total Earned:
+                         Total Earned
                         </Heading>
 
                         <HStack>
@@ -1052,7 +1052,7 @@ const Staking: React.FC = () => {
                       </Box>
                       <Box w="50%">
                       <Heading as="h4" size="md">
-                         Position Earned:
+                         {isMobile ? "Position" : "Position Earned"}
                         </Heading>
                         <HStack>
                         <Box w="160px" textAlign="right" mr={80}>
