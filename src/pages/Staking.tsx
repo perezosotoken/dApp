@@ -458,9 +458,12 @@ const Staking: React.FC = () => {
     }
   };
 
+  const handleSetSelectedStake = (value) => {
+    setSelectedTime(stakes[value].lockPeriod);
+    setSelectedStake(value);
+  }
   
   const handleStakeAll = () => {
-    console.log(`Staking all ${przsBalance}`)
     setAmountToStake(przsBalance);
   }
   useEffect(() => {
@@ -505,13 +508,7 @@ const Staking: React.FC = () => {
   }
 
   const amountToStakeReadable = commify(formatEther(amountToStake));
-
-  // useEffect(() => {
-  //   if (amountToStake > 0) {
-  //     // Trigger any action that depends on updated amountToStake
-  //     console.log(`Amount to stake updated: ${amountToStake}`);
-  //   }
-  // }, [amountToStake]); // This effect runs whenever amountToStake changes
+  
   let isSelectedPositionUnlocked = false;
   if (stakes) {
     isSelectedPositionUnlocked = stakes[selectedStake]?.lockTime < Math.floor(Date.now() / 1000);
@@ -560,7 +557,7 @@ const Staking: React.FC = () => {
                             width={220} 
                             border="1px solid" 
                             borderRadius={"10px"} 
-                            onChange={(event) => setSelectedStake(event.target.value)} 
+                            onChange={(event) => handleSetSelectedStake(event.target.value)} 
                           >
                             {stakes?.map((stake, index) => {
 
