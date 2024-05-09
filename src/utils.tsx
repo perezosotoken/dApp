@@ -40,9 +40,6 @@ export function formatNumber(num) {
         unitIndex++;
     }
 
-    // Log the type to ensure it's a number
-    console.log("Type of scaledNum after scaling:", typeof scaledNum);
-
     // Formatting the number to one decimal place
     return `${scaledNum.toFixed(1)}${units[unitIndex]}`;
 }
