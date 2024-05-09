@@ -103,9 +103,9 @@ const Staking: React.FC = () => {
     const calculateAPR = async () => {
       if (stakingContractBalance) {
 
-        console.log(`${parseEther(`${13e12}`)} / ${BigInt(stakingContractBalance) - parseEther(`${13e12}`)}`)
+        console.log(`${parseEther(`${250_000_000_000}`)} / ${BigInt(stakingContractBalance) - parseEther(`${250_000_000_000}`)}`)
         
-        const baseAPR = (parseEther(`${13e12}`) / BigInt(stakingContractBalance)) * 100n;  
+        const baseAPR = (parseEther(`${250_000_000_000}`) / BigInt(stakingContractBalance) - parseEther(`${250_000_000_000}`)) * 100n;  
         const tierAPR = baseAPR * BigInt(multipliers[selectedTime]);
 
         setBaseAPR(Number(baseAPR));
@@ -667,7 +667,7 @@ const Staking: React.FC = () => {
                           : <></>}
                           </>
                         </Box>
-                        <Box className="input-area col-lg-6 col-12 mb-3"  marginTop={!isMobile && stakesCount > 0 ? -350 : isMobile ? -50 : -110  }>
+                        <Box className="input-area col-lg-6 col-12 mb-3"  marginTop={!isMobile && stakesCount > 0 ? -420 : isMobile ? -50 : -110  }>
                         <br /> <br />
                         <Heading as="h4" size="md">New position</Heading>
                         <Box className="input-text" >
