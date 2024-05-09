@@ -54,9 +54,9 @@ const Staking: React.FC = () => {
 
   const [accumulatedRewards, setAccumulatedRewards] = useState(0);
 
-  const tokenAddress = "0xD83207C127c910e597b8ce77112ED0a56c8C9CD0";
+  const tokenAddress = "0x53ff62409b219ccaff01042bb2743211bb99882e";
   const stakingAddress = "0xE2DF958c48F0245D823c2dCb012134CfDa9F8f9F";
-  const stakingV2Address = "0x38da9dA76046d31467772Daf85cc97c2D731EC46";
+  const stakingV2Address = "0x1FbDB5c46F6a33eC22a7AF990518Ed4610864b2c";
 
   const [timeLeft, setTimeLeft] = useState("");
   const [expDate, setExpDate] = useState("");
@@ -117,6 +117,21 @@ const Staking: React.FC = () => {
 
         setBaseAPR(baseAPR);
         setTierAPR(tierAPRReadable);
+
+        // Assuming weeklyRewards and stakingContractBalance are provided
+        // If there's a multiplier based on staking time
+        const tierAPR2 = baseAPR * multipliers[selectedTime];
+
+        // Convert APR from percentage to decimal for exponential calculation
+        const aprDecimal = tierAPR2 / 100;
+
+        // Calculate APY using continuous compounding formula
+        const apy = (Math.exp(aprDecimal) - 1) * 100;  // Convert it back to percentage
+
+        const tierAPYReadable = commify(apy);
+
+        console.log(`Tier APR: ${tierAPR2.toFixed(2)}%`);
+        console.log(`Tier APY (continuously compounded): ${tierAPYReadable}%`);        
       } 
     }
   
@@ -143,7 +158,6 @@ const Staking: React.FC = () => {
   //   setEarnedOnStake(earnedOnStake);
   // }, [selectedStake]);
 
-
   const {data: stakesCount } = useContractRead({
     address: stakingV2Address,
     abi: StakingRewardsArtifact.abi,
@@ -152,26 +166,20 @@ const Staking: React.FC = () => {
   });
 
   // console.log(`Stakes count is ${stakesCount} selected stake is ${selectedStake} realtime rewards is ${realtimeRewards}`)
-  // const fetchRewardsByPosition = async (position) => {
-  //   const { data: earnedOnStake } = await useContractRead({
-  //     address: stakingV2Address,
-  //     abi: StakingRewardsArtifact.abi,
-  //     functionName: "earnedOnStake",
-  //     args: [address, position],
-  //     watch: true,
-  //   });
-
-  //   console.log(`Earned on stake #${position} ${earnedOnStake}`)
-  // }
+  const { data: earnedOnStake } = useContractRead({
+    address: stakingV2Address,
+    abi: StakingRewardsArtifact.abi,
+    functionName: "earnedOnStake",
+    args: [address, selectedStake],
+    watch: true,
+  });
+ 
 
   // Setup an interval to refetch rewards every 5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       refetchRewards();  // This will refetch the contract read
-      // for (let i = 0; i < stakesCount; i++) {
-      //   console.log(`Fetching position ${i}`)
-      //   fetchRewardsByPosition(i);
-      // }
+
     }, 5000);
 
     return () => clearInterval(interval);
@@ -309,6 +317,26 @@ const Staking: React.FC = () => {
       }
       if (data?.stack?.includes("transfer amount exceeds balance")) {
         toast("Not enough PRZS in your wallet.");
+        return;
+      }
+      toast("Error, Transaction unsuccessful.");
+    },
+  });
+
+  const {isLoading: exitingPosition, write: withdraw} = useContractWrite({
+    address: stakingV2Address,
+    abi: StakingRewardsArtifact.abi,
+    functionName: "withdraw",
+    args: [selectedStake],
+    onSuccess() {
+      toast("Successfully withdrew your stake!");
+      setTimeout(() => {
+        window.location.reload();
+      }, 5000);    
+    },
+    onError() {
+      if (!isConnected) {
+        toast("Please connect your wallet first");
         return;
       }
       toast("Error, Transaction unsuccessful.");
@@ -653,22 +681,13 @@ const Staking: React.FC = () => {
                                   <Box><label style={{fontSize:"13px"}}><b>{Number(stakes[selectedStake]?.multiplier)}x</b></label></Box>
                                 </Box>
                               </HStack>
-                              <Box w="100%">
-                                <Button 
-                                  mt={10}
-                                  w={180} 
-                                  style={{border:"1px solid white", borderRadius:"10px"}}
-                                  onClick={() => getRewards()}
-                                  isDisabled={!isSelectedPositionUnlocked}
-                                  >Exit
-                                  </Button>
-                              </Box>
+ 
                             </SimpleGrid>
                             </Box>
                           : <></>}
                           </>
                         </Box>
-                        <Box className="input-area col-lg-6 col-12 mb-3"  marginTop={!isMobile && stakesCount > 0 ? -420 : isMobile ? -50 : -110  }>
+                        <Box className="input-area col-lg-6 col-12 mb-3"  marginTop={!isMobile && stakesCount > 0 ? -350 : isMobile ? -50 : -110  }>
                         <br /> <br />
                         <Heading as="h4" size="md">New position</Heading>
                         <Box className="input-text" >
@@ -720,7 +739,7 @@ const Staking: React.FC = () => {
                               mt={4} 
                               height={35}
                               min={10000000}
-                              step={1000000000000}
+                              step={100000000}
                               value={amountToStake ? formatEther(amountToStake) : ""}  // Display the formatted value if amountToStake is not zero
                               style={{ border:"1px solid white", borderRadius:"10px", backgroundColor:"gray"}} 
                               width={180} 
@@ -938,38 +957,98 @@ const Staking: React.FC = () => {
                   <SimpleGrid>
                   <Box w="50%" >
                     
-                    <HStack><Heading as="h4">APR</Heading> <label fontSize={"md"} fontColor="gray" mt={-2}>{commify(Number(tierAPR))}%</label></HStack>
+                    <HStack><Heading as="h4">APR</Heading> 
+                    <label fontSize={"md"} fontColor="gray" mt={-2}>
+                      {commify(tierAPR)}%
+                      </label>
+                      </HStack>
+                  </Box>
+                  <Box w="50%">
+                  <SimpleGrid mt={20}>
+                        <HStack>
+                        <Box w={"50%"} ml={150}>
+                          {/* <HStack>
+                            <Text>Time left</Text>
+                          </HStack> */}
+                        </Box>
+                        <Box w={"50%"} w={150}>
+                        <Box mt={!isMobile? "-100px" :"-100px"}>
+                          {/* <Button 
+                              isDisabled={stakedBalance == 0 || typeof stakedBalance == "undefined"}
+                              w={"200px"}
+                              isDisabled={stakedBalance == 0 || typeof stakedBalance == "undefined"}
+                              style={{marginLeft:"10px", border:"1px solid white", borderRadius:"10px"}}
+                              onClick={() => unStake()}
+                            > 
+                            &nbsp;Unstake & Claim
+                          </Button>                                    */}
+                          <VStack>
+                            {stakesCount > 0 ?
+                          <Button 
+                            size="sm" 
+                            borderRadius={10} 
+                            mt={10} 
+                            ml={60}
+                            w={120} 
+                            onClick={() => getRewards()}
+                          >Get Reward</Button> : <></>}
+                          <Button 
+                            mt={10}
+                            ml={60}
+                            w={120} 
+                            style={{border:"1px solid white", borderRadius:"10px"}}
+                            onClick={() => withdraw()}
+                            isDisabled={!isSelectedPositionUnlocked}
+                            >Exit
+                            </Button>
+                           </VStack>                          
+                          {/* <Text style={{fontSize:"13px"}} ml={10}>You will be able to claim your reward once the countdown ends.</Text>                           */}
+                          </Box>
+
+                        </Box>
+                        </HStack>
+                      </SimpleGrid>
                   </Box>
                 </SimpleGrid>
-
-                    <SimpleGrid >
-                      <HStack>
-                      <Box w={"50%"} style={{marginBottom: "10px"}} >
+                  
+                  <SimpleGrid>
+                    <HStack>
+                      <Box w="50%">
                       <Heading as="h4" size="md">
                          Total Earned:
                         </Heading>
-                        <HStack> 
-                          <SimpleGrid>
-                            <HStack>
-                              <Box w="160px" textAlign="right" mr={80}>
-                              <Heading as="h6" style={{color:"lightgray"}}>
-                                {stakesCount > 0 ? realtimeRewards > 0 ? 
-                                  commify(formatEther(realtimeRewards), 4) : 0 : 0}
-                                </Heading>
-                              </Box>
-                              <Image src={logoPRZS} width="15px" mt={-5} ml={-80}></Image>
-                            </HStack>
-                          </SimpleGrid>
-                          
-                      </HStack>
-                      </Box>
-                      <Box w={"50%"}>
-                        <HStack mt={-10}>
-                          &nbsp;&nbsp;<Text size={isMobile ? "small" : "md"}></Text>
+
+                        <HStack>
+                          <Box w="160px" textAlign="right" mr={80} >
+                          <Heading as="h6" style={{color:"lightgray"}}>
+                            {stakesCount > 0 ? realtimeRewards > 0 ? 
+                              commify(formatEther(realtimeRewards), 4) : 0 : 0}
+                            </Heading>
+                          </Box>
+                          <Image src={logoPRZS} width="15px" mt={-5} ml={-80}></Image>
                         </HStack>
+
                       </Box>
-                      </HStack>
-                      </SimpleGrid>                    
+                      <Box w="50%">
+                      <Heading as="h4" size="md">
+                         Position Earned:
+                        </Heading>
+                        <HStack>
+                        <Box w="160px" textAlign="right" mr={80}>
+                          <Heading as="h6" style={{color:"lightgray"}}>
+                            {stakesCount > 0 ? earnedOnStake > 0 ? 
+                              commify(formatEther(earnedOnStake), 4) : 0 : "--"}
+                            </Heading>
+                          </Box>
+                          <Image src={logoPRZS} width="15px" mt={-5} ml={-80}></Image>
+                          </HStack>
+
+                        </Box>
+                    </HStack>
+                  </SimpleGrid>
+
+
+                    
                       <SimpleGrid >
                         <HStack>
                         <Box w={"50%"} mt={10}>
@@ -986,48 +1065,7 @@ const Staking: React.FC = () => {
                         </Box>
                         </HStack>
                       </SimpleGrid>
-                    <SimpleGrid mt={20}>
-                        <HStack>
-                        <Box w={"50%"}>
-                          {/* <HStack>
-                            <Text>Time left</Text>
-                          </HStack> */}
-                        </Box>
-                        <Box w={"50%"} w={150}>
-                        <Box mt={!isMobile? "-100px" :"-100px"}>
-                          <HStack>                       
-                          {/* <Button 
-                              isDisabled={stakedBalance == 0 || typeof stakedBalance == "undefined"}
-                              w={"200px"}
-                              isDisabled={stakedBalance == 0 || typeof stakedBalance == "undefined"}
-                              style={{marginLeft:"10px", border:"1px solid white", borderRadius:"10px"}}
-                              onClick={() => unStake()}
-                            > 
-                            &nbsp;Unstake & Claim
-                          </Button>                                    */}
 
-                            {stakesCount > 0 ?
-                          <Button 
-                            size="sm" 
-                            borderRadius={10} 
-                            mt={10} 
-                            ml={60}
-                            onClick={() => getRewards()}
-                          >Get Reward</Button> : <></>}
-                          </HStack>
-                          {/* <Text style={{fontSize:"13px"}} ml={10}>You will be able to claim your reward once the countdown ends.</Text>                           */}
-                          </Box>
-                          {stakesCount > 0 ?<Button 
-                            size="sm" 
-                            borderRadius={10} 
-                            mt={10} 
-                            ml={60}
-                            onClick={() => updateMyRewards()}
-                          >Refresh</Button> : <></>}
-                           
-                        </Box>
-                        </HStack>
-                      </SimpleGrid>
                   </Box>
                 </Box>
                 <br />
