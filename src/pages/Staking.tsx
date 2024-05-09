@@ -638,7 +638,7 @@ const Staking: React.FC = () => {
                                 <Text style={{fontSize:"14px"}}>Total positions</Text>
                               </Box>
                               <Box w={"60%"}>
-                                <Text style={{fontSize:"13px"}}>{Number(stakesCount)}</Text>
+                                <Text style={{fontSize:"13px"}}>{!isNaN(Number(stakesCount)) ? Number(stakesCount) : 0}</Text>
                               </Box>
                             </HStack>
                           </SimpleGrid>
