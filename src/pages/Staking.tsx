@@ -36,6 +36,7 @@ import { parseEther, formatEther } from "ethers";
 import { commify } from "../utils";
 import { isMobile } from "react-device-detect";
 import { rewardsMap, depositMap, totalStakingTime } from "../core/Constants";
+import BigNumber from "bignumber.js";
 
 const Staking: React.FC = () => {
   const ctx = useContext<LanguageContextType>(LanguageContext);
@@ -102,16 +103,20 @@ const Staking: React.FC = () => {
     
     const calculateAPR = async () => {
       if (stakingContractBalance) {
-
-        console.log(`${parseEther(`${250_000_000_000}`)} / ${parseEther(formatEther(stakingContractBalance)) - parseEther(`${250_000_000_000}`)}`)
         
-        const baseAPR =  Number(parseEther(`${250_000_000_000}`)) / Number(formatEther(parseEther(formatEther(stakingContractBalance)) - parseEther(`${250_000_000_000}`)))
-        const tierAPR = commify(((formatEther(baseAPR) * multipliers[selectedTime]) * 100), 2);
+        const weeklyRewards = 250_000_000_000;
 
-        setBaseAPR(Number(baseAPR));
-        setTierAPR(Number(tierAPR));
+        const stakingContractBalanceReadable = formatEther(stakingContractBalance); 
+        const balanceWithoutRewards = Number(stakingContractBalanceReadable) - weeklyRewards;
 
-        // console.log(`Tier APR is ${tierAPR} base APR is ${baseAPR} staking contract balance is ${stakingContractBalance} multiplier ${multipliers[selectedTime]}`)
+        const numerator = weeklyRewards;
+        const baseAPR = ((numerator / balanceWithoutRewards)) * 100;
+
+        const tierAPR = baseAPR * multipliers[selectedTime];
+        const tierAPRReadable = commify(tierAPR, 2);
+
+        setBaseAPR(baseAPR);
+        setTierAPR(tierAPRReadable);
       } 
     }
   
@@ -359,7 +364,6 @@ const Staking: React.FC = () => {
 
       setAccumulatedRewards(accumulatedRewards);
       
-      // console.log(`Rewards per second ${rewardPerSecond} Staked balance ${stakedBalance} Got accumulated rewards ${accumulatedRewards}`)
       function calculateTimeLeft(unlockTime) {
         const now = Math.floor(Date.now() / 1000);  
     
@@ -719,7 +723,7 @@ const Staking: React.FC = () => {
                               mt={4} 
                               height={35}
                               min={10000000}
-                              step={10000000}
+                              step={1000000000000}
                               value={amountToStake ? formatEther(amountToStake) : ""}  // Display the formatted value if amountToStake is not zero
                               style={{ border:"1px solid white", borderRadius:"10px", backgroundColor:"gray"}} 
                               width={180} 
