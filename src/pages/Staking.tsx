@@ -117,21 +117,7 @@ const Staking: React.FC = () => {
 
         setBaseAPR(baseAPR);
         setTierAPR(tierAPRReadable);
-
-        // Assuming weeklyRewards and stakingContractBalance are provided
-        // If there's a multiplier based on staking time
-        // const tierAPR2 = baseAPR * multipliers[selectedTime];
-
-        // Convert APR from percentage to decimal for exponential calculation
-        // const aprDecimal = tierAPR2 / 100;
-
-        // // Calculate APY using continuous compounding formula
-        // const apy = (Math.exp(aprDecimal) - 1) * 100;  // Convert it back to percentage
-
-        // const tierAPYReadable = commify(apy);
-
-        // console.log(`Tier APR: ${tierAPR2.toFixed(2)}%`);
-        // console.log(`Tier APY (continuously compounded): ${tierAPYReadable}%`);        
+    
       } 
     }
   
@@ -142,22 +128,6 @@ const Staking: React.FC = () => {
     return () => clearInterval(interval);
   }, [stakingContractBalance, selectedTime]);
       
-  // const { data: earnedOnStake, refetch: refetchEarnedOnStake } = useContractRead({
-  //   address: stakingV2Address,
-  //   abi: StakingRewardsArtifact.abi,
-  //   functionName: "earnedOnStake",
-  //   args: [address, selectedStake],
-  //   watch: true,
-  // });
-
-  // console.log(`Earned on stake #${selectedStake} ${earnedOnStake}`)
-  // useEffect(() => {
-
-
-  //   console.log(`Earned on stake #${selectedStake} ${earnedOnStake}`)
-  //   setEarnedOnStake(earnedOnStake);
-  // }, [selectedStake]);
-
   const {data: stakesCount } = useContractRead({
     address: stakingV2Address,
     abi: StakingRewardsArtifact.abi,
@@ -191,10 +161,6 @@ const Staking: React.FC = () => {
     functionName: "getAllStakes",
     args: [address],
   });
-
-  // console.log(StakingRewardsArtifact.abi)
-  // console.log(`Reading from  ${stakingV2Address}`)
-  // console.log(stakes)
   
   const totalStaked = stakes?.reduce((acc, stake) => acc + stake.amount, 0n) || 0;
 
@@ -430,7 +396,8 @@ const Staking: React.FC = () => {
         setIsWaitingForApproval(false);
       }, 5000);
     },
-    onError() {
+    onError(data) {
+      console.error(data?.stack)
       if (!isConnected) {
         toast("Please connect your wallet first");
         return;
@@ -463,14 +430,6 @@ const Staking: React.FC = () => {
     toast("Error, Transaction unsuccessful.");
     },
   });
-
-  
-  // const handleAmountToStake = (value) => {
-  //   // console.log(`Got value ${parseEther(`${parseFloat(Number(value))}`)}`)
-  //   if (typeof value != "undefined") {
-  //     setAmountToStake(parseEther(`${value}`));
-  //   }
-  // };
 
   const handleAmountToStake = (value) => {
     if (value == "") {
@@ -545,6 +504,16 @@ const Staking: React.FC = () => {
    return(
     <>
       <section className="hero-section">
+        {/* <Box w="100%" background="tomato" height="auto">
+          
+            <VStack>
+              <Text fontSize="2xl" ml={'25%'} color="lightgray"   fontWeight="bold">
+                Your positions have stopped generating rewards. Please unstake to continue!
+              </Text>
+              <HStack><b>APR:</b> <Text><b>0%</b></Text></HStack>
+            </VStack>
+
+        </Box> */}
         <Box className="staking-area">
           <Box className="container">
             <Box className="row justify-content-center">
@@ -588,16 +557,6 @@ const Staking: React.FC = () => {
                             onChange={(event) => handleSetSelectedStake(event.target.value)} 
                           >
                             {stakes?.map((stake, index) => {
-
-                              // const options = {
-                              //   weekday: "long",
-                              //   year: "numeric",
-                              //   month: "long",
-                              //   day: "numeric",
-                              // };
-                              
-                              // options.timeZone = "UTC";
-                              // options.timeZoneName = "short";
 
                               return (
                                 <>
@@ -822,7 +781,7 @@ const Staking: React.FC = () => {
                       </Box>
                     </Box>
                   </Box>                   
-                  {stakedBalance == 0 || typeof stakedBalance == "undefined" ?
+                  {/* {stakedBalance == 0 || typeof stakedBalance == "undefined" ?
                    <Box className="tab-content mt-md-3" id="myTabContent">
                     <Heading as="h4" size="md">Phase 1 (Old)</Heading>
                     <Text style={{fontSize:"13px", marginTop:"-20px"}}>
@@ -958,7 +917,7 @@ const Staking: React.FC = () => {
                       </Box>
                     </Box>
                   </Box> : 
-                  <></>}
+                  <></>} */}
                   {/* <Box className="tab-content mt-md-3" id="myTabContent">
                     
                     <Box
@@ -1050,8 +1009,8 @@ const Staking: React.FC = () => {
                         <HStack>
                           <Box w="160px" textAlign="right" mr={80} >
                           <Heading as="h6" style={{color:"lightgray"}}>
-                            {stakesCount > 0 ? realtimeRewards > 0 ? 
-                              commify(formatEther(realtimeRewards), 4) : 0 : 0}
+                            {stakesCount > 0 && realtimeRewards > 0 ? 
+                              commify(formatEther(realtimeRewards), 4) : 0}
                             </Heading>
                           </Box>
                           <Image src={logoPRZS} width="15px" mt={-5} ml={-80}></Image>
@@ -1065,8 +1024,8 @@ const Staking: React.FC = () => {
                         <HStack>
                         <Box w="160px" textAlign="right" mr={80}>
                           <Heading as="h6" style={{color:"lightgray"}}>
-                            {stakesCount > 0 ? earnedOnStake > 0 ? 
-                              commify(formatEther(earnedOnStake), 4) : 0 : "--"}
+                            {stakesCount > 0 && earnedOnStake > 0 ? 
+                              commify(formatEther(earnedOnStake), 4) : 0}
                             </Heading>
                           </Box>
                           <Image src={logoPRZS} width="15px" mt={-5} ml={-80}></Image>
