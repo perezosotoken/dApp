@@ -759,25 +759,33 @@ const Staking: React.FC = () => {
                             <NumberDecrementStepper />
                           </NumberInputStepper> */}
                         </Input>
-                            <Button size="sm" borderRadius={10} mt={5} onClick={() => handleStakeAll()}>Max</Button>
+                            <Button isDisabled={przsBalance == 0} size="sm" borderRadius={10} mt={5} onClick={() => handleStakeAll()}>Max</Button>
+                            {isMobile ? 
+                              <Button 
+                              isDisabled={amountToStake == 0 || przsBalance == 0}
+                              width={"120px"} 
+                              style={{ border:"1px solid white", borderRadius:"10px"}}
+                              onClick={() => approve()}
+                            > 
+                            &nbsp;Stake 
+                            </Button> : <></>}
                           </HStack>
                           </Box>
                           <VStack mr={95}>
-                          <Button 
-                            mt={10}
-                            isDisabled={amountToStake == 0}
-                            width={"180px"} 
-                            style={{ border:"1px solid white", borderRadius:"10px"}}
-                            onClick={() => approve()}
-                            ml={isMobile ? -50 : 0}
-                          > 
-                          &nbsp;Stake 
-                          </Button> 
-                          <Box w="200px" ml={isMobile ? -50 : 30} pb={20} mt={10}>
+                          <Box w="200px" ml={isMobile ? "-2vh" : "1vh"} pb={20} mt={10}>
                            {amountToStakeReadable > 0 ?  <Text ml={isMobile ? 18 : 0} style={{fontSize:"16px"}} color="lightgray">(Staking: {formatNumber(Number(amountToStakeReadable))})</Text> : <></>}
                           </Box>
                           </VStack>
-
+                          {!isMobile ? 
+                              <Button 
+                              mt={-20}
+                              isDisabled={amountToStake == 0 || przsBalance == 0}
+                              width={"120px"} 
+                              style={{ border:"1px solid white", borderRadius:"10px"}}
+                              onClick={() => approve()}
+                            > 
+                            &nbsp;Stake 
+                            </Button> : <></>}
                           
                         </Box>
                         <Box className="input-area col-lg-6 col-12 mb-3" >
