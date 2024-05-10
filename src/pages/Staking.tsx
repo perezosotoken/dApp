@@ -774,7 +774,7 @@ const Staking: React.FC = () => {
                           &nbsp;Stake 
                           </Button> 
                           <Box w="200px" ml={isMobile ? -50 : 30} pb={20} mt={10}>
-                           {amountToStakeReadable > 0 ?  <Text style={{fontSize:"16px"}} color="lightgray">(Staking: {formatNumber(Number(amountToStakeReadable))})</Text> : <></>}
+                           {amountToStakeReadable > 0 ?  <Text ml={isMobile ? 18 : 0} style={{fontSize:"16px"}} color="lightgray">(Staking: {formatNumber(Number(amountToStakeReadable))})</Text> : <></>}
                           </Box>
                           </VStack>
 
