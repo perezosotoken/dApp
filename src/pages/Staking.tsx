@@ -475,7 +475,7 @@ const Staking: React.FC = () => {
     if (Number(value) >= 0) {
        
       handleAmountToStake(parseEther(`${getDepositAmount(value)}`));
-      console.log(`${getDepositAmount(value)}`)
+      // console.log(`${getDepositAmount(value)}`)
     } else {
       handleAmountToStake(0);
       return;
@@ -781,7 +781,7 @@ const Staking: React.FC = () => {
                       </Box>
                     </Box>
                   </Box>                   
-                  {/* {stakedBalance == 0 || typeof stakedBalance == "undefined" ?
+                   {stakedBalance == 0 || typeof stakedBalance == "undefined" ?
                    <Box className="tab-content mt-md-3" id="myTabContent">
                     <Heading as="h4" size="md">Phase 1 (Old)</Heading>
                     <Text style={{fontSize:"13px", marginTop:"-20px"}}>
@@ -917,7 +917,7 @@ const Staking: React.FC = () => {
                       </Box>
                     </Box>
                   </Box> : 
-                  <></>} */}
+                  <></>} 
                   {/* <Box className="tab-content mt-md-3" id="myTabContent">
                     
                     <Box
