@@ -323,7 +323,10 @@ const Staking: React.FC = () => {
         
       function calculateAccumulatedRewards(startTimeInSeconds, rewardPerSecond) {
 
-        // console.log(`Got rewards per second ${rewardPerSecond}`)
+        console.log(`Got rewards per second ${rewardPerSecond}`)
+        console.log(`Staked balance ${stakedBalance}`)
+        console.log(`Accumulated rewards ${accumulatedRewards}`)
+
         const currentTimeInSeconds = Math.floor(Date.now() / 1000); 
         const elapsedTimeInSeconds = currentTimeInSeconds - startTimeInSeconds;
         const accumulatedRewards = elapsedTimeInSeconds * rewardPerSecond;
