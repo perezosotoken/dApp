@@ -42,6 +42,7 @@ const Staking: React.FC = () => {
   const ctx = useContext<LanguageContextType>(LanguageContext);
   const { address, connector, isConnected } = useAccount();
 
+  const [amountToStakeV1, setAmountToStakeV1] = useState(parseEther(`${0}`));
   const [amountToStake, setAmountToStake] = useState(parseEther(`${0}`));
   const [isWaitingForApproval, setIsWaitingForApproval] = useState(false);
   const [selectedTier, setSelectedTier] = useState("1");
@@ -443,6 +444,20 @@ const Staking: React.FC = () => {
       }
     }
   };
+
+  const handleAmountToStakeV1 = (value) => {
+    if (value == "") {
+      setAmountToStakeV1(parseEther("0")); // Ensure this is a BigNumber
+    } else {
+      try {
+        const formattedValue = parseEther(`${value}`);
+        setAmountToStakeV1(formattedValue);
+      } catch (error) {
+        console.error("Error formatting value:", error);
+      }
+    }
+  };
+  
   
   const handleSetSelectedStake = (value) => {
     setSelectedTime(stakes[value].lockPeriod);
@@ -482,6 +497,19 @@ const Staking: React.FC = () => {
     }
   }
 
+  const handleSelectTierV1 = (value: string) => {
+    setSelectedTierV1(value);
+    // console.log(`Selected tier is ${value}`)
+    if (Number(value) >= 0) {
+       
+      handleAmountToStakeV1(parseEther(`${getDepositAmount(value)}`));
+      // console.log(`${getDepositAmount(value)}`)
+    } else {
+      handleAmountToStakeV1(0);
+      return;
+    }
+  }
+
   const handleSelectTime = (value: string) => {
     setSelectedTime(value);
   }
@@ -495,7 +523,8 @@ const Staking: React.FC = () => {
   }
 
   const amountToStakeReadable = formatEther(amountToStake);
-  
+  const amountToStakeReadableV1 = formatEther(amountToStakeV1);
+
   let isSelectedPositionUnlocked = false;
   if (stakes) {
     isSelectedPositionUnlocked = stakes[selectedStake]?.lockTime < Math.floor(Date.now() / 1000);
@@ -804,7 +833,7 @@ const Staking: React.FC = () => {
                               height={40}
                               fontSize={13}
                               style={{border:"1px solid white", borderRadius:"10px", backgroundColor:"gray"}}
-                              onChange={(ev) => handleSelectTier(ev.target.value)} 
+                              onChange={(ev) => handleSelectTierV1(ev.target.value)} 
                               mt={4} 
                             >
                               <option value='"-1"'>Choose tier</option>
@@ -845,7 +874,7 @@ const Staking: React.FC = () => {
                               <Input 
                                   mt={4} 
                                   placeholder="--"
-                                  value={commify(amountToStakeReadable)}
+                                  value={commify(amountToStakeReadableV1)}
                                   height={35} 
                                   placeHolder="0.0000" 
                                   style={{ border:"1px solid white", borderRadius:"10px", backgroundColor:"gray"}} 
