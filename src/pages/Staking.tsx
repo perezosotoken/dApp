@@ -42,22 +42,24 @@ const Staking: React.FC = () => {
   const ctx = useContext<LanguageContextType>(LanguageContext);
   const { address, connector, isConnected } = useAccount();
 
+
+  /** V1 Variables */
   const [amountToStakeV1, setAmountToStakeV1] = useState(parseEther(`${0}`));
-  const [amountToStake, setAmountToStake] = useState(parseEther(`${0}`));
-  const [isWaitingForApproval, setIsWaitingForApproval] = useState(false);
-  const [selectedTier, setSelectedTier] = useState("1");
-
   const [selectedTierV1, setSelectedTierV1] = useState("0");
- 
-  const [selectedTime, setSelectedTime] = useState("2592000");
   const [selectedTimeV1, setSelectedTimeV1] = useState("0");
-  const [selectedStake, setSelectedStake] = useState("0");
-
   const [accumulatedRewards, setAccumulatedRewards] = useState(0);
-
+  
+  /** V2 Variables */
+  const [amountToStake, setAmountToStake] = useState(parseEther(`${0}`));
+  const [selectedTier, setSelectedTier] = useState("1");
+  const [selectedTime, setSelectedTime] = useState("2592000");
+  const [selectedStake, setSelectedStake] = useState("0");
+ 
   const tokenAddress = "0x53ff62409b219ccaff01042bb2743211bb99882e";
   const stakingAddress = "0xE2DF958c48F0245D823c2dCb012134CfDa9F8f9F";
   const stakingV2Address = "0x1FbDB5c46F6a33eC22a7AF990518Ed4610864b2c";
+
+  const [isWaitingForApproval, setIsWaitingForApproval] = useState(false);
 
   const [timeLeft, setTimeLeft] = useState("");
   const [expDate, setExpDate] = useState("");
@@ -194,13 +196,13 @@ const Staking: React.FC = () => {
     refetch();
   }, [address, stakingAddress, refetch]);
 
-  const { data: isUserStaked } = useContractRead({
-    address: stakingAddress,
-    abi: PerezosoStakingAbi.abi,
-    functionName: "isUserStaked",
-    args: [address], 
-    watch: true
-  });
+  // const { data: isUserStaked } = useContractRead({
+  //   address: stakingAddress,
+  //   abi: PerezosoStakingAbi.abi,
+  //   functionName: "isUserStaked",
+  //   args: [address], 
+  //   watch: true
+  // });
  
   const {data: unlockTime} = useContractRead({
     address: stakingAddress,
@@ -353,11 +355,13 @@ const Staking: React.FC = () => {
         setSelectedTierV1(3);
         setSelectedTimeV1(0);
       }
+
       rewardPerSecond = rewardsMap[selectedTierV1][selectedTimeV1] / totalStakingTime;    
 
       // console.log(rewardSpeeds[selectedTier])
       // console.log(`Selected Time ${selectedTime} Selected Tier ${selectedTier}`)
       // console.log(rewardSpeeds[selectedTier][selectedTime])
+
       const accumulatedRewards = calculateAccumulatedRewards(startTime, rewardPerSecond);
 
       setAccumulatedRewards(accumulatedRewards);
@@ -385,7 +389,7 @@ const Staking: React.FC = () => {
     updateCountdown();  
     
     return () => clearInterval(interval);  
-  }, [unlockTime, selectedTier, selectedTime]);
+  }, [address, unlockTime, selectedTierV1, selectedTimeV1]);
 
   // @ts-ignore
   const { isLoading: approving, write: approve } = useContractWrite({
