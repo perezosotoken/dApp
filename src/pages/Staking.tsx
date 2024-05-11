@@ -706,6 +706,14 @@ const Staking: React.FC = () => {
                                   <option value={2592000 * 12}>365 days</option>
                               </Select>
                               </Box>
+                              &nbsp;&nbsp;
+                              <Box ml={10}>
+                              <Text style={{fontSize:'11px'}}>(APR&nbsp;
+                              <label fontSize={"md"} fontColor="gray" mt={-2}>
+                                {commify(tierAPR)}%)
+                                </label>
+                              </Text>
+                              </Box>
                               </HStack>
                             </SimpleGrid>
                           </Box>
