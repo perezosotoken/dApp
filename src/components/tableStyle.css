@@ -1,0 +1,36 @@
+/* styles.css */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: separate; /* Adjusted for border-radius */
+  border-spacing: 0; /* Remove cell spacing */
+  border: 1px solid gray;
+  border-radius: 10px; /* Corrected */
+}
+
+table th,
+table td {
+  text-align: left;
+  padding: 8px;
+  border-bottom: 1px solid gray;
+}
+
+/* Last row in table should have the bottom corners rounded */
+table tr:last-child td:first-child {
+  border-bottom-left-radius: 10px; /* Corrected */
+}
+
+table tr:last-child td:last-child {
+  border-bottom-right-radius: 10px; /* Corrected */
+}
+
+@media screen and (max-width: 600px) {
+  table th,
+  table td {
+      padding: 12px 6px;
+  }
+}

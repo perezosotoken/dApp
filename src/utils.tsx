@@ -22,10 +22,7 @@ export const commify = (number, decimals = undefined) => {
 }
 
 export function formatNumber(num) {
-    if (typeof num !== "number") {
-        console.error("Input must be a number.");
-        return null; // Ensure input is a number
-    }
+    num = Number(num); // Convert to number if it's not already
 
     if (num < 1000) {
         return num.toString(); // Convert the number to string for consistency
