@@ -1,11 +1,9 @@
 /* styles.css */
 .table-responsive {
-  width: 100%;
   overflow-x: auto;
 }
 
 table {
-  width: 100%;
   border-collapse: separate; /* Adjusted for border-radius */
   border-spacing: 0; /* Remove cell spacing */
   border: 1px solid gray;

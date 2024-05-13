@@ -38,7 +38,7 @@ input {
 
 @media screen and (max-width: 600px) {
   table {
-    width: 830px !important
+    width: auto !important
   }
   .hero-content h1 {
     font-size: 2.2rem;

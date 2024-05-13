@@ -17,8 +17,8 @@ function StakingTable({ data }) {
 
   const lockTimes = [30, 90, 180, 360]; // Defined lock times
 
-  const tableWidth = isMobile ? "80%" : "80%";
-  const tableFontSize = isMobile ? "11px" : "md";
+  const tableWidth = isMobile ? "100%" : "80%";
+  const tableFontSize = isMobile ? "13px" : "md";
   const columnWidth1 = isMobile ? "20px" : "200px";
   const columnWidth2 = isMobile ? "20px" : "200px";
   const columnWidth3 = isMobile ? "20px" : "200px";
@@ -33,7 +33,7 @@ function StakingTable({ data }) {
       <Table variant="simple" fontSize={tableFontSize}>
         <Thead>
           <Tr>
-            <Th width={columnWidth1} color={"lightgray"}>Lock Time (days)</Th>
+            <Th width={columnWidth1} color={"lightgray"}>Lock Time</Th>
             <Th width={columnWidth2} color={"lightgray"}>Total Staked</Th>
             <Th width={columnWidth3} color={"lightgray"}>APR (historical)</Th>
           </Tr>
@@ -47,7 +47,7 @@ function StakingTable({ data }) {
 
             return (
               <Tr key={days}>
-                <Td>{days}</Td>
+                <Td>{days} days</Td>
                 <Td>{formatNumber(formatEther(staked))}</Td>
                 <Td><b>{`${apr.toFixed(2)}%`}</b></Td>
               </Tr>

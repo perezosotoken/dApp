@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 // import { Link } from "react-router-dom";
 import { LanguageContext, LanguageContextType } from "../core/LanguageProvider";
-import { CirclesWithBar } from "react-loader-spinner";
 
 import { 
     Heading, 
@@ -15,31 +14,19 @@ import {
     HStack,
     Select,
     SimpleGrid,
-    VStack,
-    NumberInput,
-    NumberInputField,
-    NumberInputStepper,
-    NumberIncrementStepper,
-    NumberDecrementStepper,   
-    Container, Stat, StatLabel, StatNumber    
+    Stat, StatLabel, StatNumber    
     // VStack
 } from '@chakra-ui/react';
 
 import data from '../core/data.json';
 import dataSummary from '../core/summary.json';
 
-import { Address, useAccount, useContractRead, useContractWrite } from "wagmi";
+import { useAccount } from "wagmi";
 import logoPRZS from "../../public/assets/images/logo.png";
-import TOKENABI from "../core/TokenABI.json";
-import StakingRewardsArtifact from "../core/StakingRewards.json";
-
-import PerezosoStakingAbi from "../core/PerezosoStaking.json";
-import { toast } from "react-toastify";
 
 import { parseEther, formatEther } from "ethers";
 import { commify, formatNumber } from "../utils";
 import { isMobile } from "react-device-detect";
-import { rewardsMap, depositMap, totalStakingTime } from "../core/Constants";
 import StakingTable from '../components/StakingTable'; 
 import './stats.css';
 
@@ -82,35 +69,21 @@ const Stats: React.FC = () => {
     setStats(calculateStats(data));
   }, []);
 
-  const totalStaked = typeof stats?.totalStaked != "undefined" ? formatEther(stats?.totalStaked) : 0;
-
   const totalStakedReadablePerct = Number(9.02)  + 
   Number(formatEther(stats?.totalStaked ? stats?.totalStaked : 0)) * 100 / totalSupply 
   
-  // const totalStaked = typeof stats?.totalStaked != "undefined" ? stats?.totalStaked : 0;
-  // const totalStakedV1V2 = BigInt(totalStaked).add(BigInt( parseEther(`${37.9e12}`)));
 
    return(
     <>
       <section className="hero-section">
-        {/* 
-        <Box w="100%" background="tomato" height="auto">
-            <VStack>
-              <Text fontSize="2xl" ml={'25%'} color="lightgray"   fontWeight="bold">
-                Your positions have stopped generating rewards. Please unstake to continue!
-              </Text>
-              <HStack><b>APR:</b> <Text><b>0%</b></Text></HStack>
-            </VStack>
-        </Box> 
-        */}
         <Box className="staking-area">
           <Box className="container">
             <Box className="row justify-content-center">
                 <br /><br />
                 <Box className="col-12 col-md-7">
                     <Box className="card no-hover staking-card single-staking">
-                        <Heading as="h3" size="lg" textAlign="left" color="white" className="card-title">
-                            Perezoso Farming (Phase 2)
+                        <Heading as="h3" size={isMobile ? "md" : "lg"} textAlign="left" color="white" className="card-title">
+                            Perezoso Farming Stats
                         </Heading>
                            <SimpleGrid>
                             <HStack>
