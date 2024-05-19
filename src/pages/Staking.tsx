@@ -33,10 +33,11 @@ import PerezosoStakingAbi from "../core/PerezosoStaking.json";
 import { toast } from "react-toastify";
 
 import { parseEther, formatEther } from "ethers";
-import { commify, formatNumber } from "../utils";
+import { commify, formatNumber, formatAndCommifyNumber } from "../utils";
 import { isMobile } from "react-device-detect";
 import { rewardsMap, depositMap, totalStakingTime } from "../core/Constants";
 import StakeControls from '../components/StakeControls.tsx';
+import axios from 'axios';
 
 import BigNumber from "bignumber.js";
 
@@ -44,6 +45,7 @@ const Staking: React.FC = () => {
   const ctx = useContext<LanguageContextType>(LanguageContext);
   const { address, connector, isConnected } = useAccount();
 
+  const ticker = "perezoso";
 
   /** V1 Variables */
   const [amountToStakeV1, setAmountToStakeV1] = useState(parseEther(`${0}`));
@@ -67,6 +69,7 @@ const Staking: React.FC = () => {
   const [expDate, setExpDate] = useState("");
   const [baseAPR, setBaseAPR] = useState(0);
   const [tierAPR, setTierAPR] = useState(0);
+  const [priceUSD, setPriceUSD] = useState(0);
 
   const { data: realtimeRewards, refetch: refetchRewards } = useContractRead({
     address: stakingV2Address,
@@ -92,6 +95,30 @@ const Staking: React.FC = () => {
 
     return () => clearInterval(interval);
   }, [stakingV2Address]);
+
+  useEffect(() => {
+    const fetchPrice = async () => {
+      try {
+        const url = 'https://api.coingecko.com/api/v3/simple/price';
+        const params = {
+          ids: 'perezoso',
+          vs_currencies: 'usd',
+        };
+        const headers = {
+          'x-cg-demo-api-key': process.env.REACT_APP_CG_API_KEY,
+        };
+  
+        const response = await axios.get(url, { params, headers });
+        // console.log(response.data['perezoso'])
+        // console.log(`Price for PRZS is $${Number(response.data['perezoso'].usd).toFixed(11)}`)
+        setPriceUSD(Number(response.data['perezoso'].usd).toFixed(11));
+      } catch (err) {
+        console.log(err.message);
+      } 
+    };
+
+    fetchPrice();
+  }, [ticker]);
 
   useEffect(() => {
     const key1 = `${2592000}`;
@@ -1028,11 +1055,11 @@ const Staking: React.FC = () => {
                   
                   <SimpleGrid>
                     <HStack>
-                      <Box w="50%">
+                      <Box w="50%" h="auto">
                       <Heading as="h4" size="md">
                          Total Earned
                         </Heading>
-
+                        <VStack>
                         <HStack>
                           <Box w="160px" textAlign="right" mr={80} >
                           <Heading as="h6" style={{color:"lightgray"}}>
@@ -1042,28 +1069,28 @@ const Staking: React.FC = () => {
                           </Box>
                           <Image src={logoPRZS} width="15px" mt={-5} ml={-80}></Image>
                         </HStack>
-
+                        <Text mt={-20} style={{fontSize:"14px"}}> (${formatAndCommifyNumber(Number(formatEther(realtimeRewards || 0)) * Number(priceUSD).toFixed(12))})</Text>
+                        </VStack>
                       </Box>
                       <Box w="50%">
                       <Heading as="h4" size="md">
                          {isMobile ? "Position" : "Position Earned"}
                         </Heading>
-                        <HStack>
-                        <Box w="160px" textAlign="right" mr={80}>
-                          <Heading as="h6" style={{color:"lightgray"}}>
-                            {stakesCount > 0 && earnedOnStake > 0 ? 
-                              commify(formatEther(earnedOnStake || 0), 4) : 0}
-                            </Heading>
-                          </Box>
-                          <Image src={logoPRZS} width="15px" mt={-5} ml={-80}></Image>
-                          </HStack>
-
+                        <VStack>
+                          <HStack>
+                          <Box w="160px" textAlign="right" mr={80}>
+                            <Heading as="h6" style={{color:"lightgray"}}>
+                              {stakesCount > 0 && earnedOnStake > 0 ? 
+                                commify(formatEther(earnedOnStake || 0), 4) : 0}
+                              </Heading>
+                            </Box>
+                            <Image src={logoPRZS} width="15px" mt={-5} ml={-80}></Image>
+                            </HStack>
+                        <Text mt={-20} style={{fontSize:"14px"}}>(${formatAndCommifyNumber(Number(formatEther(earnedOnStake || 0)) * Number(priceUSD).toFixed(12))})</Text>
+                        </VStack>
                         </Box>
-                    </HStack>
+                      </HStack>
                   </SimpleGrid>
-
-
-                    
                       <SimpleGrid >
                         <HStack>
                         <Box w={"50%"} mt={10}>
