@@ -36,6 +36,8 @@ import { parseEther, formatEther } from "ethers";
 import { commify, formatNumber } from "../utils";
 import { isMobile } from "react-device-detect";
 import { rewardsMap, depositMap, totalStakingTime } from "../core/Constants";
+import StakeControls from '../components/StakeControls.tsx';
+
 import BigNumber from "bignumber.js";
 
 const Staking: React.FC = () => {
@@ -323,16 +325,22 @@ const Staking: React.FC = () => {
       const oneMonthInSeconds = 2592000;
       const startTime = calculateStartTime(unlockTime, oneMonthInSeconds);
         
-      function calculateAccumulatedRewards(startTimeInSeconds, rewardPerSecond) {
-
-        console.log(`Got rewards per second ${rewardPerSecond}`)
-        console.log(`Staked balance ${stakedBalance}`)
+      function calculateAccumulatedRewards(startTimeInSeconds, rewardPerSecond, unlockTime) {
+        // console.log(`Got rewards per second ${rewardPerSecond}`);
+        // console.log(`Staked balance ${stakedBalance}`);
 
         const currentTimeInSeconds = Math.floor(Date.now() / 1000); 
         const elapsedTimeInSeconds = currentTimeInSeconds - startTimeInSeconds;
         const accumulatedRewards = elapsedTimeInSeconds * rewardPerSecond;
-        
-        console.log(`Accumulated rewards ${accumulatedRewards}`)
+
+        // console.log(`Accumulated rewards ${accumulatedRewards}`);
+
+        const now = Math.floor(Date.now() / 1000);  
+        const delta = unlockTime - now;
+
+        if (delta <= 0) {
+          return Math.min(accumulatedRewards, 300000);
+        }
 
         return accumulatedRewards;
       }
@@ -370,7 +378,12 @@ const Staking: React.FC = () => {
         const now = Math.floor(Date.now() / 1000);  
     
         let delta = unlockTime - now;
-        
+
+        if (delta < 0) {
+          setTimeLeft("0d 0h 0m 0s");
+          return;
+        }
+
         const days = Math.floor(delta / 86400);
         delta -= days * 86400;
         const hours = Math.floor(delta / 3600) % 24;
@@ -465,16 +478,26 @@ const Staking: React.FC = () => {
     }
   };
   
-  
+  const handleStakeAll = (quantity) => {
+    let toStake = 0n; 
+    const przsBalanceBigInt = BigInt(przsBalance); 
+    if (quantity == "25") {
+        toStake = przsBalanceBigInt / 4n; 
+    } else if (quantity == "50") {
+        toStake = przsBalanceBigInt / 2n; 
+    } else if (quantity == "75") {
+        toStake = (przsBalanceBigInt * 75n) / 100n; 
+    } else if (quantity == "100") {
+        toStake = przsBalanceBigInt; 
+    }
+      setAmountToStake(toStake);
+  };
+
   const handleSetSelectedStake = (value) => {
     setSelectedTime(stakes[value].lockPeriod);
     setSelectedStake(value);
   }
   
-  const handleStakeAll = () => {
-    setAmountToStake(przsBalance);
-  }
-
   useEffect(() => {
     if (amountToStake > 0) {
       // Trigger any action that depends on updated amountToStake
@@ -491,51 +514,21 @@ const Staking: React.FC = () => {
     }
   };
   
-  const handleSelectTier = (value: string) => {
-    setSelectedTier(value);
-    // console.log(`Selected tier is ${value}`)
-    if (Number(value) >= 0) {
-       
-      handleAmountToStake(parseEther(`${getDepositAmount(value)}`));
-      // console.log(`${getDepositAmount(value)}`)
-    } else {
-      handleAmountToStake(0);
-      return;
-    }
-  }
-
-  const handleSelectTierV1 = (value: string) => {
-    setSelectedTierV1(value);
-    // console.log(`Selected tier is ${value}`)
-    if (Number(value) >= 0) {
-       
-      handleAmountToStakeV1(parseEther(`${getDepositAmount(value)}`));
-      // console.log(`${getDepositAmount(value)}`)
-    } else {
-      handleAmountToStakeV1(0);
-      return;
-    }
-  }
-
   const handleSelectTime = (value: string) => {
     setSelectedTime(value);
   }
 
-  const getRewardsFromMap = (tier: string, time: string) => {
-    if (Number(tier) >= 0) {
-      return rewardsMap[Number(tier)][Number(time)];
-    } else {
-      return 0;
-    }    
-  }
+
 
   const amountToStakeReadable = formatEther(amountToStake);
-  const amountToStakeReadableV1 = formatEther(amountToStakeV1);
+  // const amountToStakeReadableV1 = formatEther(amountToStakeV1);
+  const sideButtonsGroupSize = isMobile ? "35px" : "25px";
 
   let isSelectedPositionUnlocked = false;
   if (stakes) {
     isSelectedPositionUnlocked = stakes[selectedStake]?.lockTime < Math.floor(Date.now() / 1000);
   }
+ 
 
    return(
     <>
@@ -665,7 +658,7 @@ const Staking: React.FC = () => {
                                 <Text style={{fontSize:"13px"}}>Amount staked</Text>
                               </Box>
                               <Box w={"50%"} >
-                                <Box ><label style={{fontSize:"13px"}}><b>{ formatNumber(Number(formatEther(stakes[selectedStake]?.amount)))}</b></label></Box>
+                                <Box ><label style={{fontSize:"13px"}}><b>{ formatNumber(Number(formatEther(stakes[selectedStake]?.amount || 0)))}</b></label></Box>
                               </Box>
                               </HStack>
                               <HStack>
@@ -718,68 +711,38 @@ const Staking: React.FC = () => {
                             </SimpleGrid>
                           </Box>
                           <br />
-                          <Box className="input-text">
+                          <Box className="input-text" >
                             <label>{!ctx.isSpanishCountry ? "Choose deposit amount" : "Elija el monto del depósito"} </label>
-                            {/* <Select 
-                              placeholder='' 
-                              defaultValue={-1}
-                              width={"50%"} 
-                              height={40}
-                              fontSize={13}
-                              style={{border:"1px solid white", borderRadius:"10px", backgroundColor:"gray"}}
-                              onChange={(ev) => handleSelectTier(ev.target.value)} 
-                              mt={4} 
-                            >
-                              <option value='"-1"'>Choose tier</option>
-                              <option value='0'>Tier 1</option>
-                              <option value='1'>Tier 2</option>
-                              <option value='2'>Tier 3</option>
-                              <option value='3'>Tier 4</option>
-                            </Select> */}
                           <HStack>
-                          {/* <Input 
-                            type="number"
-                            mt={4} 
-                            height={35}
-                            // step={1} // Allow finer control, adjust based on expected input granularity
-                            value={amountToStakeReadable} // Display the formatted value
-                            style={{ border: "1px solid white", borderRadius: "10px", backgroundColor: "gray" }} 
-                            width={180} 
-                            // onChange={(ev) => handleAmountToStake(ev.target.value)} // Handle the input change
-                          /> */}
                           <Input 
                             type="text"
-                            mt={4} 
+                            mt={isMobile ? -60 : 4} 
                             height={35}
                             placeholder={"type here..."} // Display the formatted value
                             style={{ border: "1px solid white", borderRadius: "10px", backgroundColor: "gray" }} 
                             width={180} 
                             onChange={(ev) => handleAmountToStake(ev.target.value)}
                            >
-                          {/* <NumberInputField /> */}
-                          {/* <NumberInputStepper mr={10}>
-                            <NumberIncrementStepper />
-                            <NumberDecrementStepper />
-                          </NumberInputStepper> */}
                         </Input>
-                            <Button isDisabled={przsBalance == 0} size="sm" borderRadius={10} mt={5} onClick={() => handleStakeAll()}>Max</Button>
                             {isMobile ? 
-                              <Button 
-                              isDisabled={amountToStake == 0 || przsBalance == 0}
-                              width={"120px"} 
-                              style={{ border:"1px solid white", borderRadius:"10px"}}
-                              onClick={() => approve()}
-                            > 
-                            &nbsp;Stake 
-                            </Button> : <></>}
-                          </HStack>
-                          </Box>
+                            <StakeControls
+                              amountToStake={amountToStake}
+                              przsBalance={przsBalance}
+                              // sideButtonsGroupSize={sideButtonsGroupSize}
+                              approve={approve}
+                              handleStakeAll={handleStakeAll}
+                             /> : <></>}
+                        </HStack>
+                        </Box>
+
                           <VStack mr={95}>
-                          <Box w="200px" ml={isMobile ? "-2vh" : "1vh"} pb={20} mt={10}>
+                          <Box w="200px" ml={isMobile ? "-2vh" : "1vh"} pb={20} mt={isMobile ? -60 : 10}>
                            {amountToStakeReadable > 0 ?  <Text ml={isMobile ? 18 : 0} style={{fontSize:"16px"}} color="lightgray">(Staking: {formatNumber(Number(amountToStakeReadable))})</Text> : <></>}
                           </Box>
                           </VStack>
-                          {!isMobile ? 
+                            <Box mt={isMobile ? 0 : -20}>
+                              <HStack>
+                              {!isMobile ? 
                               <Button 
                               mt={-20}
                               isDisabled={amountToStake == 0 || przsBalance == 0}
@@ -789,8 +752,28 @@ const Staking: React.FC = () => {
                             > 
                             &nbsp;Stake 
                             </Button> : <></>}
-                          
-                        </Box>
+                              {isMobile ? <></> : <Box ml={20}>
+                                <StakeControls 
+                                  amountToStake={amountToStake}
+                                  przsBalance={przsBalance}
+                                  sideButtonsGroupSize={sideButtonsGroupSize}
+                                  approve={approve}
+                                  handleStakeAll={handleStakeAll}                              
+                                />  
+                                </Box>}
+                              {/* <Button 
+                                mt={-20}
+                                isDisabled={amountToStake == 0 || przsBalance == 0}
+                                width={"120px"} 
+                                style={{ border:"1px solid white", borderRadius:"10px"}}
+                                onClick={() => approve()}
+                              > 
+                              &nbsp;Stake 
+                              </Button>  */}
+                              
+                              </HStack>
+                            </Box>
+                          </Box>
                         <Box className="input-area col-lg-6 col-12 mb-3" >
                           {/* <Text>test</Text>
                           <br />      */}
@@ -825,7 +808,7 @@ const Staking: React.FC = () => {
                       </Box>
                     </Box>
                   </Box>                   
-                   {stakedBalance == 0 || typeof stakedBalance == "undefined" ?
+                   {/* {stakedBalance == 0 || typeof stakedBalance == "undefined" ?
                    <Box className="tab-content mt-md-3" id="myTabContent">
                     <Heading as="h4" size="md">Phase 1 (Old)</Heading>
                     <Text style={{fontSize:"13px", marginTop:"-20px"}}>
@@ -961,7 +944,7 @@ const Staking: React.FC = () => {
                       </Box>
                     </Box>
                   </Box> : 
-                  <></>} 
+                  <></>}  */}
                   {/* <Box className="tab-content mt-md-3" id="myTabContent">
                     
                     <Box
