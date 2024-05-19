@@ -40,3 +40,36 @@ export function formatNumber(num) {
     // Formatting the number to one decimal place
     return `${scaledNum.toFixed(1)}${units[unitIndex]}`;
 }
+
+export function formatAndCommifyNumber(number) {
+    // Check if the number is large (greater than or equal to 1000)
+    const isLargeNumber = Math.abs(number) >= 1000;
+  
+    // Determine the number of decimal places
+    const decimalPlaces = isLargeNumber ? 2 : 12;
+  
+    // Format the number to the specified decimal places
+    const formattedNumber = Number(number).toFixed(decimalPlaces);
+  
+    // Add commas as thousands separators
+    const parts = formattedNumber.split('.');
+    const integerPart = parts[0];
+    let decimalPart = parts.length > 1 ? parts[1] : '';
+  
+    // Remove unnecessary trailing zeros
+    if (decimalPart) {
+      decimalPart = decimalPart.replace(/0+$/, '');
+      // Remove the decimal point if there are no remaining decimal digits
+      if (decimalPart === '') {
+        decimalPart = '';
+      } else {
+        decimalPart = '.' + decimalPart;
+      }
+    }
+  
+    const commifiedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  
+    // Combine the integer and decimal parts
+    return commifiedIntegerPart + decimalPart;
+  }
+  
