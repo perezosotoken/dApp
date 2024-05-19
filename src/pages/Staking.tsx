@@ -701,9 +701,9 @@ const Staking: React.FC = () => {
                               </Box>
                               &nbsp;&nbsp;
                               <Box ml={10}>
-                              <Text style={{fontSize:'11px'}}>(APR&nbsp;
+                              <Text style={{fontSize:'16px'}}>(APR&nbsp;
                               <label fontSize={"md"} fontColor="gray" mt={-2}>
-                                {commify(tierAPR)}%)
+                                <b>{commify(tierAPR)}</b>%)
                                 </label>
                               </Text>
                               </Box>
