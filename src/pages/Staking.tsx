@@ -520,7 +520,7 @@ const Staking: React.FC = () => {
 
 
 
-  const amountToStakeReadable = formatEther(amountToStake);
+  const amountToStakeReadable = formatEther(amountToStake || 0);
   // const amountToStakeReadableV1 = formatEther(amountToStakeV1);
   const sideButtonsGroupSize = isMobile ? "35px" : "25px";
 
@@ -614,7 +614,7 @@ const Staking: React.FC = () => {
                                 <Text style={{fontSize:"11px"}} height={"20px"}>
                                   <HStack>
                                     <Text style={{fontSize:"12px", color:"lightgray"}} fontWeight={"bold"}>
-                                      {formatNumber(Number(formatEther(totalStaked)))} 
+                                      {formatNumber(Number(formatEther(totalStaked || 0)))} 
                                     </Text>
                                     <Image src={logoPRZS} width="15px" mt={-25}></Image>
                                   </HStack>
@@ -1037,7 +1037,7 @@ const Staking: React.FC = () => {
                           <Box w="160px" textAlign="right" mr={80} >
                           <Heading as="h6" style={{color:"lightgray"}}>
                             {stakesCount > 0 && realtimeRewards > 0 ? 
-                              commify(formatEther(realtimeRewards), 4) : 0}
+                              commify(formatEther(realtimeRewards || 0), 4) : 0}
                             </Heading>
                           </Box>
                           <Image src={logoPRZS} width="15px" mt={-5} ml={-80}></Image>
@@ -1052,7 +1052,7 @@ const Staking: React.FC = () => {
                         <Box w="160px" textAlign="right" mr={80}>
                           <Heading as="h6" style={{color:"lightgray"}}>
                             {stakesCount > 0 && earnedOnStake > 0 ? 
-                              commify(formatEther(earnedOnStake), 4) : 0}
+                              commify(formatEther(earnedOnStake || 0), 4) : 0}
                             </Heading>
                           </Box>
                           <Image src={logoPRZS} width="15px" mt={-5} ml={-80}></Image>
