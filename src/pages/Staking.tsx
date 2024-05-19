@@ -1052,7 +1052,7 @@ const Staking: React.FC = () => {
                       </SimpleGrid>
                   </Box>
                 </SimpleGrid>
-                  
+                  <Box ml={isMobile ? -15 : 0}>
                   <SimpleGrid>
                     <HStack>
                       <Box w="50%" h="auto">
@@ -1091,22 +1091,23 @@ const Staking: React.FC = () => {
                         </Box>
                       </HStack>
                   </SimpleGrid>
-                      <SimpleGrid >
-                        <HStack>
-                        <Box w={"50%"} mt={10}>
-                          {/* {stakedBalance > 0 ?
-                          <HStack>
-                            <h5 className="m-0">{timeLeft != "" ? timeLeft : expDate}</h5>
-                          </HStack> : 
-                          <h4 className="m-0">-- -- --</h4>} */}
+                  </Box>
+                  <SimpleGrid >
+                    <HStack>
+                    <Box w={"50%"} mt={10}>
+                      {/* {stakedBalance > 0 ?
+                      <HStack>
+                        <h5 className="m-0">{timeLeft != "" ? timeLeft : expDate}</h5>
+                      </HStack> : 
+                      <h4 className="m-0">-- -- --</h4>} */}
 
-                        </Box>
-                        <Box w={"50%"}>
+                    </Box>
+                    <Box w={"50%"}>
 
-                            
-                        </Box>
-                        </HStack>
-                      </SimpleGrid>
+                        
+                    </Box>
+                    </HStack>
+                  </SimpleGrid>
 
                   </Box>
                 </Box>
