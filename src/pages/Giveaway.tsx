@@ -7,7 +7,7 @@ import ABI from "../core/ABI.json";
 import { toast } from "react-toastify";
 import { CirclesWithBar } from "react-loader-spinner";
 import { ethers } from "ethers";
-import { commify } from "../utils";
+import { commify, formatNumber } from "../utils";
 import { BrowserView, MobileView, isBrowser, isMobile } from 'react-device-detect';
  
 const { formatEther, parseEther } = ethers;
@@ -20,6 +20,8 @@ interface Winner {
  
 const DashboardPage: React.FC = () => {
   const stakingAddress = "0xE2DF958c48F0245D823c2dCb012134CfDa9F8f9F";
+  const stakingAddressV2 = "0x1FbDB5c46F6a33eC22a7AF990518Ed4610864b2c";
+
   const giveawayAddress = "0x3234ddFeB18fbeFcBF5D482A00a8dD4fAEdA8d19";
   const tokenAddress = "0x53Ff62409B219CcAfF01042Bb2743211bB99882e";
   
@@ -149,13 +151,20 @@ const DashboardPage: React.FC = () => {
     args: [ZERO_ADDRESS],
   });
 
-  const {data: totalStaked} = useContractRead({
+  const {data: totalStakedV1} = useContractRead({
     address: tokenAddress,
     abi: TOKENABI,
     functionName: "balanceOf",
     args: [stakingAddress],
   });
 
+  const {data: totalStakedV2} = useContractRead({
+    address: tokenAddress,
+    abi: TOKENABI,
+    functionName: "balanceOf",
+    args: [stakingAddressV2],
+  });
+  
   const { data: maxTicket } = useContractRead({
     address: giveawayAddress,
     abi: ABI,
@@ -253,7 +262,7 @@ const DashboardPage: React.FC = () => {
     },
   });
 
-  console.log(`Staked amount is ${totalStaked} total stakers is ${totalStakers} `)
+  console.log(`Staked amount is ${totalStakedV1} total stakers is ${totalStakers} `)
 
 
   return (
@@ -358,8 +367,8 @@ const DashboardPage: React.FC = () => {
                                   <strong>Circulating Supply:</strong>
                                   {/* @ts-ignore */}
                                   <span>
-                                    {`${totalBurned != null  && totalStaked != null ? 
-                                      commify(formatEther(parseEther(`${totalSupply}`) - (totalBurned + totalStaked))) : 0}`} PRZS
+                                    {`${totalBurned != null  && totalStakedV1 != null ? 
+                                      commify(formatEther(parseEther(`${totalSupply}`) - (totalBurned + totalStakedV1))) : 0}`} PRZS
                                   </span>
                                 </li>                                                               
                               <li className="d-flex justify-content-between">
@@ -371,14 +380,14 @@ const DashboardPage: React.FC = () => {
                                 <strong>Total stakers:</strong>
                                 {/* @ts-ignore */}
                                 <span>
-                                  {`${totalStaked != null ? commify(typeof totalStakers != "undefined" ? totalStakers : 0) : 0}`}
+                                  {`${totalStakedV1 != null ? commify(typeof totalStakers != "undefined" ? totalStakers : 0) : 0}`}
                                   </span>
                                 </li>
                                <li className="d-flex justify-content-between">
                                   <strong>Staked Supply:</strong>
                                   {/* @ts-ignore */}
                                   <span>
-                                    {`${totalBurned != null ? commify(formatEther(typeof totalStaked != "undefined" ? totalStaked : 0)) : 0}`} PRZS
+                                    {`${totalBurned != null ? formatNumber(formatEther(typeof totalStakedV1 != "undefined" && typeof totalStakedV2 != "undefined" ? totalStakedV1 + totalStakedV2 : 0), 2) : 0}`} PRZS
                                     </span>
                                 </li>                                                                  
                               <li className="d-flex justify-content-between">
