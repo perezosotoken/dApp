@@ -71,85 +71,45 @@ const HomePage: React.FC = () => {
                   </h1>
                   <h4 style={{ color: "#fff" }}>
                     {!ctx.isSpanishCountry
-                      ? "Win $50 daily and earn up to 10 Billion PRZS in 365 days!"
+                      ? "Win $50 every tuesday and friday, stake your tokens to earn passive income!"
                       : "¡Redefiniendo el valor digital con eficiencia!"}
                   </h4>
                 </div>
                 <div style={{ margin: "auto", width: "auto" }} >
-                <Flex direction={"row"} ml={isMobile ? 30 : 130}>
-                <Flex direction={"column"} w={"full"}>
-                  {/* Staked Box */}
-                  <HStack w={"full"}>
-                    <Box w={"25%"}>
-                      <Text textAlign="left"><b>Staked</b></Text>
-                    </Box>
-                    <Box flex={1} position="relative">
-                      <Input 
-                        style={{
-                          height: "40px",
-                          backgroundColor: "gray",
-                          padding: "10px",
-                          border: "1px solid white",
-                          textAlign: "left",
-                          borderRadius: "10px",
-                          width: '100%'
-                        }}
-                        fontSize={inputTextSize}
-                        value={typeof totalStaked === "undefined" ? 0 : commify(formatEther(totalStaked))}
-                      />
-                      <Image 
-                        src={logoPRZS} 
-                        width="25px" 
-                        style={{
-                          position: 'absolute',
-                          right: '5px', // Adjust this value as needed
-                          top: '50%',
-                          transform: 'translateY(-50%)'
-                        }} 
-                      />
-                    </Box>
-
-                  </HStack>
-                  
-                  
-                  {/* Stakers Box */}
-                  <HStack w={"full"} mt={4}>
-                    <Box w={"25%"}>
-                      <Text textAlign="left"><b>Stakers</b></Text>
-                    </Box>
-                    <Box flex={1}>
-                      <Input
-                        style={{
-                          height: "40px",
-                          backgroundColor: "gray",
-                          padding: "10px",
-                          border: "1px solid white",
-                          textAlign: "left",
-                          borderRadius: "10px",
-                          width: '100%'
-                        }}
-                        fontSize={inputTextSize}
-                        value={typeof totalStakers === "undefined" ? 0 : commify(totalStakers)}
-                      />
-                    </Box>
-                  </HStack>
-                </Flex>
-                <Box w={"30%"}>
-                      {!isMobile ? 
+              <Flex direction={"column"} w={"full"}>
+                <Box mt={"-20"}>
+                  <Box ml={"auto"}>
+                  <h4>Phase 2 launched! Check detailed statistic 
+                    <Link color="red" style={{fontSize:"22px", textDecoration:"underline"}} to="/stats" target="_new">
+                      &nbsp;<b>here</b>
+                    </Link>
+                    </h4>
+                    <center>
+                    {!isMobile ? 
+                        <>
                         <Link
                           className="btn btn-bordered active smooth-anchor mb-2"
                           to="/staking"
-                          style={{ marginTop: "10px" }}
+                          style={{ marginTop: "-10px" }}
                         >
                           {!isMobile ? <i className="fa-solid fa-lock mr-2"></i> : <></>}
-                          {!ctx.isSpanishCountry ? "Stake" : "Acuñar"}
-                        </Link> : <></>}
-                    </Box>
-              </Flex>    
+                          {!ctx.isSpanishCountry ? "Stake on V2" : "Acuñar"}
+                        </Link> <br /> <br />                        
+                        </> : <></>}
+                       
+                    </center>
+                  </Box>
+
+                </Box>
+              </Flex>
+
               <Flex direction={"column"} w={"full"}>
-                <Box mt={"20"}>
-                  <Box ml={"auto"}>
-                  <h4>Staking summary (Phase 1)</h4>
+                <Box mt={"-40"}>
+                  <Box ml={"auto"} >
+                    <br />
+                  <HStack ml={isMobile ? "3vh" : "25%"}><h4 style={{fontSize: isMobile ? "16px" : "21px"}}>Staking summary Phase 1 </h4>&nbsp;
+                    <Text mt={-2} style={{color: "tomato"}} ml={isMobile ? "10" : 0}>(Discontinued)</Text>
+                  </HStack>
                   </Box>
                 <HStack w={"full"} justifyContent="space-between" align="stretch">
                   {/* Left Side */}
@@ -210,7 +170,7 @@ const HomePage: React.FC = () => {
                       style={{width:`${stakeButtonWidth}`, marginTop: `${stakeButtonMt}`}}
                     >
                       <i className="fa-solid fa-lock mr-2"></i>
-                      {!ctx.isSpanishCountry ? "Stake" : "Acuñar"}
+                      {!ctx.isSpanishCountry ? "Stake on V2" : "Acuñar"}
                     </Link> : <></>}   
                     <a
                     className="btn btn-bordered-white  mb-2"
