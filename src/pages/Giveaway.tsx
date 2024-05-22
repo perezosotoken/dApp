@@ -391,20 +391,20 @@ const DashboardPage: React.FC = () => {
                               </li>
                               <li className="d-flex justify-content-between">
                                 <strong>Max Token Supply:</strong>
-                                <span>{`${commify(totalSupply)}`} PRZS</span>
+                                <span>{`${formatNumber(totalSupply)}`} PRZS</span>
                               </li>
                               <li className="d-flex justify-content-between">
                                   <strong>Circulating Supply:</strong>
                                   {/* @ts-ignore */}
                                   <span>
                                     {`${totalBurned != null  && totalStakedV1 != null ? 
-                                      commify(formatEther(parseEther(`${totalSupply}`) - (totalBurned + totalStakedV1))) : 0}`} PRZS
+                                      formatNumber(formatEther(parseEther(`${totalSupply}`) - (totalBurned + totalStakedV1 + totalStakedV2))) : 0}`} PRZS
                                   </span>
                                 </li>                                                               
                               <li className="d-flex justify-content-between">
                                 <strong>Burned Supply:</strong>
                                 {/* @ts-ignore */}
-                                <span>{`${totalBurned != null ? commify(formatEther(totalBurned)) : 0}`} PRZS</span>
+                                <span>{`${totalBurned != null ? formatNumber(formatEther(totalBurned)) : 0}`} PRZS</span>
                                </li>
                                <li className="d-flex justify-content-between">
                                 <strong>Total stakers:</strong>
@@ -440,7 +440,7 @@ const DashboardPage: React.FC = () => {
               <div className="col-12 col-md-5">
                 <div className="staking-items mt-4 mt-md-0">
                   <div className="card no-hover staking-card">
-                    <h3 className="m-0">{commify(winning)}</h3>
+                    <h3 className="m-0">{winning > 0 ? formatNumber(winning) : 0}</h3>
                     <p>Your Winnings</p>
                   </div>
                   <div className="card no-hover staking-card my-4">
@@ -449,7 +449,7 @@ const DashboardPage: React.FC = () => {
                   </div>
                   <div className="card no-hover staking-card my-4">
                     <h3 className="m-0">
-                      {commify(Number(totalRewardDistributed)) || 0} PRZS
+                      {formatNumber(Number(totalRewardDistributed)) || 0} PRZS
                     </h3>
                     <p>Total Rewards Distributed</p>
                   </div>
