@@ -3,6 +3,8 @@ import { Address, useAccount, useContractRead, useContractWrite } from "wagmi";
 import PerezosoStakingAbi from "../core/PerezosoStaking.json";
 import TOKENABI from "../core/TokenABI.json";
 import ABI from "../core/ABI.json";
+import data from '../core/data.json';
+import dataSummary from '../core/summary.json';
 
 import { toast } from "react-toastify";
 import { CirclesWithBar } from "react-loader-spinner";
@@ -38,6 +40,34 @@ const DashboardPage: React.FC = () => {
   const [winning, setWinning] = useState<string>("");
   const [ticketsBought, setTicketBought] = useState<number>(0);
   const [isWaitingForApproval, setIsWaitingForApproval] = useState<boolean>(false);
+  const [stats, setStats] = useState({});
+
+  const calculateStats = (data) => {
+    const uniqueAddresses = new Set();
+    let totalStaked = BigInt(0);
+    let totalEarned = BigInt(0);
+    let totalRewardsDistributed = BigInt(0);
+  
+    data.forEach(item => {
+      uniqueAddresses.add(item.address);
+      item.stakes.forEach(stake => {
+        totalStaked += BigInt(stake.totalStaked);
+      });
+      totalEarned += BigInt(item.totalEarned);
+      totalRewardsDistributed += BigInt(item.rewardPaid);
+    });
+  
+    return {
+      uniqueAddresses: uniqueAddresses.size,
+      totalStaked: totalStaked.toString(),
+      totalEarned: totalEarned.toString(),
+      totalRewardsDistributed: totalRewardsDistributed.toString()
+    };
+}
+
+  useEffect(() => {
+    setStats(calculateStats(data));
+  }, []);
 
   useEffect(() => {
     const fetchTokenHolders = async () => {
@@ -380,7 +410,7 @@ const DashboardPage: React.FC = () => {
                                 <strong>Total stakers:</strong>
                                 {/* @ts-ignore */}
                                 <span>
-                                  {`${totalStakedV1 != null ? commify(typeof totalStakers != "undefined" ? totalStakers : 0) : 0}`}
+                                  {`${totalStakedV1 != null ? commify(typeof totalStakers != "undefined" ? totalStakers + (BigInt(stats?.uniqueAddresses) || 0): 0) : 0}`}
                                   </span>
                                 </li>
                                <li className="d-flex justify-content-between">
