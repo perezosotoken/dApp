@@ -108,7 +108,7 @@ const HomePage: React.FC = () => {
                   <Box ml={"auto"} >
                     <br />
                   <HStack ml={isMobile ? "3vh" : "25%"}><h4 style={{fontSize: isMobile ? "16px" : "21px"}}>Staking summary Phase 1 </h4>&nbsp;
-                    <Text mt={-2} style={{color: "tomato"}} ml={isMobile ? "10" : 0}>(Discontinued)</Text>
+                    <Text mt={-2} style={{color: "tomato"}} ml={isMobile ? "10" : 0}><b>(Discontinued)</b></Text>
                   </HStack>
                   </Box>
                 <HStack w={"full"} justifyContent="space-between" align="stretch">
