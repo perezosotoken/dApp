@@ -410,7 +410,7 @@ const DashboardPage: React.FC = () => {
                                 <strong>Total stakers:</strong>
                                 {/* @ts-ignore */}
                                 <span>
-                                  {`${totalStakedV1 != null ? commify(typeof totalStakers != "undefined" ? totalStakers + (BigInt(stats?.uniqueAddresses) || 0): 0) : 0}`}
+                                  {`${totalStakedV1 != null ? commify(typeof totalStakers != "undefined" && typeof stats?.uniqueAddresses != "undefined" ? totalStakers + (BigInt(stats?.uniqueAddresses) || 0): 0) : 0}`}
                                   </span>
                                 </li>
                                <li className="d-flex justify-content-between">
