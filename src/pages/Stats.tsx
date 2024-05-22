@@ -69,7 +69,7 @@ const Stats: React.FC = () => {
     setStats(calculateStats(data));
   }, []);
 
-  const totalStakedReadablePerct = Number(9.02)  + 
+  const totalStakedReadablePerct = Number(2.70)  + 
   Number(formatEther(stats?.totalStaked ? stats?.totalStaked : 0)) * 100 / totalSupply 
   
 
@@ -245,7 +245,7 @@ const Stats: React.FC = () => {
                               <b>9.02% </b>
                             </StatNumber>
                             <Box color="lightgray" fontSize="13px">
-                              37.9T of {formatNumber(totalSupply)}
+                              11.3T of {formatNumber(totalSupply)}
                             </Box>
                             </HStack>
                           </Box>                                
@@ -258,7 +258,7 @@ const Stats: React.FC = () => {
                               <b><Text className="globalTotal" style={{color:"#9ca0d2"}}>{totalStakedReadablePerct.toFixed(2)}%</Text> </b>
                             </StatNumber>
                             <Box color="lightgray" fontSize="13px">
-                            {typeof stats?.totalStaked != "undefined" ? formatNumber(Number(formatEther(stats?.totalStaked)) + Number(37.9e12)) : 0 } of {formatNumber(totalSupply)}
+                            {typeof stats?.totalStaked != "undefined" ? formatNumber(Number(formatEther(stats?.totalStaked)) + Number(11.35e12)) : 0 } of {formatNumber(totalSupply)}
                             </Box>
                             </HStack>
                           </Box>                                

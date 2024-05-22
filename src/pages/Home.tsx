@@ -79,7 +79,7 @@ const HomePage: React.FC = () => {
               <Flex direction={"column"} w={"full"}>
                 <Box mt={"-20"}>
                   <Box ml={"auto"}>
-                  <h4>Phase 2 launched! Check detailed statistic 
+                  <h4>Phase 2 launched! Check detailed statistics
                     <Link color="red" style={{fontSize:"22px", textDecoration:"underline"}} to="/stats" target="_new">
                       &nbsp;<b>here</b>
                     </Link>
