@@ -508,17 +508,20 @@ const Staking: React.FC = () => {
   const handleStakeAll = (quantity) => {
     let toStake = 0n; 
     const przsBalanceBigInt = BigInt(przsBalance); 
-    if (quantity == "25") {
-        toStake = przsBalanceBigInt / 4n; 
-    } else if (quantity == "50") {
-        toStake = przsBalanceBigInt / 2n; 
-    } else if (quantity == "75") {
-        toStake = (przsBalanceBigInt * 75n) / 100n; 
-    } else if (quantity == "100") {
-        toStake = przsBalanceBigInt; 
+  
+    if (quantity === "25") {
+      toStake = przsBalanceBigInt / 4n; 
+    } else if (quantity === "50") {
+      toStake = przsBalanceBigInt / 2n; 
+    } else if (quantity === "75") {
+      toStake = (przsBalanceBigInt * 75n) / 100n; 
+    } else if (quantity === "100") {
+      toStake = (przsBalanceBigInt * 9999n) / 10000n; 
     }
-      setAmountToStake(toStake);
+  
+    setAmountToStake(toStake);
   };
+  
 
   const handleSetSelectedStake = (value) => {
     setSelectedTime(stakes[value].lockPeriod);
