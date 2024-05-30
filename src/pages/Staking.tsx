@@ -136,7 +136,7 @@ const Staking: React.FC = () => {
     const calculateAPR = async () => {
       if (stakingContractBalance) {
         
-        const weeklyRewards = 324_769_500_000;
+        const weeklyRewards = 400_000_000_000;
 
         const stakingContractBalanceReadable = formatEther(stakingContractBalance); 
         const balanceWithoutRewards = Number(stakingContractBalanceReadable) - weeklyRewards;
