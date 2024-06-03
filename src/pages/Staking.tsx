@@ -961,6 +961,7 @@ const Staking: React.FC = () => {
                             mt={10} 
                             ml={60}
                             w={120} 
+                            isDisabled={selectedType == -1}
                             onClick={() => getRewards()}
                           >Get Reward</Button> : <></>}
 
