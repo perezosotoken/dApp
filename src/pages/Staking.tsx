@@ -332,7 +332,7 @@ const Staking: React.FC = () => {
     functionName: "stake",
     args: stakeTypeIcon == logoPRZS ? [amountToStake, selectedTime] : [amountToStake],
     onSuccess() {
-      toast("Successfully staked your PRZS!");
+      toast(`Successfully staked your ${selectedType == 1 ? "PRZS" : "LP tokens"} !`);
 
       if (stakeTypeIcon == logoLPToken) {
         const now = new Date();
