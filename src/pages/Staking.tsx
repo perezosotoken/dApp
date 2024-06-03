@@ -451,7 +451,7 @@ const Staking: React.FC = () => {
           return Math.min(accumulatedRewards, 300000);
         }
 
-        return accumulatedRewards;
+        return stakedBalanceBN > 0 ? accumulatedRewards : 0;
       }
 
       let rewardPerSecond = 0;
@@ -1067,8 +1067,8 @@ const Staking: React.FC = () => {
                             <HStack>
                               <Box w="160px" textAlign="right" mr={80}>
                               <Heading as="h6" style={{color:"lightgray"}}>
-                                {stakedBalance > 0 ? accumulatedRewards > 0 ? 
-                                  commify(accumulatedRewards, 2) : 0 : 0}
+                                { accumulatedRewards > 0 ? 
+                                  commify(accumulatedRewards, 2) : 0}
                                 </Heading>
                               </Box>
                               <Image src={logoPRZS} width="15px" mt={-5} ml={-80}></Image>
