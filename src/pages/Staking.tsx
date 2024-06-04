@@ -76,6 +76,7 @@ const Staking: React.FC = () => {
   const [expDate, setExpDate] = useState("");
   const [baseAPR, setBaseAPR] = useState(0);
   const [tierAPR, setTierAPR] = useState(0);
+  const [lpAPR, setLpAPR] = useState(0);
   const [priceUSD, setPriceUSD] = useState(0);
 
   const { data: realtimeRewardsBN, refetch: refetchRewards } = useContractRead({
@@ -200,9 +201,27 @@ const Staking: React.FC = () => {
         setTierAPR(tierAPRReadable);
       } 
     }
-  
+
+    const calculateAPRLP = async () => {
+      if (stakingContractBalance) {
+        const weeklyRewards = 1_000_000;
+
+        const stakingContractBalanceReadable = 100_000_000; 
+        const balanceWithoutRewards = Number(stakingContractBalanceReadable) - weeklyRewards;
+
+        const numerator = weeklyRewards;
+        const baseAPR = ((numerator / balanceWithoutRewards)) * 100;
+
+        const tierAPR = baseAPR * multipliers[selectedTime];
+        const tierAPRReadable = commify(tierAPR * 52, 2);
+        console.log(`LP APR is ${tierAPRReadable}`)
+        setLpAPR(tierAPRReadable);
+      } 
+    }
+
     const interval = setInterval(() => {
       calculateAPR();
+      calculateAPRLP();
     }, 1000);
 
     return () => clearInterval(interval);
@@ -850,7 +869,7 @@ const Staking: React.FC = () => {
                                 <Box ml={10}>
                                 <Text style={{fontSize:isMobile?'16px':'14px'}}>(APR&nbsp;
                                 <label fontSize={"md"} fontColor="gray" mt={-2}>
-                                  <b>{commify(tierAPR)}</b>%)
+                                  <b>{selectedType == -1 ? 0 : selectedType == 1 ? commify(tierAPR) : commify(lpAPR)}%</b>%)
                                   </label>
                                 </Text>
                                 </Box>
@@ -929,7 +948,7 @@ const Staking: React.FC = () => {
                     
                     <HStack><Heading as="h4">APR</Heading> 
                     <label fontSize={"md"} fontColor="gray" mt={-2}>
-                      {commify(tierAPR)}%
+                      {selectedType == -1 ? 0 : selectedType == 1 ? commify(tierAPR) : commify(lpAPR)}%
                       </label>
                       </HStack>
                   </Box>
