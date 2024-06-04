@@ -655,7 +655,7 @@ const Staking: React.FC = () => {
       default:
     }
 
-    console.log(`Selected type is ${selectedType} ${realtimeRewardsBN} ${realtimeRewardsLp} current staking address ${currentStakingAddress}`); 
+    console.log(`Selected type is  ${selectedType} ac is ${accumulatedRewards == 0} ${realtimeRewardsBN} ${realtimeRewardsLp} current staking address ${currentStakingAddress}`); 
   }
 
   const amountToStakeReadable = formatEther(amountToStake || 0);
@@ -1129,17 +1129,20 @@ const Staking: React.FC = () => {
                         <Box w={"50%"} w={150}>
                           <Box mt={!isMobile? "-100px" :"-100px"}>
                           <HStack>                       
-                          <Button 
-                              isDisabled={ accumulatedRewards == 0}
+                            {timeLeft > 0 ? 
+                            <>
+                            <Button 
+                              isDisabled={timeLeft == 0}
                               w={"200px"}
                               isDisabled={stakedBalance == 0 || typeof stakedBalance == "undefined"}
                               style={{marginLeft:"10px", border:"1px solid white", borderRadius:"10px"}}
                               onClick={() => unStake()}
                             > 
                             &nbsp;Unstake & Claim
-                          </Button>                                   
-                          </HStack>
+                          </Button> 
                           <Text style={{fontSize:"13px"}} ml={10}>You will be able to claim your reward once the countdown ends.</Text>                          
+                            </> : <></>}                                  
+                          </HStack>
                         </Box>
                         </Box>
                         </HStack>
