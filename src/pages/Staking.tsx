@@ -577,12 +577,14 @@ const Staking: React.FC = () => {
   };
   
   const handleStakeAll = (quantity) => {
+    console.log(`Handle stakeAll`)
+
     let toStake = 0n; 
     let toStakeBigInt = BigInt(0);
 
     if (selectedType == 1) {
       toStakeBigInt = BigInt(przsBalance); 
-    } else  {
+    } else if (selectedType == 2) {
       toStakeBigInt = BigInt(lpTokenBalance);
     }
 
@@ -596,7 +598,7 @@ const Staking: React.FC = () => {
       toStake = (toStakeBigInt * 9999n) / 10000n; 
     }
   
-    setAmountToStake(toStake);
+    setAmountToStake(selectedType == 2 ? toStake : toStakeBigInt);
   };
 
   const handleSetSelectedStake = (value) => {
@@ -1128,7 +1130,7 @@ const Staking: React.FC = () => {
                           <Box mt={!isMobile? "-100px" :"-100px"}>
                           <HStack>                       
                           <Button 
-                              isDisabled={stakedBalance == 0 || typeof stakedBalance == "undefined"}
+                              isDisabled={ accumulatedRewards == 0}
                               w={"200px"}
                               isDisabled={stakedBalance == 0 || typeof stakedBalance == "undefined"}
                               style={{marginLeft:"10px", border:"1px solid white", borderRadius:"10px"}}
