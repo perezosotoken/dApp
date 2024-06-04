@@ -1132,7 +1132,6 @@ const Staking: React.FC = () => {
                             {timeLeft > 0 ? 
                             <>
                             <Button 
-                              isDisabled={timeLeft == 0}
                               w={"200px"}
                               isDisabled={stakedBalance == 0 || typeof stakedBalance == "undefined"}
                               style={{marginLeft:"10px", border:"1px solid white", borderRadius:"10px"}}
