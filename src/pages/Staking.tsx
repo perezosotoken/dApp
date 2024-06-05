@@ -123,21 +123,6 @@ const Staking: React.FC = () => {
 
 
   useEffect(() => {
-    const fetchTokenPrice = async () => {
-        const url = 'https://stats.perezosotoken.com/price';
-        const response = await fetch(url, {
-          headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-          }
-        });
-        const text = await response.json();
-        setTokenPrice(Number(text.price).toFixed(14))
-    };
-
-    fetchTokenPrice();
-  }, [isConnected]);
-
-  useEffect(() => {
     const interval = setInterval(() => {
 
       let isSelectedPositionUnlocked = false;
@@ -158,26 +143,20 @@ const Staking: React.FC = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const fetchPrice = async () => {
-        try {
-          const url = 'https://api.coingecko.com/api/v3/simple/price';
-          const params = {
-            ids: 'perezoso',
-            vs_currencies: 'usd',
-          };
-          const headers = {
-            'x-cg-demo-api-key': process.env.REACT_APP_CG_API_KEY,
-          };
-    
-          const response = await axios.get(url, { params, headers });
-          setPriceUSD(Number(response.data['perezoso'].usd).toFixed(11));
-        } catch (err) {
-          console.log(err.message);
-        } 
-      };
-  
-      fetchPrice();
-    }, 5000);
+      const fetchTokenPrice = async () => {
+        const url = 'https://stats.perezosotoken.com/price';
+        const response = await fetch(url, {
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+          }
+        });
+        const text = await response.json();
+        console.log(`Token price is ${Number(text.price).toFixed(14)}`)
+        setTokenPrice(Number(text.price).toFixed(14))
+    };
+
+    fetchTokenPrice();
+    }, 3000);
 
     return () => clearInterval(interval);
 
@@ -223,7 +202,7 @@ const Staking: React.FC = () => {
         const numerator = weeklyRewards * 52;
         const baseAPR = ((numerator / stakingContractBalanceReadable)) * 100;
 
-        // console.log(`Token price is ${tokenPrice} Numerator is ${numerator} denominator ${stakingContractBalanceReadable} LP APR is ${baseAPR}`)
+        console.log(`Token price is ${tokenPrice} Numerator is ${numerator} denominator ${stakingContractBalanceReadable} LP APR is ${baseAPR}`)
         setLpAPR(baseAPR.toFixed(2));
       } 
     }
@@ -234,7 +213,7 @@ const Staking: React.FC = () => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [stakingContractBalance, selectedTime]);
+  }, [stakingContractBalance, tokenPrice, selectedTime]);
 
   let { data: stakesCountBN } = useContractRead({
     address: stakingV2Address,
@@ -686,13 +665,13 @@ const Staking: React.FC = () => {
         <Box className="staking-area">
           <Box className="container">
             <Box className="row justify-content-center">
-              <Box className="col-12 col-md-7" border="1px solid">
+              <Box className="col-12 col-md-7" >
                 <Box className="card no-hover staking-card single-staking">
                   <h3 className="m-0">
                     {!ctx.isSpanishCountry ? "Perezoso Farming (Phase 2)" : "Acuña tu token Perezoso"}</h3>
                   {typeof address !== "undefined" ? 
                     <>
-                    <Box className="input-area col-lg-6 col-12 mb-3" mt={20} border="1px solid">
+                    <Box className="input-area col-lg-6 col-12 mb-3" mt={20}>
                         <HStack><h4>Choose type </h4><h5 style={{color:"tomato", fontWeight:"bolder"}}>(NEW)</h5></HStack>
                         <Box className="input-text">
                           <Select
