@@ -12,7 +12,8 @@ import {
     HStack,
     Select,
     SimpleGrid,
-    VStack
+    VStack,
+    Tooltip
 } from '@chakra-ui/react';
 
 import { useAccount, useContractRead, useContractWrite } from "wagmi";
@@ -71,6 +72,7 @@ const Staking: React.FC = () => {
   const [isWaitingForApproval, setIsWaitingForApproval] = useState(false);
   const [isSelectedPositionUnlocked, setIsSelectedPositionUnlocked] = useState(false);
   const [totalEarned, setTotalEarned] = useState(0);
+  const [tokenPrice, setTokenPrice] = useState(0);
 
   const [timeLeft, setTimeLeft] = useState("");
   const [expDate, setExpDate] = useState("");
@@ -95,7 +97,14 @@ const Staking: React.FC = () => {
     watch: true,
   });
 
- 
+  const { data: totalSupplyLP, refetch: refetchTotalSupplyLp } = useContractRead({
+    address: stakingLPAddress,
+    abi: PerezosoFarmingLPAbi.abi,
+    functionName: "totalSupply",
+    args: [],
+    watch: true,
+  });
+
   const { data: stakingContractBalance, refetch: refetchStakingContractBalance } = 
   useContractRead({
     address: tokenAddress,
@@ -112,23 +121,21 @@ const Staking: React.FC = () => {
     return () => clearInterval(interval);
   }, [stakingV2Address]);
 
-  // Separate useEffect for rewards
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
 
-  //     if (selectedType == 2) {
-  //       refetchRewards();
-  //       setRealtimeRewards(realtimeRewardsBN);
-  //     } else {
-  //       refetchRewardsLp();
-  //       setRealtimeRewardsLp(realtimeRewardsLpBN);
-  //     }
-          
-  //   }, 1000);
-  //   return () => clearInterval(interval);
+  useEffect(() => {
+    const fetchTokenPrice = async () => {
+        const url = 'https://stats.perezosotoken.com/price';
+        const response = await fetch(url, {
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+          }
+        });
+        const text = await response.json();
+        setTokenPrice(Number(text.price).toFixed(14))
+    };
 
-    
-  // }, [address, selectedType, currentStakingAddress, realtimeRewardsBN, realtimeRewardsLpBN]);
+    fetchTokenPrice();
+  }, [isConnected]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -204,18 +211,15 @@ const Staking: React.FC = () => {
 
     const calculateAPRLP = async () => {
       if (stakingContractBalance) {
-        const weeklyRewards = 1_000_000;
+        const weeklyRewards = 20_000_000_000 * Number(tokenPrice);
 
-        const stakingContractBalanceReadable = 100_000_000; 
-        const balanceWithoutRewards = Number(stakingContractBalanceReadable) - weeklyRewards;
+        const stakingContractBalanceReadable = formatEther(totalSupplyLP); 
+ 
+        const numerator = weeklyRewards * 52;
+        const baseAPR = ((numerator / stakingContractBalanceReadable)) * 100;
 
-        const numerator = weeklyRewards;
-        const baseAPR = ((numerator / balanceWithoutRewards)) * 100;
-
-        const tierAPR = baseAPR * multipliers[selectedTime];
-        const tierAPRReadable = commify(tierAPR * 52, 2);
-        console.log(`LP APR is ${tierAPRReadable}`)
-        setLpAPR(tierAPRReadable);
+        // console.log(`Token price is ${tokenPrice} Numerator is ${numerator} denominator ${stakingContractBalanceReadable} LP APR is ${baseAPR}`)
+        setLpAPR(baseAPR.toFixed(2));
       } 
     }
 
@@ -635,7 +639,6 @@ const Staking: React.FC = () => {
  
     switch (value) {
       case "1":
-        console.log("PRZS");
         setSelectedType("1")
         setCurrentStakingAddress(stakingV2Address);
         setStakeTypeIcon(logoPRZS);
@@ -644,7 +647,6 @@ const Staking: React.FC = () => {
         setTotalEarned(realtimeRewardsBN);
         break;
       case "2":
-        console.log("LP");
         setSelectedType("2")
         setCurrentStakingAddress(stakingLPAddress);
         setStakeTypeIcon(logoLPToken);
@@ -655,7 +657,7 @@ const Staking: React.FC = () => {
       default:
     }
 
-    console.log(`Selected type is  ${selectedType} ac is ${accumulatedRewards == 0} ${realtimeRewardsBN} ${realtimeRewardsLp} current staking address ${currentStakingAddress}`); 
+    console.log(`TS is ${totalSupplyLP} Selected type is  ${selectedType} ac is ${accumulatedRewards == 0} ${realtimeRewardsBN} ${realtimeRewardsLp} current staking address ${currentStakingAddress}`); 
   }
 
   const amountToStakeReadable = formatEther(amountToStake || 0);
@@ -679,13 +681,13 @@ const Staking: React.FC = () => {
         <Box className="staking-area">
           <Box className="container">
             <Box className="row justify-content-center">
-              <Box className="col-12 col-md-7">
+              <Box className="col-12 col-md-7" border="1px solid">
                 <Box className="card no-hover staking-card single-staking">
                   <h3 className="m-0">
                     {!ctx.isSpanishCountry ? "Perezoso Farming (Phase 2)" : "Acuña tu token Perezoso"}</h3>
                   {typeof address !== "undefined" ? 
                     <>
-                    <Box className="input-area col-lg-6 col-12 mb-3" mt={20}>
+                    <Box className="input-area col-lg-6 col-12 mb-3" mt={20} border="1px solid">
                         <HStack><h4>Choose type </h4><h5 style={{color:"tomato", fontWeight:"bolder"}}>(NEW)</h5></HStack>
                         <Box className="input-text">
                           <Select
@@ -700,6 +702,7 @@ const Staking: React.FC = () => {
                             <option key={2} value={2}>BNB/PRZS (LP)</option>
                           </Select>
                         </Box>
+
                     </Box>
                     {selectedType != -1 ?
                     <Box className="tab-content mt-md-3" id="myTabContent"  mt={-20}>
@@ -713,7 +716,32 @@ const Staking: React.FC = () => {
                           
                         <Box className="input-area col-lg-6 col-12 mb-3">
                           <h4>Your wallet</h4>
-                          <Box className="input-text">
+                          {selectedType == 2 ?
+                          <>
+                            <Box className="input-text">
+                              <label>Balances</label><br/>
+                              <Input 
+                                mt={4} 
+                                value={commify(formatEther(przsBalance?.toString()), 4)}
+                                height={35} 
+                                placeHolder="0.0000" 
+                                style={{ border:"1px solid white", borderRadius:"10px", backgroundColor:"gray"}} 
+                                width={180}
+                                mb={10} 
+                              />&nbsp;&nbsp;<Image src={logoPRZS} width={"25px"}></Image>  
+                            </Box>
+                            <Box className="input-text">
+                            <Input 
+                              mt={4} 
+                              value={commify(formatEther(stakedBalance?.toString()), 4)}
+                              height={35} 
+                              placeHolder="0.0000" 
+                              style={{ border:"1px solid white", borderRadius:"10px", backgroundColor:"gray"}} 
+                              width={180} 
+                            />&nbsp;&nbsp;<Image src={stakeTypeIcon} width={stakeTypeIcon == logoPRZS ? "25px": "50px"}></Image>  
+                          </Box> </>:<></>}                         
+                            {selectedType == 1 ?
+                            <Box className="input-text">
                               <label>Balance</label><br/>
                               <Input 
                                 mt={4} 
@@ -723,7 +751,7 @@ const Staking: React.FC = () => {
                                 style={{ border:"1px solid white", borderRadius:"10px", backgroundColor:"gray"}} 
                                 width={180} 
                               />&nbsp;&nbsp;<Image src={stakeTypeIcon} width={stakeTypeIcon == logoPRZS ? "25px": "50px"}></Image>  
-                            </Box>
+                            </Box> : <></>}
                           {stakeTypeIcon == logoLPToken ? 
                           <>
                           <br />

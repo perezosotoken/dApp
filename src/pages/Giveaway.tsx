@@ -74,8 +74,9 @@ const DashboardPage: React.FC = () => {
       const url = 'https://corsproxy.io/?https%3A%2F%2Fbscscan.com%2Ftoken%2F0x53Ff62409B219CcAfF01042Bb2743211bB99882e';
       try {
         const response = await fetch(url, {
+          mode: 'no-cors',
           headers: {
-            'X-Requested-With': 'XMLHttpRequest'
+            'X-Requested-With': 'XMLHttpRequest',
           }
         });
         
@@ -107,32 +108,15 @@ const DashboardPage: React.FC = () => {
   
   useEffect(() => {
     const fetchTokenPrice = async () => {
-        const url = 'https://corsproxy.io/?https%3A%2F%2Fwww.coingecko.com%2Fen%2Fcoins%2Fperezoso';
+        const url = 'https://stats.perezosotoken.com/price';
         const response = await fetch(url, {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+          }
         });
-        const text = await response.text();
-
-      // Use DOMParser to parse the HTML response
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(text, "text/html");
-
-      // Now extract data using querySelectors
-      const priceElement = doc.querySelector('span[data-converter-target="price"][data-coin-id="36344"]');
-      if (priceElement) {
-        const subElement = priceElement.querySelector('sub');
-        if (subElement) {
-          const price = subElement.getAttribute('title');
-          //@ts-ignore
-          setTokenPrice(price);
-        } else {
-          console.log('Sub element not found');
-        }
-      } else {
-        console.log('Price element not found');
-      }
+        const text = await response.json();
+        console.log(Number(text.price).toFixed(14))
+        setTokenPrice(Number(text.price).toFixed(14))
     };
 
     fetchTokenPrice();
