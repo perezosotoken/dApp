@@ -197,13 +197,13 @@ const Staking: React.FC = () => {
       if (stakingContractBalance) {
         const weeklyRewards = 20_000_000_000 * Number(tokenPrice);
 
-        const stakingContractBalanceReadable = Number(50); //formatEther(totalSupplyLP); 
+        const stakingContractBalanceReadable = formatEther(totalSupplyLP); 
  
         const numerator = weeklyRewards * 52;
         const baseAPR = ((numerator / stakingContractBalanceReadable)) * 100;
 
-        console.log(`Token price is ${tokenPrice} Numerator is ${numerator} denominator ${stakingContractBalanceReadable} LP APR is ${baseAPR}`)
-        setLpAPR(baseAPR.toFixed(2));
+        // console.log(`Token price is ${tokenPrice} Numerator is ${numerator} denominator ${stakingContractBalanceReadable} LP APR is ${baseAPR}`)
+        setLpAPR(baseAPR.toFixed(2) * 3);
       } 
     }
 
