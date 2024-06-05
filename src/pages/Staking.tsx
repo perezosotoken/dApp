@@ -670,7 +670,6 @@ const Staking: React.FC = () => {
                 className="card no-hover staking-card" 
                 border="1px solid" 
                 borderRadius={"30px 30px 0px 0px !important"} 
-                h={isMobile ? "30vh" : "25vh"}
               >
               <Heading as="h3" className="m-0">
                     {!ctx.isSpanishCountry ? "Perezoso Farming (Phase 2)" : "Acuña tu token Perezoso"}</Heading>
@@ -713,12 +712,12 @@ const Staking: React.FC = () => {
                             > 
                             &nbsp;Withdraw
                           </Button>  */}
-                          {realtimeRewardsBN > 0 || realtimeRewardsLpBN > 0 ?
-                          <Box ml={!isMobile ? 200 : 0}>
-                            <VStack>
-                              <Text>Stake your Perezoso token or add liquidity  </Text>
+                          {(selectedType == 2 && !isMobile) && (realtimeRewardsBN > 0 || realtimeRewardsLpBN > 0) ?
+                          <Box ml={!isMobile ? 200 : 0} w="280px">
+                            <HStack>
+                              <Text ml={!isMobile ? 60 : 0} style={{fontSize:"14px"}}>Stake your Perezoso (PRZS) or liquidity token (LP)</Text>
                               <Text></Text>
-                            </VStack>
+                            </HStack>
                             </Box> : 
                             <></>}
                            </VStack>                          
