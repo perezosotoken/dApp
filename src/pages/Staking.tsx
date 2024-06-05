@@ -1085,7 +1085,7 @@ const Staking: React.FC = () => {
                             </Box>
                             <Image src={logoPRZS} width="15px" mt={-5} ml={-80}></Image>
                           </HStack>
-                          <Text mt={-20} style={{fontSize:"14px"}}> (${formatAndCommifyNumber(Number(formatEther(selectedType == 1 ? realtimeRewardsBN : realtimeRewardsLpBN  || 0)) * Number(priceUSD).toFixed(12))})</Text>
+                          <Text mt={-20} style={{fontSize:"14px"}}> (${formatAndCommifyNumber(Number(formatEther(selectedType == 1 ? realtimeRewardsBN : realtimeRewardsLpBN  || 0)) * Number(tokenPrice).toFixed(12))})</Text>
                           </VStack>
                           </> : <></>}
                         </Box>
@@ -1105,7 +1105,7 @@ const Staking: React.FC = () => {
                               </Box>
                               <Image src={logoPRZS} width="15px" mt={-5} ml={-80}></Image>
                               </HStack>
-                          <Text mt={-20} style={{fontSize:"14px"}}>(${formatAndCommifyNumber(Number(formatEther(earnedOnStake || 0)) * Number(priceUSD).toFixed(12))})</Text>
+                          <Text mt={-20} style={{fontSize:"14px"}}>(${formatAndCommifyNumber(Number(formatEther(earnedOnStake || 0)) * Number(tokenPrice).toFixed(12))})</Text>
                           </VStack>
                           </>
                           : <></>}
