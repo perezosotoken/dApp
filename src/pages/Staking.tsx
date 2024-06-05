@@ -157,26 +157,31 @@ const Staking: React.FC = () => {
   // Highlighted Changes End
 
   useEffect(() => {
-    const fetchPrice = async () => {
-      try {
-        const url = 'https://api.coingecko.com/api/v3/simple/price';
-        const params = {
-          ids: 'perezoso',
-          vs_currencies: 'usd',
-        };
-        const headers = {
-          'x-cg-demo-api-key': process.env.REACT_APP_CG_API_KEY,
-        };
+    const interval = setInterval(() => {
+      const fetchPrice = async () => {
+        try {
+          const url = 'https://api.coingecko.com/api/v3/simple/price';
+          const params = {
+            ids: 'perezoso',
+            vs_currencies: 'usd',
+          };
+          const headers = {
+            'x-cg-demo-api-key': process.env.REACT_APP_CG_API_KEY,
+          };
+    
+          const response = await axios.get(url, { params, headers });
+          setPriceUSD(Number(response.data['perezoso'].usd).toFixed(11));
+        } catch (err) {
+          console.log(err.message);
+        } 
+      };
   
-        const response = await axios.get(url, { params, headers });
-        setPriceUSD(Number(response.data['perezoso'].usd).toFixed(11));
-      } catch (err) {
-        console.log(err.message);
-      } 
-    };
+      fetchPrice();
+    }, 5000);
 
-    fetchPrice();
-  }, [ticker]);
+    return () => clearInterval(interval);
+
+  }, [isConnected]);
 
   useEffect(() => {
     const key1 = `${2592000}`;
