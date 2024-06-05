@@ -663,16 +663,21 @@ const Staking: React.FC = () => {
 
         </Box> */}
         <Box className="staking-area">
-          <Box className="container">
+          <Box className="container" >
             <Box className="row justify-content-center">
               <Box className="col-12 col-md-7" >
-                <Box className="card no-hover staking-card single-staking">
-                  <h3 className="m-0">
-                    {!ctx.isSpanishCountry ? "Perezoso Farming (Phase 2)" : "Acuña tu token Perezoso"}</h3>
-                  {typeof address !== "undefined" ? 
-                    <>
-                    <Box className="input-area col-lg-6 col-12 mb-3" mt={20}>
-                        <HStack><h4>Choose type </h4><h5 style={{color:"tomato", fontWeight:"bolder"}}>(NEW)</h5></HStack>
+              <Box 
+                className="card no-hover staking-card" 
+                border="1px solid" 
+                borderRadius={"30px 30px 0px 0px !important"} 
+                h={isMobile ? "30vh" : "25vh"}
+              >
+              <Heading as="h3" className="m-0">
+                    {!ctx.isSpanishCountry ? "Perezoso Farming (Phase 2)" : "Acuña tu token Perezoso"}</Heading>
+                  <SimpleGrid>
+                  <Box w="50%" >
+                    
+                  <HStack><h4>Choose type </h4><h5 style={{color:"tomato", fontWeight:"bolder"}}>(NEW)</h5></HStack>
                         <Box className="input-text">
                           <Select
                             width={160} 
@@ -686,8 +691,50 @@ const Staking: React.FC = () => {
                             <option key={2} value={2}>BNB/PRZS (LP)</option>
                           </Select>
                         </Box>
+                  </Box>
+                  <Box w="50%"  >
+                  <SimpleGrid mt={20}>
+                        <HStack>
+                        <Box w={"50%"} ml={150}>
+                          {/* <HStack>
+                            <Text>Time left</Text>
+                          </HStack> */}
+                        </Box>
+                        <Box w={"50%"} w={150}>
+                        <Box mt={!isMobile? "-100px" :"-100px"}>
+                                  
+                          <VStack>
+                          {/* <Button 
+                              isDisabled={stakedBalance == 0 || typeof stakedBalance == "undefined"}
+                              w={"120px"}
+                              isDisabled={stakedBalance == 0 || typeof stakedBalance == "undefined"}
+                              style={{marginLeft:"10px", border:"1px solid white", borderRadius:"10px"}}
+                              onClick={() => withdraw()}
+                            > 
+                            &nbsp;Withdraw
+                          </Button>  */}
+                          {realtimeRewardsBN > 0 || realtimeRewardsLpBN > 0 ?
+                          <Box ml={!isMobile ? 200 : 0}>
+                            <VStack>
+                              <Text></Text>
+                              <Text></Text>
+                            </VStack>
+                            </Box> : 
+                            <></>}
+                           </VStack>                          
+                          {/* <Text style={{fontSize:"13px"}} ml={10}>You will be able to claim your reward once the countdown ends.</Text>                           */}
+                          </Box>
 
+                        </Box>
+                        </HStack>
+                      </SimpleGrid>
                     </Box>
+                  </SimpleGrid>
+              </Box>
+
+                <Box className="card no-hover staking-card single-staking" borderRadius={"0px !important"}>
+                  {typeof address !== "undefined" ? 
+                    <>
                     {selectedType != -1 ?
                     <Box className="tab-content mt-md-3" id="myTabContent"  mt={-20}>
                       <Box
@@ -954,11 +1001,11 @@ const Staking: React.FC = () => {
                 </Box>
               </Box>
               <Box className="col-12 col-md-5">
-              <Box className="staking-items mt-4 mt-md-0" >
-                  <Box className="card no-hover staking-card" border="1px solid" >
+              <Box className="staking-items mt-4 mt-md-0">
+                  <Box className="card no-hover staking-card">
                   <Heading as="h5" size="md" mt={-20}>Phase 2 (Current)</Heading>
                   <SimpleGrid>
-                  <Box w="50%" >
+                  <Box w="50%">
                     
                     <HStack><Heading as="h4">APR</Heading> 
                     <label fontSize={"md"} fontColor="gray" mt={-2}>
