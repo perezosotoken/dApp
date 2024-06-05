@@ -197,7 +197,7 @@ const Staking: React.FC = () => {
       if (stakingContractBalance) {
         const weeklyRewards = 20_000_000_000 * Number(tokenPrice);
 
-        const stakingContractBalanceReadable = formatEther(totalSupplyLP); 
+        const stakingContractBalanceReadable = Number(50); //formatEther(totalSupplyLP); 
  
         const numerator = weeklyRewards * 52;
         const baseAPR = ((numerator / stakingContractBalanceReadable)) * 100;
@@ -716,7 +716,7 @@ const Staking: React.FC = () => {
                           {realtimeRewardsBN > 0 || realtimeRewardsLpBN > 0 ?
                           <Box ml={!isMobile ? 200 : 0}>
                             <VStack>
-                              <Text></Text>
+                              <Text>Stake your Perezoso token or add liquidity  </Text>
                               <Text></Text>
                             </VStack>
                             </Box> : 
