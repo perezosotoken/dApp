@@ -203,7 +203,7 @@ const Staking: React.FC = () => {
         const baseAPR = ((numerator / stakingContractBalanceReadable)) * 100;
 
         // console.log(`Token price is ${tokenPrice} Numerator is ${numerator} denominator ${stakingContractBalanceReadable} LP APR is ${baseAPR}`)
-        setLpAPR(baseAPR.toFixed(2) * 3);
+        setLpAPR((baseAPR * 3).toFixed(2));
       } 
     }
 
