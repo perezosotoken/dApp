@@ -335,7 +335,7 @@ const Staking: React.FC = () => {
 
   const { isLoading: staking, write: stake } = useContractWrite({
     address: stakeTypeIcon == logoPRZS ? stakingV2Address : stakingLPAddress,
-    abi: stakeTypeIcon == logoPRZS ? StakingRewardsArtifact : PerezosoFarmingLPAbi.abi,
+    abi: stakeTypeIcon == logoPRZS ? StakingRewardsArtifact.abi : PerezosoFarmingLPAbi.abi,
     functionName: "stake",
     args: stakeTypeIcon == logoPRZS ? [amountToStake, selectedTime] : [amountToStake],
     onSuccess() {
@@ -355,6 +355,7 @@ const Staking: React.FC = () => {
       }, 5000);
     },
     onError(data) {
+      console.log(data)
       if (!isConnected) {
         toast("Please connect your wallet first");
         return;
