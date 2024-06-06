@@ -970,7 +970,7 @@ const Staking: React.FC = () => {
                               {isMobile ? 
                               <StakeControls
                                 amountToStake={amountToStake}
-                                przsBalance={przsBalance}
+                                lpTokenBalance={lpTokenBalance}
                                 // sideButtonsGroupSize={sideButtonsGroupSize}
                                 approve={approve}
                                 handleStakeAll={handleStakeAll}
