@@ -451,39 +451,48 @@ const Staking: React.FC = () => {
       const startTime = calculateStartTime(unlockTime, oneMonthInSeconds);
         
       function calculateAccumulatedRewards(startTimeInSeconds, rewardPerSecond, unlockTime) {
-        const currentTimeInSeconds = Math.floor(Date.now() / 1000); 
-        const elapsedTimeInSeconds = currentTimeInSeconds - startTimeInSeconds;
-        const accumulatedRewards = elapsedTimeInSeconds * rewardPerSecond;
+        let accumulatedRewards = 0;
+        console.log(`Staked balance is ${stakedBalance}`)
+        if (stakedBalance <= parseEther("1000000000")) {
+          setSelectedTierV1(0);
+          setSelectedTimeV1("0");
+          accumulatedRewards = 300_000;
+        } else if (stakedBalance <= parseEther("10000000000")) {
+          setSelectedTierV1(1);
+          setSelectedTimeV1(0);
+          accumulatedRewards = 3_000_000;
+        }
+        else if (stakedBalance <= parseEther("100000000000")) {
+          setSelectedTierV1(2);
+          setSelectedTimeV1(0);
+        }
+        else if (stakedBalance <= parseEther("1000000000000")) {
+          setSelectedTierV1(3);
+          setSelectedTimeV1(0);
+        }  
+   
 
-        const now = Math.floor(Date.now() / 1000);  
-        const delta = unlockTime - now;
+        if (timeLeft > 0 ) {
 
-        if (delta <= 0) {
-          return Math.min(accumulatedRewards, 300000);
+          accumulatedRewards = 0;
+          const currentTimeInSeconds = Math.floor(Date.now() / 1000); 
+          const elapsedTimeInSeconds = currentTimeInSeconds - startTimeInSeconds;
+          accumulatedRewards = elapsedTimeInSeconds * rewardPerSecond;  
+  
+          const now = Math.floor(Date.now() / 1000);  
+          const delta = unlockTime - now;
+  
+          if (delta <= 0) {
+            return Math.min(accumulatedRewards, 300000);
+          }
+        } else {
+
         }
 
         return stakedBalanceBN > 0 ? accumulatedRewards : 0;
       }
 
-      let rewardPerSecond = 0;
-
-      if (stakedBalance == parseEther("1000000000")) {
-        setSelectedTierV1(0);
-        setSelectedTimeV1("0");
-      } else if (stakedBalance == parseEther("10000000000")) {
-        setSelectedTierV1(1);
-        setSelectedTimeV1(0);
-      }
-      else if (stakedBalance == parseEther("100000000000")) {
-        setSelectedTierV1(2);
-        setSelectedTimeV1(0);
-      }
-      else if (stakedBalance == parseEther("1000000000000")) {
-        setSelectedTierV1(3);
-        setSelectedTimeV1(0);
-      }
-
-      rewardPerSecond = rewardsMap[selectedTierV1][selectedTimeV1] / totalStakingTime;
+      let rewardPerSecond = rewardsMap[selectedTierV1][selectedTimeV1] / totalStakingTime;
 
       const accumulatedRewards = calculateAccumulatedRewards(startTime, rewardPerSecond);
 
@@ -637,6 +646,7 @@ const Staking: React.FC = () => {
   const sideButtonsGroupSize = isMobile ? "35px" : "25px";
 
 
+  console.log(`AC is ${accumulatedRewards} -- ${Number(accumulatedRewards) == 0}`)
 
    return(
     <>
@@ -1179,15 +1189,15 @@ const Staking: React.FC = () => {
                         <Box w={"50%"} w={150}>
                           <Box mt={!isMobile? "-100px" :"-100px"}>
                           <HStack>                       
-                            {timeLeft > 0 ? 
+                            {accumulatedRewards > 0 ? 
                             <>
                             <Button 
                               w={"200px"}
-                              isDisabled={accumulatedRewards == 0 || typeof stakedBalance == "undefined"}
+                              isDisabled={Number(accumulatedRewards) == 0}
                               style={{marginLeft:"10px", border:"1px solid white", borderRadius:"10px"}}
                               onClick={() => unStake()}
                             > 
-                            &nbsp;Unstake & Claim
+                            &nbsp;Exit
                           </Button> 
                           <Text style={{fontSize:"13px"}} ml={10}>You will be able to claim your reward once the countdown ends.</Text>                          
                             </> : <></>}                                  
