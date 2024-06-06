@@ -151,7 +151,7 @@ const Staking: React.FC = () => {
           }
         });
         const text = await response.json();
-        console.log(`Token price is ${Number(text.price).toFixed(14)}`)
+        // console.log(`Token price is ${Number(text.price).toFixed(14)}`)
         setTokenPrice(Number(text.price).toFixed(14))
     };
 
@@ -376,7 +376,7 @@ const Staking: React.FC = () => {
     },
   });
 
-  console.log(`Token address ${ stakeTypeIcon == logoPRZS ? tokenAddress : lpTokenAddress} p ${stakingV2Address} pars ${[stakingLPAddress, amountToStake]}`);
+  // console.log(`Token address ${ stakeTypeIcon == logoPRZS ? tokenAddress : lpTokenAddress} p ${stakingV2Address} pars ${[stakingLPAddress, amountToStake]}`);
 
   const { isLoading: approving, write: approve } = useContractWrite({
     address: stakeTypeIcon == logoPRZS ? tokenAddress : lpTokenAddress,
@@ -569,30 +569,12 @@ const Staking: React.FC = () => {
   };
   
   const handleStakeAll = (quantity) => {
-    console.log(`Handle stakeAll`)
 
-    let toStake = 0n; 
-    let toStakeBigInt = BigInt(0);
-
-    if (selectedType == 1) {
-      toStakeBigInt = BigInt(przsBalance); 
-    } else if (selectedType == 2) {
-      toStakeBigInt = BigInt(lpTokenBalance);
-    }
-
-    
-    if (quantity === "25") {
-      toStake = toStakeBigInt / 4n; 
-    } else if (quantity === "50") {
-      toStake = toStakeBigInt / 2n; 
-    } else if (quantity === "75") {
-      toStake = (toStakeBigInt * 75n) / 100n; 
-    } else if (quantity === "100") {
-      toStake = (toStakeBigInt * 9999n) / 10000n; 
-    }
-    console.log(`type ${selectedType} ToStake ${toStakeBigInt} ts ${toStake}`)
-
-    setAmountToStake(selectedType == 1 ? toStake : toStakeBigInt);
+    setAmountToStake(
+      selectedType == 1 ? 
+      BigInt(przsBalance) * BigInt(quantity) / 100n : 
+      BigInt(lpTokenBalance) * BigInt(quantity) / 100n
+    );
   };
 
   const handleSetSelectedStake = (value) => {
@@ -626,7 +608,7 @@ const Staking: React.FC = () => {
   }
 
   const handleChangeStakingType = (value) => {
- 
+    setAmountToStake(0);
     switch (value) {
       case "1":
         setSelectedType("1")
@@ -647,7 +629,7 @@ const Staking: React.FC = () => {
       default:
     }
 
-    console.log(`TS is ${totalSupplyLP} Selected type is  ${selectedType} ac is ${accumulatedRewards == 0} ${realtimeRewardsBN} ${realtimeRewardsLp} current staking address ${currentStakingAddress}`); 
+    // console.log(`TS is ${totalSupplyLP} Selected type is  ${selectedType} ac is ${accumulatedRewards == 0} ${realtimeRewardsBN} ${realtimeRewardsLp} current staking address ${currentStakingAddress}`); 
   }
 
   const amountToStakeReadable = formatEther(amountToStake || 0);
@@ -972,7 +954,7 @@ const Staking: React.FC = () => {
 
                             <VStack mr={95}>
                             <Box w="200px" ml={isMobile ? "-2vh" : "1vh"} pb={20} mt={isMobile ? -60 : 10}>
-                            {amountToStakeReadable > 0 ?  <Text ml={isMobile ? 18 : 0} style={{fontSize:"16px"}} color="lightgray">(Staking: {formatNumber(Number(amountToStakeReadable))})</Text> : <></>}
+                            {amountToStake > 0 ?  <Text ml={isMobile ? 18 : 0} style={{fontSize:"16px"}} color="lightgray">(Staking: {formatNumber(formatEther(amountToStake || 0))})</Text> : <></>}
                             </Box>
                             </VStack>
                               <Box mt={isMobile ? 0 : -20}>
