@@ -1199,7 +1199,9 @@ const Staking: React.FC = () => {
                             > 
                             &nbsp;Exit
                           </Button> 
-                          <Text style={{fontSize:"13px"}} ml={10}>You will be able to claim your reward once the countdown ends.</Text>                          
+                              {timeLeft > 0 ?
+                              <Text style={{fontSize:"13px"}} ml={10}>You will be able to claim your reward once the countdown ends.</Text>                          
+                              : <></>}
                             </> : <></>}                                  
                           </HStack>
                         </Box>
