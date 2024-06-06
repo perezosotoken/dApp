@@ -572,7 +572,8 @@ const Staking: React.FC = () => {
 
     setAmountToStake(
       selectedType == 1 ? 
-      BigInt(przsBalance) * BigInt(quantity) / 100n : 
+      BigInt(przsBalance) * BigInt(quantity == "100" ? 9999n : quantity   
+    ) / (quantity == "100" ? 10000n : 100n) :
       BigInt(lpTokenBalance) * BigInt(quantity) / 100n
     );
   };
