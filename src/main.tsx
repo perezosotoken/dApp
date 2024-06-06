@@ -8,6 +8,7 @@ import DashboardPage from "./pages/Giveaway";
 import LeaderboardPage from "./pages/Leaderboard";
 import Staking from "./pages/Staking";
 import Stats from "./pages/Stats";
+import PdfRedirect from "./pages/PdfRedirect";  
 
 const router = createBrowserRouter([
   {
@@ -33,7 +34,11 @@ const router = createBrowserRouter([
       {
         path: "/stats",
         element: <Stats />,
-      }
+      },
+      {
+        path: "/wp", // Add the new route
+        element: <PdfRedirect />,
+      },      
     ],
   },
 ]);
