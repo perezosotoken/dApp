@@ -73,6 +73,7 @@ const Staking: React.FC = () => {
   const [isSelectedPositionUnlocked, setIsSelectedPositionUnlocked] = useState(false);
   const [totalEarned, setTotalEarned] = useState(0);
   const [tokenPrice, setTokenPrice] = useState(0);
+  const [lpAprFromApi, setLpAprFromApi] = useState(0);
 
   const [timeLeft, setTimeLeft] = useState("");
   const [expDate, setExpDate] = useState("");
@@ -121,7 +122,21 @@ const Staking: React.FC = () => {
     return () => clearInterval(interval);
   }, [stakingV2Address]);
 
-
+  useEffect(() => {
+    const fetchLpApr = async () => {
+      const url = 'https://stats.perezosotoken.com/lpapr';
+      const response = await fetch(url, {
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+        }
+      });
+      const data = await response.json();
+      setLpAprFromApi(Number(data.apr));
+    };
+  
+    fetchLpApr();
+  }, []);
+  
   useEffect(() => {
     const interval = setInterval(() => {
 
@@ -930,7 +945,7 @@ const Staking: React.FC = () => {
                                   <HStack>
                                   <Text style={{fontSize:"13px", marginTop: 20}}>(APR</Text>
                                   <label fontSize={"md"} fontColor="gray" mt={-2}>
-                                  <b>{selectedType == -1 ? 0 : selectedType == 1 ? commify(tierAPR) : commify(lpAPR)}%</b>)
+                                  <b>{selectedType == -1 ? 0 : selectedType == 1 ? commify(tierAPR) : commify(lpAprFromApi)}%</b>)
                                   </label>
                                   </HStack>
                                 </Text>
@@ -1010,7 +1025,7 @@ const Staking: React.FC = () => {
                     
                     <HStack><Heading as="h4">APR</Heading> 
                     <label fontSize={"md"} fontColor="gray" mt={-2}>
-                      {selectedType == -1 ? 0 : selectedType == 1 ? commify(tierAPR) : commify(lpAPR)}%
+                      {selectedType == -1 ? 0 : selectedType == 1 ? commify(tierAPR) : commify(lpAprFromApi)}%
                       </label>
                       </HStack>
                   </Box>
