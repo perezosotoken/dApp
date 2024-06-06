@@ -704,7 +704,7 @@ const Staking: React.FC = () => {
                           {(selectedType == 2 && !isMobile) && (realtimeRewardsBN > 0 || realtimeRewardsLpBN > 0) ?
                           <Box ml={!isMobile ? 200 : 0} w="280px">
                             <HStack>
-                              <Text ml={!isMobile ? 60 : 0} style={{fontSize:"14px"}}>Stake your Perezoso (PRZS) or liquidity token (LP)</Text>
+                              <Text ml={!isMobile ? 60 : 0} mt={150} style={{fontSize:"14px"}}>Stake your Perezoso (PRZS) or liquidity token (LP)</Text>
                               <Text></Text>
                             </HStack>
                             </Box> : 
@@ -1129,7 +1129,7 @@ const Staking: React.FC = () => {
                   <Box className="card no-hover staking-card">
                     {typeof address !== "undefined" ? 
                     <>
-                                      <Heading as="h4" size="md" mt={-20}>Phase 1 (Old)</Heading>
+                    <Heading as="h4" size="md" mt={-20}>Phase 1 (Old)</Heading>
                     <SimpleGrid >
                         <HStack>
                         <Box w={"50%"} style={{marginBottom: "10px"}} >
@@ -1183,7 +1183,7 @@ const Staking: React.FC = () => {
                             <>
                             <Button 
                               w={"200px"}
-                              isDisabled={stakedBalance == 0 || typeof stakedBalance == "undefined"}
+                              isDisabled={accumulatedRewards == 0 || typeof stakedBalance == "undefined"}
                               style={{marginLeft:"10px", border:"1px solid white", borderRadius:"10px"}}
                               onClick={() => unStake()}
                             > 
