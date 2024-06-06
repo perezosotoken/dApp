@@ -375,11 +375,13 @@ const Staking: React.FC = () => {
     },
   });
 
+  console.log(`Token address ${ stakeTypeIcon == logoPRZS ? tokenAddress : lpTokenAddress} p ${stakingV2Address} pars ${[stakingLPAddress, amountToStake]}`);
+
   const { isLoading: approving, write: approve } = useContractWrite({
     address: stakeTypeIcon == logoPRZS ? tokenAddress : lpTokenAddress,
     abi: TOKENABI,
     functionName: "approve",
-    args: stakeTypeIcon == logoPRZS ? stakingV2Address : [stakingLPAddress, amountToStake],
+    args: stakeTypeIcon == logoPRZS ? [stakingV2Address, amountToStake] : [stakingLPAddress, amountToStake],
     onSuccess: () => {
       setIsWaitingForApproval(true);
       setTimeout(() => {
@@ -388,6 +390,7 @@ const Staking: React.FC = () => {
       }, 5000);
     },
     onError(data) {
+      console.log(data)
       if (!isConnected) {
         toast("Please connect your wallet first");
         return;
@@ -576,6 +579,7 @@ const Staking: React.FC = () => {
       toStakeBigInt = BigInt(lpTokenBalance);
     }
 
+    
     if (quantity === "25") {
       toStake = toStakeBigInt / 4n; 
     } else if (quantity === "50") {
@@ -585,8 +589,9 @@ const Staking: React.FC = () => {
     } else if (quantity === "100") {
       toStake = (toStakeBigInt * 9999n) / 10000n; 
     }
-  
-    setAmountToStake(selectedType == 2 ? toStake : toStakeBigInt);
+    console.log(`type ${selectedType} ToStake ${toStakeBigInt} ts ${toStake}`)
+
+    setAmountToStake(selectedType == 1 ? toStake : toStakeBigInt);
   };
 
   const handleSetSelectedStake = (value) => {
@@ -927,10 +932,13 @@ const Staking: React.FC = () => {
                                 </Box>
                                 &nbsp;&nbsp;
                                 <Box ml={10}>
-                                <Text style={{fontSize:isMobile?'16px':'14px'}}>(APR&nbsp;
-                                <label fontSize={"md"} fontColor="gray" mt={-2}>
-                                  <b>{selectedType == -1 ? 0 : selectedType == 1 ? commify(tierAPR) : commify(lpAPR)}%</b>%)
+                                <Text style={{fontSize:isMobile?'16px':'14px'}}>
+                                  <HStack>
+                                  <Text style={{fontSize:"13px", marginTop: 20}}>(APR</Text>
+                                  <label fontSize={"md"} fontColor="gray" mt={-2}>
+                                  <b>{selectedType == -1 ? 0 : selectedType == 1 ? commify(tierAPR) : commify(lpAPR)}%</b>)
                                   </label>
+                                  </HStack>
                                 </Text>
                                 </Box>
                                 </HStack>
