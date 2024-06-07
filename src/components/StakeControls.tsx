@@ -30,7 +30,7 @@ function StakingTable({amountToStake, przsBalance, lpTokenBalance, sideButtonsGr
 
         {isMobile ? 
           <Button 
-          isDisabled={amountToStake == 0 || lpTokenBalance == 0}
+          isDisabled={amountToStake == 0}
           width={"120px"} 
           style={{ border:"1px solid white", borderRadius:"10px"}}
           onClick={() => approve()}
