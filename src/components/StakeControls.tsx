@@ -13,18 +13,18 @@ import {
 } from '@chakra-ui/react';
 import { isMobile } from "react-device-detect";
 
-function StakingTable({amountToStake, lpTokenBalance, sideButtonsGroupSize, approve, handleStakeAll}) {
+function StakingTable({amountToStake, przsBalance, lpTokenBalance, sideButtonsGroupSize, approve, handleStakeAll}) {
   return (
     <Box>
       <VStack>
         <Box mt={isMobile ? 0 : 10}>
         <HStack>
-          <Button isDisabled={lpTokenBalance == 0} size={sideButtonsGroupSize} borderRadius={10} mt={5} onClick={() => handleStakeAll("25")}>25%</Button>&nbsp;
-          <Button isDisabled={lpTokenBalance == 0} size={sideButtonsGroupSize} borderRadius={10} mt={5} onClick={() => handleStakeAll("50")}>50%</Button>&nbsp;
+          <Button isDisabled={lpTokenBalance == 0 || przsBalance == 0} size={sideButtonsGroupSize} borderRadius={10} mt={5} onClick={() => handleStakeAll("25")}>25%</Button>&nbsp;
+          <Button isDisabled={lpTokenBalance == 0 || przsBalance == 0} size={sideButtonsGroupSize} borderRadius={10} mt={5} onClick={() => handleStakeAll("50")}>50%</Button>&nbsp;
           </HStack>
         <HStack>
-        <Button isDisabled={lpTokenBalance == 0} size={sideButtonsGroupSize} borderRadius={10} mt={5} onClick={() => handleStakeAll("75")}>75%</Button>&nbsp;
-        <Button isDisabled={lpTokenBalance == 0} border="4px solid green" size={sideButtonsGroupSize} borderRadius={10} mt={5} onClick={() => handleStakeAll("100")}>MAX</Button>&nbsp;
+        <Button isDisabled={lpTokenBalance == 0 || przsBalance == 0} size={sideButtonsGroupSize} borderRadius={10} mt={5} onClick={() => handleStakeAll("75")}>75%</Button>&nbsp;
+        <Button isDisabled={lpTokenBalance == 0 || przsBalance == 0} border="4px solid green" size={sideButtonsGroupSize} borderRadius={10} mt={5} onClick={() => handleStakeAll("100")}>MAX</Button>&nbsp;
         </HStack>      
         </Box>
 

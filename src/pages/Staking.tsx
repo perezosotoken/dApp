@@ -971,6 +971,7 @@ const Staking: React.FC = () => {
                               <StakeControls
                                 amountToStake={amountToStake}
                                 lpTokenBalance={lpTokenBalance}
+                                przsBalance={przsBalance}
                                 // sideButtonsGroupSize={sideButtonsGroupSize}
                                 approve={approve}
                                 handleStakeAll={handleStakeAll}
