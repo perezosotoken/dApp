@@ -426,12 +426,13 @@ const Staking: React.FC = () => {
         window.location.reload();
       }, 5000);    
     },
-    onError() {
+    onError(data) {
+      console.log(data)
       if (!isConnected) {
         toast("Please connect your wallet first");
         return;
       }
-      toast("Error, Transaction unsuccessful.");
+      toast("Error, cannot unstake position");
     },
   });
 
@@ -467,7 +468,7 @@ const Staking: React.FC = () => {
         
       function calculateAccumulatedRewards(startTimeInSeconds, rewardPerSecond, unlockTime) {
         let accumulatedRewards = 0;
-        console.log(`Staked balance is ${stakedBalance}`)
+        // console.log(`Staked balance is ${stakedBalance}`)
         if (stakedBalance <= parseEther("1000000000")) {
           setSelectedTierV1(0);
           setSelectedTimeV1("0");
@@ -661,7 +662,7 @@ const Staking: React.FC = () => {
   const sideButtonsGroupSize = isMobile ? "35px" : "25px";
 
 
-  console.log(`AC is ${accumulatedRewards} -- ${Number(accumulatedRewards) == 0}`)
+  // console.log(`AC is ${accumulatedRewards} -- ${Number(accumulatedRewards) == 0}`)
 
    return(
     <>
@@ -981,7 +982,7 @@ const Staking: React.FC = () => {
 
                             <VStack mr={95}>
                             <Box w="200px" ml={isMobile ? "-2vh" : "1vh"} pb={20} mt={isMobile ? -60 : 10}>
-                            {amountToStake > 0 ?  <Text ml={isMobile ? 18 : 0} style={{fontSize:"16px"}} color="lightgray">(Staking: {formatNumber(formatEther(amountToStake || 0))})</Text> : <></>}
+                            {amountToStake > 0 ?  <Text ml={isMobile ? 18 : 0} style={{fontSize:"16px"}} color="lightgray">(Staking: {selectedType == 2 ? Number(formatNumber(formatEther(amountToStake || 0))).toFixed(2) : formatNumber(formatEther(amountToStake || 0))})</Text> : <></>}
                             </Box>
                             </VStack>
                               <Box mt={isMobile ? 0 : -20}>
