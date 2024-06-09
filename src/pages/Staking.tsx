@@ -140,7 +140,7 @@ const Staking: React.FC = () => {
   useEffect(() => {
     const interval = setInterval(() => {
 
-      let isSelectedPositionUnlocked = true; //stakes[selectedStake].lockTime < Math.floor(Date.now() / 1000);
+      let isSelectedPositionUnlocked = stakes[selectedStake].lockTime < Math.floor(Date.now() / 1000);
        
       isSelectedPositionUnlocked = selectedType == 2 ? true : isSelectedPositionUnlocked;
  
