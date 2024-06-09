@@ -140,7 +140,7 @@ const Staking: React.FC = () => {
   useEffect(() => {
     const interval = setInterval(() => {
 
-      let isSelectedPositionUnlocked = false;
+      let isSelectedPositionUnlocked = stakes[selectedStake].lockTime < Math.floor(Date.now() / 1000);
        
       isSelectedPositionUnlocked = selectedType == 2 ? true : isSelectedPositionUnlocked;
  
@@ -766,7 +766,7 @@ const Staking: React.FC = () => {
                               <label>Balances</label><br/>
                               <Input 
                                 mt={4} 
-                                value={commify(formatEther(przsBalance?.toString()), 4)}
+                                value={commify(formatEther(przsBalance?.toString() || 0), 4)}
                                 height={35} 
                                 placeHolder="0.0000" 
                                 style={{ border:"1px solid white", borderRadius:"10px", backgroundColor:"gray"}} 
@@ -777,7 +777,7 @@ const Staking: React.FC = () => {
                             <Box className="input-text">
                             <Input 
                               mt={4} 
-                              value={commify(formatEther(stakedBalance?.toString()), 4)}
+                              value={commify(formatEther(stakedBalance?.toString() || 0), 4)}
                               height={35} 
                               placeHolder="0.0000" 
                               style={{ border:"1px solid white", borderRadius:"10px", backgroundColor:"gray"}} 
