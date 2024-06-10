@@ -1128,7 +1128,7 @@ const Staking: React.FC = () => {
                             <HStack>
                             <Box w="160px" textAlign="right" mr={80}>
                               <Heading as="h6" style={{color:"lightgray"}}>
-                                {stakesCount > 0 && earnedOnStake > 0 ? 
+                                {(stakesCount > 0 && earnedOnStake > 0 && !isSelectedPositionUnlocked) ? 
                                   commify(formatEther(earnedOnStake || 0), 4) : 0}
                                 </Heading>
                               </Box>
