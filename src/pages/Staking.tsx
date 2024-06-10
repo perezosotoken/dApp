@@ -140,10 +140,17 @@ const Staking: React.FC = () => {
   useEffect(() => {
     const interval = setInterval(() => {
 
-      console.log(stakes[selectedStake])
-      console.log(`${selectedStake} ${stakes[selectedStake].lockEnd} < ${Math.floor(Date.now() / 1000)} = ${stakes[selectedStake].lockTime < Math.floor(Date.now() / 1000)}`)
+      // console.log(stakes[selectedStake])
+      // console.log(`${selectedType} ${selectedStake} ${stakes[selectedStake].lockEnd} < ${Math.floor(Date.now() / 1000)} = ${stakes[selectedStake].lockTime < Math.floor(Date.now() / 1000)}`)
       
-      let isSelectedPositionUnlocked = stakes[selectedStake].lockEnd < Math.floor(Date.now() / 1000);
+      let isSelectedPositionUnlocked 
+
+      try {
+        isSelectedPositionUnlocked = stakes[selectedStake].lockEnd < Math.floor(Date.now() / 1000);
+
+      } catch (err) {
+        console.log(err)
+      }
        
       isSelectedPositionUnlocked = selectedType == 2 ? true : isSelectedPositionUnlocked;
  
@@ -1073,7 +1080,7 @@ const Staking: React.FC = () => {
                           w={120} 
                           style={{border:"1px solid white", borderRadius:"10px"}}
                           onClick={() => selectedType == 1 ? withdraw() : withdrawLp()}
-                          isDisabled={!isSelectedPositionUnlocked }
+                          isDisabled={!isSelectedPositionUnlocked}
                           >Exit
                           </Button>: <></>}
                            </VStack>                          
