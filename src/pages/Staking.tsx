@@ -137,29 +137,6 @@ const Staking: React.FC = () => {
     fetchLpApr();
   }, []);
   
-  useEffect(() => {
-    const interval = setInterval(() => {
-
-      // console.log(stakes[selectedStake])
-      // console.log(`${selectedType} ${selectedStake} ${stakes[selectedStake].lockEnd} < ${Math.floor(Date.now() / 1000)} = ${stakes[selectedStake].lockTime < Math.floor(Date.now() / 1000)}`)
-      
-      let isSelectedPositionUnlocked 
-
-      try {
-        isSelectedPositionUnlocked = stakes[selectedStake].lockEnd < Math.floor(Date.now() / 1000);
-
-      } catch (err) {
-        console.log(err)
-      }
-       
-      isSelectedPositionUnlocked = selectedType == 2 ? true : isSelectedPositionUnlocked;
- 
-      setIsSelectedPositionUnlocked(isSelectedPositionUnlocked);
-      
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [selectedType]);
 
   useEffect(() => {
     setCurrentStakingAddress(selectedType == 2 ? stakingV2Address : stakingLPAddress);
@@ -271,6 +248,30 @@ const Staking: React.FC = () => {
   });
   
   const totalStaked = stakes?.reduce((acc, stake) => acc + stake.amount, 0n) || 0;
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+
+      // console.log(stakes[selectedStake])
+      // console.log(`${selectedType} ${selectedStake} ${stakes[selectedStake].lockEnd} < ${Math.floor(Date.now() / 1000)} = ${stakes[selectedStake].lockTime < Math.floor(Date.now() / 1000)}`)
+      
+      let isSelectedPositionUnlocked 
+
+      try {
+        isSelectedPositionUnlocked = stakes[selectedStake].lockEnd < Math.floor(Date.now() / 1000);
+
+      } catch (err) {
+        console.log(err)
+      }
+       
+      isSelectedPositionUnlocked = selectedType == 2 ? true : isSelectedPositionUnlocked;
+ 
+      setIsSelectedPositionUnlocked(isSelectedPositionUnlocked);
+      
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [selectedType, stakes, selectedStake]);
 
   const { data: lpTokenBalance } = useContractRead({
     address: lpTokenAddress,
@@ -1107,8 +1108,8 @@ const Staking: React.FC = () => {
                             <Box w="160px" textAlign="right" mr={80} >
                             <Heading as="h6" style={{color:"lightgray"}}>
                                 { stakesCount > 0 && selectedType == 1 ? 
-                                commify(formatEther(realtimeRewardsBN || 0), 4) : 
-                                commify(formatEther(realtimeRewardsLpBN || 0), 4)
+                                  commify(formatEther(realtimeRewardsBN || 0), 4) : 
+                                  commify(formatEther(realtimeRewardsLpBN || 0), 4)
                                 }
                               </Heading>
                             </Box>
@@ -1128,7 +1129,9 @@ const Staking: React.FC = () => {
                             <HStack>
                             <Box w="160px" textAlign="right" mr={80}>
                               <Heading as="h6" style={{color:"lightgray"}}>
-                                {(stakesCount > 0 && earnedOnStake > 0 && !isSelectedPositionUnlocked) ? 
+                                {(stakesCount > 0 && 
+                                  earnedOnStake > 0 && 
+                                  !isSelectedPositionUnlocked) ? 
                                   commify(formatEther(earnedOnStake || 0), 4) : 0}
                                 </Heading>
                               </Box>
