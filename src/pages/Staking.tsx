@@ -41,11 +41,11 @@ const Staking: React.FC = () => {
 
   const ticker = "perezoso";
 
-  const tokenAddress = "0x53ff62409b219ccaff01042bb2743211bb99882e";
+  const tokenAddress = "0xd83207c127c910e597b8ce77112ed0a56c8c9cd0";
   const lpTokenAddress = "0xe2F4A4534133BEacD8542F404f8C9D5135fBaF0e";
   
   const stakingAddress = "0xE2DF958c48F0245D823c2dCb012134CfDa9F8f9F";
-  const stakingV2Address = "0x1FbDB5c46F6a33eC22a7AF990518Ed4610864b2c";
+  const stakingV2Address = "0x099C966BdfB2D1365a14886d1686fC64f0948553";
   const stakingLPAddress = "0x3B6109F05D7C32F887A65646511486695FEa6428";
 
   /** V1 Variables */
