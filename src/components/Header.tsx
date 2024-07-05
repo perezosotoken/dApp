@@ -164,9 +164,21 @@ const Header: React.FC = () => {
                       className="nav-link"
                       href="/staking"
                     >
-                        {!ctx.isSpanishCountry ? "Staking" : "Acuñar"}
+                        {!ctx.isSpanishCountry ? "Farming" : "Acuñar"}
                     </a>
                     </li>
+                    <li 
+                    className="nav-item"
+                    data-bs-dismiss="modal"
+                    style={{ fontSize: "20px" }}                    
+                    >
+                    <a
+                      className="nav-link"
+                      href="/staking"
+                    >
+                        {!ctx.isSpanishCountry ? "Farming BBP" : "Acuñar"}
+                    </a>
+                    </li>                    
                     <li
                       className="nav-item"
                       data-bs-dismiss="modal"
@@ -185,7 +197,7 @@ const Header: React.FC = () => {
                         className="nav-link"
                         href="https://drive.google.com/file/d/1PXB0_ev2_oex0o8LdPF-QmQi3hFLyoxK/view"
                       >
-                        WP
+                        Whitepaper
                       </a>
                     </li>
                     <li
