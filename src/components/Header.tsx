@@ -56,7 +56,7 @@ const Header: React.FC = () => {
                 className="nav-link"
                 href="/stakingbbp"
               >
-                  {!ctx.isSpanishCountry ? "Farming BBP" : "Acuñar BBP"}
+                  {!ctx.isSpanishCountry ? "BBP" : "Acuñar BBP"}
               </a>
             </li>               
             <li
