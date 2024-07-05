@@ -174,7 +174,7 @@ const Header: React.FC = () => {
                     >
                     <a
                       className="nav-link"
-                      href="/staking"
+                      href="/stakingbbp"
                     >
                         {!ctx.isSpanishCountry ? "Farming BBP" : "Acuñar"}
                     </a>
