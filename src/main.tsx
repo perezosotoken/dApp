@@ -7,6 +7,8 @@ import HomePage from "./pages/Home";
 import DashboardPage from "./pages/Giveaway";
 import LeaderboardPage from "./pages/Leaderboard";
 import Staking from "./pages/Staking";
+import StakingBBP from "./pages/StakingBBP";
+
 import Stats from "./pages/Stats";
 import PdfRedirect from "./pages/PdfRedirect";  
 
@@ -31,6 +33,10 @@ const router = createBrowserRouter([
         path: "/staking",
         element: <Staking />,
       },
+      {
+        path: "/stakingbbp",
+        element: <StakingBBP />,
+      },      
       {
         path: "/stats",
         element: <Stats />,
