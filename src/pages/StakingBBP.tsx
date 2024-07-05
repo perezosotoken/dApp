@@ -131,15 +131,15 @@ const StakingBBP: React.FC = () => {
     const multipliers = {
       [key1]: 1,
       [key2]: 2,
-      [key3]: 3,
-      [key4]: 6,
+      [key3]: 1,
+      [key4]: 2,
     };
     
     const calculateAPR = async () => {
       if (stakingContractBalance) {
         const _tokenPrice = 0.005;
         const priceUSD =   0.00000000197;
-        const weeklyRewards = 150_000 * Number(_tokenPrice);
+        const weeklyRewards = 250_000 * Number(_tokenPrice);
         const stakingContractBalanceReadable = formatEther(stakingContractBalance); 
         console.log(`Staking contract balance is ${stakingContractBalanceReadable}`)
         const numerator = weeklyRewards * 52;
