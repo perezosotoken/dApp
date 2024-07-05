@@ -140,7 +140,6 @@ const StakingBBP: React.FC = () => {
       if (stakingContractBalance) {
         const _tokenPrice = 0.005;
         const weeklyRewards = 150_000 * Number(_tokenPrice);
-        const priceUSD =  0.00000000197
         const stakingContractBalanceReadable = formatEther(stakingContractBalance); 
         console.log(`Staking contract balance is ${stakingContractBalanceReadable}`)
         const numerator = weeklyRewards * 52;
