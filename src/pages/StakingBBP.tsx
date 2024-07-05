@@ -719,7 +719,7 @@ const StakingBBP: React.FC = () => {
                               <Box w={"60%"}>
                                 <Select
                                   placeholder='' 
-                                  defaultValue={0}
+                                  defaultValue={2592000 * 6}
                                   width={"100%"} 
                                   height={40}
                                   fontSize={13}
