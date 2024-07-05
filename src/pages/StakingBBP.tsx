@@ -1009,7 +1009,7 @@ const StakingBBP: React.FC = () => {
               <Box className="col-12 col-md-5">
               <Box className="staking-items mt-4 mt-md-0" >
                   <Box className="card no-hover staking-card" border="1px solid" >
-                  <Heading as="h5" size="md" mt={-20}>Rewards</Heading>
+                  <Heading as="h5" size="md" mt={-20}>Rewards (Baby Perezoso - BBP)</Heading>
                   <SimpleGrid>
                   <Box w="50%" >
                     
