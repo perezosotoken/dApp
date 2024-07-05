@@ -58,7 +58,7 @@ const StakingBBP: React.FC = () => {
   /** V2 Variables */
   const [amountToStake, setAmountToStake] = useState(parseEther(`${0}`));
   const [selectedTier, setSelectedTier] = useState("1");
-  const [selectedTime, setSelectedTime] = useState("2592000");
+  const [selectedTime, setSelectedTime] = useState("2592000 * 6");
   const [selectedStake, setSelectedStake] = useState("0");
  
   const tokenAddress = "0xd83207c127c910e597b8ce77112ed0a56c8c9cd0";
@@ -138,22 +138,23 @@ const StakingBBP: React.FC = () => {
     
     const calculateAPR = async () => {
       if (stakingContractBalance) {
-        
-        const weeklyRewards = 400_000_000_000;
-
+        const _tokenPrice = 0.005;
+        const weeklyRewards = 150_000 * Number(_tokenPrice);
+        const priceUSD =  0.00000000197
         const stakingContractBalanceReadable = formatEther(stakingContractBalance); 
-        const balanceWithoutRewards = Number(stakingContractBalanceReadable) - weeklyRewards;
-
-        const numerator = weeklyRewards;
-        const baseAPR = ((numerator / balanceWithoutRewards)) * 100;
-
+        console.log(`Staking contract balance is ${stakingContractBalanceReadable}`)
+        const numerator = weeklyRewards * 52;
+        console.log(`Numerator is ${numerator}`)
+        console.log(`Denominator is ${stakingContractBalanceReadable * priceUSD}`)
+        const baseAPR = ((numerator / (stakingContractBalanceReadable * priceUSD))) * 100;
+        console.log(`Base APR is ${baseAPR}`)
         const tierAPR = baseAPR * multipliers[selectedTime];
-        const tierAPRReadable = commify(tierAPR * 52, 2);
-
+        const tierAPRReadable = commify(tierAPR, 2);
+        console.log(tierAPRReadable)
+        console.log(`Price usd ${priceUSD}`)
         setBaseAPR(baseAPR);
-        setTierAPR(tierAPRReadable);
-    
-      } 
+        setTierAPR(tierAPRReadable)
+      }
     }
   
     const interval = setInterval(() => {
@@ -162,7 +163,16 @@ const StakingBBP: React.FC = () => {
 
     return () => clearInterval(interval);
   }, [stakingContractBalance, selectedTime]);
-      
+
+  const {data: getRewardsActivated } = useContractRead({
+    address: stakingV2Address,
+    abi: StakingRewardsArtifactV4.abi,
+    functionName: "getRewardsActivated",
+    args: [],
+  });
+
+  console.log(`GetRewardsActivated ${getRewardsActivated}`)
+
   const {data: stakesCount } = useContractRead({
     address: stakingV2Address,
     abi: StakingRewardsArtifactV4.abi,
@@ -623,7 +633,7 @@ const StakingBBP: React.FC = () => {
 
                               return (
                                 <>
-                                  <option key={index} value={index}>
+                                  <option key={index} value={index} selected={index == 0 ? true : false}>
                                     #{index+1} - Unlock on : {new Date(Number(stake.lockEnd) * 1000).toLocaleString("en-US", {
                                       year: 'numeric', // Use 'numeric' or '2-digit'
                                       month: 'long',   // Use 'numeric', '2-digit', 'narrow', 'short', or 'long'
@@ -727,7 +737,7 @@ const StakingBBP: React.FC = () => {
                                   onChange={(ev) => handleSelectTime(ev.target.value)} 
                                   mt={4} 
                                 >
-                                  <option value={2592000 * 6}>180 days</option>
+                                  <option value={2592000 * 6} selected>180 days</option>
                                   <option value={2592000 * 12}>365 days</option>
                               </Select>
                               </Box>
@@ -1034,6 +1044,7 @@ const StakingBBP: React.FC = () => {
                           <Button 
                             size="sm" 
                             borderRadius={10} 
+                            isDisabled={!getRewardsActivated}
                             mt={10} 
                             ml={60}
                             w={120} 
