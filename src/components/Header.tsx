@@ -185,7 +185,7 @@ const Header: React.FC = () => {
                         className="nav-link"
                         href="https://drive.google.com/file/d/1PXB0_ev2_oex0o8LdPF-QmQi3hFLyoxK/view"
                       >
-                        Whitepaper
+                        WP
                       </a>
                     </li>
                     <li
