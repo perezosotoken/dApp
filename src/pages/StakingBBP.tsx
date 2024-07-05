@@ -58,13 +58,12 @@ const StakingBBP: React.FC = () => {
   /** V2 Variables */
   const [amountToStake, setAmountToStake] = useState(parseEther(`${0}`));
   const [selectedTier, setSelectedTier] = useState("1");
-  const [selectedTime, setSelectedTime] = useState("2592000 * 6");
+  const [selectedTime, setSelectedTime] = useState(2592000 * 6);
   const [selectedStake, setSelectedStake] = useState("0");
  
-  const tokenAddress = "0xd83207c127c910e597b8ce77112ed0a56c8c9cd0";
-  const babyPerezosoAddress = "0x4532547919aBbA30b3e4264087E522c923269754";
+  const tokenAddress = "0x53ff62409b219ccaff01042bb2743211bb99882e";
   const stakingAddress = "0xE2DF958c48F0245D823c2dCb012134CfDa9F8f9F";
-  const stakingV2Address = "0x73d8B302d55EF0eDBd981647BDAd65801960032F";
+  const stakingV2Address = "0x83602F5BDbeF1aD24488DA27398C8aa9B2a18B5c";
 
   const [isWaitingForApproval, setIsWaitingForApproval] = useState(false);
 
@@ -139,6 +138,7 @@ const StakingBBP: React.FC = () => {
     const calculateAPR = async () => {
       if (stakingContractBalance) {
         const _tokenPrice = 0.005;
+        const priceUSD =   0.00000000197;
         const weeklyRewards = 150_000 * Number(_tokenPrice);
         const stakingContractBalanceReadable = formatEther(stakingContractBalance); 
         console.log(`Staking contract balance is ${stakingContractBalanceReadable}`)
