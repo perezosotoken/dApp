@@ -82,25 +82,25 @@ const HomePage: React.FC = () => {
               <Flex direction={"column"} w={"full"} mt={"70"}>
                 <Box mt={"-20"} >
                   <Box ml={"auto"}>
-                        <SimpleGrid columns={2} spacing={10} >
-                            
-                              <Box w="auto" style={{border:"1px solid",  background: "linear-gradient(90deg, rgba(60,100,29,1) 0%, rgba(40,66,19,1) 84%)"}} borderRadius={"10px"} >
-                              <div><a href="staking">
-                              <h4>Perezoso Farming </h4>
-                              <Image src={logoPRZS2} w={"100px"} style={{marginTop:"10px", marginBottom:"35px"}}></Image>    
-                              <h6>Stake your Perezoso and earn more tokens</h6>
-                              </a> </div>
+                    <SimpleGrid columns={2} spacing={10} >
+                        
+                          <Box w="auto" fontSize={isMobile ? "13px" : "auto"} style={{border:"2px solid white",  background: "linear-gradient(90deg, rgba(60,100,29,1) 0%, rgba(40,66,19,1) 84%)"}} borderRadius={"10px"} >
+                          <div><a href="staking">
+                          <h4 style={{fontSize: isMobile ? "14px" : "auto"}}>Perezoso Farming </h4>
+                          <Image src={logoPRZS2} w={"100px"} style={{marginTop:"10px", marginBottom:"35px"}}></Image>    
+                          <h6>Stake your Perezoso and earn more tokens</h6>
+                          </a> </div>
 
-                            </Box>
-                            <Box w="auto" style={{border:"1px solid",  background: "linear-gradient(90deg, rgba(60,100,29,1) 0%, rgba(40,66,19,1) 84%)"}} borderRadius={"10px"} >
-                            <div><a href="stakingbbp">
-                              <h4>Baby Perezoso Farming </h4>
-                              <Image src={logoBBP} w={"100px"} style={{marginTop:"10px", marginBottom:"35px"}}></Image>    
-                              <h6>Stake your Perezoso and earn Baby Perezoso</h6>
-                              </a> </div>
-                            </Box> 
-                                              
-                        </SimpleGrid>
+                        </Box>
+                        <Box w="auto"  style={{border:"2px solid white",  background: "linear-gradient(90deg, rgba(60,100,29,1) 0%, rgba(40,66,19,1) 84%)"}} borderRadius={"10px"} >
+                        <div><a href="stakingbbp">
+                          <h4  style={{fontSize: isMobile ? "14px" : "auto"}}>Baby Perezoso Farming </h4>
+                          <Image src={logoBBP} w={"100px"} style={{marginTop:"10px", marginBottom:"35px"}}></Image>    
+                          <h6>Stake your Perezoso and earn Baby Perezoso</h6>
+                          </a> </div>
+                        </Box> 
+                                          
+                    </SimpleGrid>
                   </Box>
 
                 </Box>
