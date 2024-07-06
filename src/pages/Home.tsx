@@ -3,6 +3,8 @@ import { Address, useAccount, useContractRead, } from "wagmi";
 import PerezosoStakingAbi from "../core/PerezosoStaking.json";
 import TOKENABI from "../core/TokenABI.json";
 import { parseEther, formatEther } from "ethers";
+import logoBBP from "../../public/assets/images/baby_przs.png";
+import logoPRZS2 from "../../public/assets/images/przscoin.png";
 
 import { Link } from "react-router-dom";
 import { LanguageContext, LanguageContextType } from "../core/LanguageProvider";
@@ -17,7 +19,8 @@ import {
   Button,
   Flex,
   HStack,     
-  VStack
+  VStack,
+  SimpleGrid
 } from '@chakra-ui/react';
 import { commify } from "../utils";
 import logoPRZS from "../../public/assets/images/logo.png";
@@ -76,80 +79,35 @@ const HomePage: React.FC = () => {
                   </h4>
                 </div>
                 <div style={{ margin: "auto", width: "auto" }} >
-              <Flex direction={"column"} w={"full"}>
-                <Box mt={"-20"}>
+              <Flex direction={"column"} w={"full"} mt={"70"}>
+                <Box mt={"-20"} >
                   <Box ml={"auto"}>
-                  <h4>Phase 2 launched! Check detailed statistics
-                    <Link color="red" style={{fontSize:"22px", textDecoration:"underline"}} to="/stats" target="_new">
-                      &nbsp;<b>here</b>
-                    </Link>
-                    </h4>
-                    <center>
-                    {!isMobile ? 
-                        <>
-                        <Link
-                          className="btn btn-bordered active smooth-anchor mb-2"
-                          to="/staking"
-                          style={{ marginTop: "-10px" }}
-                        >
-                          {!isMobile ? <i className="fa-solid fa-lock mr-2"></i> : <></>}
-                          {!ctx.isSpanishCountry ? "Stake on V2" : "Acuñar"}
-                        </Link> <br /> <br />                        
-                        </> : <></>}
-                       
-                    </center>
+                        <SimpleGrid columns={2} spacing={10} >
+                            
+                              <Box w="auto" style={{border:"1px solid",  background: "linear-gradient(90deg, rgba(60,100,29,1) 0%, rgba(40,66,19,1) 84%)"}} borderRadius={"10px"} >
+                              <div><a href="staking">
+                              <h4>Perezoso Farming </h4>
+                              <Image src={logoPRZS2} w={"100px"} style={{marginTop:"10px", marginBottom:"35px"}}></Image>    
+                              <h6>Stake your Perezoso and earn more tokens</h6>
+                              </a> </div>
+
+                            </Box>
+                            <Box w="auto" style={{border:"1px solid",  background: "linear-gradient(90deg, rgba(60,100,29,1) 0%, rgba(40,66,19,1) 84%)"}} borderRadius={"10px"} >
+                            <div><a href="stakingbbp">
+                              <h4>Baby Perezoso Farming </h4>
+                              <Image src={logoBBP} w={"100px"} style={{marginTop:"10px", marginBottom:"35px"}}></Image>    
+                              <h6>Stake your Perezoso and earn Baby Perezoso</h6>
+                              </a> </div>
+                            </Box> 
+                                              
+                        </SimpleGrid>
                   </Box>
 
                 </Box>
               </Flex>
-
-              <Flex direction={"column"} w={"full"}>
-                <Box mt={"-40"}>
-                  <Box ml={"auto"} >
-                    <br />
-                  <HStack ml={isMobile ? "3vh" : "25%"}><h4 style={{fontSize: isMobile ? "16px" : "21px"}}>Staking summary Phase 1 </h4>&nbsp;
-                    <Text mt={-2} style={{color: "tomato"}} ml={isMobile ? "10" : 0}><b>(Discontinued)</b></Text>
-                  </HStack>
-                  </Box>
-                <HStack w={"full"} justifyContent="space-between" align="stretch">
-                  {/* Left Side */}
-                  <VStack flex={1} justifyContent="space-between" style={{height: "100%"}}>
-                    <Box p={4}>
-                      <Text fontSize={"lg"}>Total supply staked:</Text>
-                    </Box>
-
-                    <Box p={4} marginTop={isMobile ? "45px": "20px"}>
-                      <Text fontSize={"lg"}>Stakers cap:</Text>
-                    </Box>
-                  </VStack>
-                  {/* Right Side */}
-                  <VStack flex={1} justifyContent="space-between" style={{height: "100%"}}>
-                    <Box p={4} >
-                      <VStack>
-                        <Box>
-                          <Text>
-                            <b>{typeof totalStaked != "undefined" ? Number(formatEther(totalStaked) * 100 / totalSupply ).toFixed(2) : 0}% </b>
-                          </Text>
-                        </Box>
-                        <Box>
-                        <p style={{ fontSize:"13px"}}>
-                            ({typeof totalStaked != "undefined" ? commify(Number(formatEther(totalStaked)), 0) : 0} of {commify(totalSupply, 0)})
-                          </p> 
-                        </Box>
-                        </VStack>
-                    </Box>
-                    <Box p={4}>
-                      <Text fontSize={"lg"}>
-                        {Number(totalStakersPct).toFixed(2)}% ({commify(totalStakers, 0)} of 1000)
-                      </Text>
-                    </Box>
-                  </VStack>
-                </HStack>
-                </Box>
-              </Flex>
-
                 </div>
-                <div className="button-group">
+                <br />
+                <div className="button-group" style={{marginTop:"50px"}}>
                   <a
                     className="btn btn-bordered-white mb-3"
                     href="https://pancakeswap.finance/swap?chain=bsc&outputCurrency=BNB&utm_source=Trust_iOS_Browser&inputCurrency=0x53Ff62409B219CcAfF01042Bb2743211bB99882e"
@@ -183,99 +141,16 @@ const HomePage: React.FC = () => {
               </div>
             </div>
           </div>
-          <center><p style={{marginTop:"30px"}}><h3 style={{ color: "#fff" }}>Perezoso Token is featured on:</h3> </p></center>
-          <div className="row align-items-center justify-content-center">
-            <div className="text-center">
-                <div className="button-group">                                  
-                <Link
-                    className="btn btn-bordered-white "
-                    to="https://coinmarketcap.com/currencies/perezoso/"
-                    style={{marginBottom: `${isMobile ? "25px": "0px"}`, height:"60px", width:"230px"}}
-                    target="_blank"
-                  >
-                    <img src="https://perezosotoken.com/assets/images/cmc.png" style={{ width: "25px", marginRight: "10px" }} />
-                    {!ctx.isSpanishCountry ? "CMC" : "CMC"}
-                  </Link>                  
-                  <Link
-                    className="btn btn-bordered-white "
-                    to="https://www.coingecko.com/en/coins/perezoso"
-                    style={{marginBottom: `${isMobile ? "25px": "0px"}`, height:"60px", width:"230px"}}
-                    target="_blank"
-                  >
-                    <img src="https://perezosotoken.com/assets/images/coingecko.png" style={{ width: "25px", marginRight: "10px" }} />
-                    {!ctx.isSpanishCountry ? "Coingecko" : "Coingecko"}
-                  </Link>                  
-                  <Link
-                    className="btn btn-bordered-white "
-                    to="https://pancakeswap.finance/swap?outputCurrency=0x53ff62409b219ccaff01042bb2743211bb99882e&inputCurrency=BNB"
-                    style={{marginBottom: `${isMobile ? "25px": "0px"}`, height:"60px", width:"230px"}}
-                    target="_blank"
-                  >
-                    <img src="https://perezosotoken.com/assets/images/pancakeswap.png" style={{ width: "25px", marginRight: "10px" }} />
-                    {!ctx.isSpanishCountry ? "PancakeSwap" : "PancakeSwap"}
-                  </Link> 
-                  <Link
-                    className="btn btn-bordered-white "
-                    to="https://dappradar.com/dapp/perezoso"
-                    style={{marginBottom: `${isMobile ? "25px": "0px"}`, height:"60px", width:"230px"}}
-                    target="_blank"
-                  >
-                    <img src="https://perezosotoken.com/assets/images/dappradar.png" style={{ width: "25px", marginRight: "10px" }} />
-                    {!ctx.isSpanishCountry ? "Dappradar" : "Dappradar"}
-                  </Link>                  
-                </div>
-            </div>
-          </div>          
+        
         </div>
 
-        <div className="row align-items-center justify-content-center">
-            <div className="col-sm5 text-center">
-                <div className="button-group">
-                <Link
-                    className="btn btn-bordered-white "
-                    to="https://bscscan.com/token/0x53ff62409b219ccaff01042bb2743211bb99882e"
-                    style={{marginBottom: `${isMobile ? "25px": "0px"}`, height:"60px", width:"230px"}}
-                    target="_blank"
-                  >
-                    <img src="https://perezosotoken.com/assets/images/bscscan.png" style={{ width: "25px", marginRight: "10px" }} />
-                    {!ctx.isSpanishCountry ? "Bscscan" : "Bscscan"}
-                  </Link>                                 
-                  <Link
-                    className="btn btn-bordered-white "
-                    to="https://www.dextools.io/app/en/bnb/pair-explorer/0xe2f4a4534133beacd8542f404f8c9d5135fbaf0e"
-                    style={{marginBottom: `${isMobile ? "25px": "0px"}`,height:"60px", width:"230px"}}
-                    target="_blank"
-                  >
-                    <img src="https://perezosotoken.com/assets/images/dextools.png" style={{ width: "25px", marginRight: "10px" }} />
-                    {!ctx.isSpanishCountry ? "Dextools" : "Dextools"}
-                  </Link>                 
-                  <Link
-                    className="btn btn-bordered-white "
-                    to="https://ntm.ai/token/0x53ff62409b219ccaff01042bb2743211bb99882e"
-                    style={{marginBottom: `${isMobile ? "25px": "0px"}`,height:"60px", width:"230px"}}
-                    target="_blank"
-                  >
-                    <img src="https://perezosotoken.com/assets/images/ntm.png" style={{ width: "25px", marginRight: "10px" }} />
-                    {!ctx.isSpanishCountry ? "NTM" : "NTM"}
-                  </Link>      
-                  <Link
-                    className="btn btn-bordered-white"
-                    to="https://ave.ai/token/0x53ff62409b219ccaff01042bb2743211bb99882e-bsc?from=Default"
-                    style={{height:"60px", width:"230px"}}
-                    target="_blank"
-                  >
-                    <img src="https://perezosotoken.com/assets/images/avedex.png" style={{ width: "25px", marginRight: "10px" }} />
-                    {!ctx.isSpanishCountry ? "Avedex" : "Avedex"}
-                  </Link>             
-                </div>
-            </div>
-          </div>               
+            
       </section>
-      <section className="content-area" style={{ marginBottom: "-100px" }}>
-        <div className="container">
+      <section className="content-area">
+        <div className="container" >
           <div className="row align-items-center">
-            <div className="col-12 col-md-6">
-              <div className="content intro">
+            <div className="col-12 col-md-6" >
+              <div className="content intro" >
                 <h2 style={{ color: "#fff" }}>What Perezoso Is</h2>
                 <p
                   style={{ color: "#0a3607", marginTop: "-20px" }}
@@ -366,6 +241,93 @@ const HomePage: React.FC = () => {
             </div>
           </div>
         </div>
+      </section>
+      <section className="hero-section">
+      <center><p style={{marginTop:"30px"}}><h3 style={{ color: "#fff" }}>Perezoso Token is featured on:</h3> </p></center>
+          <div className="row align-items-center justify-content-center">
+            <div className="text-center">
+                <div className="button-group">                                  
+                <Link
+                    className="btn btn-bordered-white "
+                    to="https://coinmarketcap.com/currencies/perezoso/"
+                    style={{marginBottom: `${isMobile ? "25px": "0px"}`, height:"60px", width:"230px"}}
+                    target="_blank"
+                  >
+                    <img src="https://perezosotoken.com/assets/images/cmc.png" style={{ width: "25px", marginRight: "10px" }} />
+                    {!ctx.isSpanishCountry ? "CMC" : "CMC"}
+                  </Link>                  
+                  <Link
+                    className="btn btn-bordered-white "
+                    to="https://www.coingecko.com/en/coins/perezoso"
+                    style={{marginBottom: `${isMobile ? "25px": "0px"}`, height:"60px", width:"230px"}}
+                    target="_blank"
+                  >
+                    <img src="https://perezosotoken.com/assets/images/coingecko.png" style={{ width: "25px", marginRight: "10px" }} />
+                    {!ctx.isSpanishCountry ? "Coingecko" : "Coingecko"}
+                  </Link>                  
+                  <Link
+                    className="btn btn-bordered-white "
+                    to="https://pancakeswap.finance/swap?outputCurrency=0x53ff62409b219ccaff01042bb2743211bb99882e&inputCurrency=BNB"
+                    style={{marginBottom: `${isMobile ? "25px": "0px"}`, height:"60px", width:"230px"}}
+                    target="_blank"
+                  >
+                    <img src="https://perezosotoken.com/assets/images/pancakeswap.png" style={{ width: "25px", marginRight: "10px" }} />
+                    {!ctx.isSpanishCountry ? "PancakeSwap" : "PancakeSwap"}
+                  </Link> 
+                  <Link
+                    className="btn btn-bordered-white "
+                    to="https://dappradar.com/dapp/perezoso"
+                    style={{marginBottom: `${isMobile ? "25px": "0px"}`, height:"60px", width:"230px"}}
+                    target="_blank"
+                  >
+                    <img src="https://perezosotoken.com/assets/images/dappradar.png" style={{ width: "25px", marginRight: "10px" }} />
+                    {!ctx.isSpanishCountry ? "Dappradar" : "Dappradar"}
+                  </Link>                  
+                </div>
+            </div>
+          </div> 
+          <div className="row align-items-center justify-content-center">
+            <div className="col-sm5 text-center">
+                <div className="button-group">
+                <Link
+                    className="btn btn-bordered-white "
+                    to="https://bscscan.com/token/0x53ff62409b219ccaff01042bb2743211bb99882e"
+                    style={{marginBottom: `${isMobile ? "25px": "0px"}`, height:"60px", width:"230px"}}
+                    target="_blank"
+                  >
+                    <img src="https://perezosotoken.com/assets/images/bscscan.png" style={{ width: "25px", marginRight: "10px" }} />
+                    {!ctx.isSpanishCountry ? "Bscscan" : "Bscscan"}
+                  </Link>                                 
+                  <Link
+                    className="btn btn-bordered-white "
+                    to="https://www.dextools.io/app/en/bnb/pair-explorer/0xe2f4a4534133beacd8542f404f8c9d5135fbaf0e"
+                    style={{marginBottom: `${isMobile ? "25px": "0px"}`,height:"60px", width:"230px"}}
+                    target="_blank"
+                  >
+                    <img src="https://perezosotoken.com/assets/images/dextools.png" style={{ width: "25px", marginRight: "10px" }} />
+                    {!ctx.isSpanishCountry ? "Dextools" : "Dextools"}
+                  </Link>                 
+                  <Link
+                    className="btn btn-bordered-white "
+                    to="https://ntm.ai/token/0x53ff62409b219ccaff01042bb2743211bb99882e"
+                    style={{marginBottom: `${isMobile ? "25px": "0px"}`,height:"60px", width:"230px"}}
+                    target="_blank"
+                  >
+                    <img src="https://perezosotoken.com/assets/images/ntm.png" style={{ width: "25px", marginRight: "10px" }} />
+                    {!ctx.isSpanishCountry ? "NTM" : "NTM"}
+                  </Link>      
+                  <Link
+                    className="btn btn-bordered-white"
+                    to="https://ave.ai/token/0x53ff62409b219ccaff01042bb2743211bb99882e-bsc?from=Default"
+                    style={{height:"60px", width:"230px"}}
+                    target="_blank"
+                  >
+                    <img src="https://perezosotoken.com/assets/images/avedex.png" style={{ width: "25px", marginRight: "10px" }} />
+                    {!ctx.isSpanishCountry ? "Avedex" : "Avedex"}
+                  </Link>             
+                </div>
+            </div>
+          </div>              
       </section>
     </>
   );
