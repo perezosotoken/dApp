@@ -88,7 +88,7 @@ const HomePage: React.FC = () => {
                           <div><a href="staking">
                           <h4 style={{fontSize: isMobile ? "14px" : "auto"}}>Perezoso Farming </h4>
                           <Image src={logoPRZS2} w={"100px"} style={{marginTop:"10px", marginBottom:"35px"}}></Image>    
-                          <h6>Stake your Perezoso and earn more tokens</h6>
+                          <h6  style={{fontSize: isMobile ? "14px" : "auto"}}>Stake your Perezoso and earn more tokens</h6>
                           </a> </div>
 
                         </Box>
@@ -96,7 +96,7 @@ const HomePage: React.FC = () => {
                         <div><a href="stakingbbp">
                           <h4  style={{fontSize: isMobile ? "14px" : "auto"}}>Baby Perezoso Farming </h4>
                           <Image src={logoBBP} w={"100px"} style={{marginTop:"10px", marginBottom:"35px"}}></Image>    
-                          <h6>Stake your Perezoso and earn Baby Perezoso</h6>
+                          <h6  style={{fontSize: isMobile ? "14px" : "auto"}}>Stake your Perezoso and earn Baby Perezoso</h6>
                           </a> </div>
                         </Box> 
                                           
