@@ -197,7 +197,7 @@ const Staking: React.FC = () => {
 
     const calculateAPRLP = async () => {
       if (stakingContractBalance) {
-        const weeklyRewards = 400_000_000_000 * Number(tokenPrice);
+        const weeklyRewards = 100_000_000_000 * Number(tokenPrice);
 
         const stakingContractBalanceReadable = formatEther(totalSupplyLP); 
  
