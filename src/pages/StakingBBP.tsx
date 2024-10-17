@@ -137,8 +137,8 @@ const StakingBBP: React.FC = () => {
     
     const calculateAPR = async () => {
       if (stakingContractBalance) {
-        const _tokenPrice = 0.005;
-        const priceUSD =   0.00000000197;
+        const _tokenPrice = 0.002;
+        // const priceUSD =   0.0000000022;
         const weeklyRewards = 250_000 * Number(_tokenPrice);
         const stakingContractBalanceReadable = formatEther(stakingContractBalance); 
         console.log(`Staking contract balance is ${stakingContractBalanceReadable}`)
@@ -1084,7 +1084,7 @@ const StakingBBP: React.FC = () => {
                           </Box>
                           <Image src={logoBBP} width="18px" mt={-5} ml={-80}></Image>
                         </HStack>
-                        <Text mt={-20} style={{fontSize:"14px"}}> (${formatAndCommifyNumber(Number(formatEther(realtimeRewards || 0)) * Number(0.005).toFixed(12))})</Text>
+                        {/*<Text mt={-20} style={{fontSize:"14px"}}> (${formatAndCommifyNumber(Number(formatEther(realtimeRewards || 0)) * Number(0.005).toFixed(12))})</Text>*/}
                         </VStack>
                       </Box>
                       <Box w="50%">
@@ -1101,7 +1101,7 @@ const StakingBBP: React.FC = () => {
                             </Box>
                             <Image src={logoBBP} width="18px" mt={-5} ml={-80}></Image>
                             </HStack>
-                        <Text mt={-20} style={{fontSize:"14px"}}>(${formatAndCommifyNumber(Number(formatEther(earnedOnStake || 0)) * Number(0.005).toFixed(12))})</Text>
+                         {/*<Text mt={-20} style={{fontSize:"14px"}}>(${formatAndCommifyNumber(Number(formatEther(earnedOnStake || 0)) * Number(0.005).toFixed(12))})</Text>*/}
                         </VStack>
                         </Box>
                       </HStack>
