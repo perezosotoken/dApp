@@ -644,34 +644,58 @@ const Staking: React.FC = () => {
     setSelectedTime(value);
   }
 
-  const handleChangeStakingType = (value) => {
-    setAmountToStake(0);
-    switch (value) {
-      case "1":
-        setSelectedType("1")
-        setCurrentStakingAddress(stakingV2Address);
-        setStakeTypeIcon(logoPRZS);
-        setStakedBalance(przsBalance);
-        setStakesCount(stakesCountBN);
-        setTotalEarned(realtimeRewardsBN);
-        break;
-      case "2":
-        setSelectedType("2")
-        setCurrentStakingAddress(stakingLPAddress);
-        setStakeTypeIcon(logoLPToken);
-        setStakedBalance(lpTokenBalance);   
-        setStakesCount(0);     
-        setTotalEarned(realtimeRewardsLp)
-        break;
-      default:
-    }
+  // const handleChangeStakingType = (value) => {
+  //   console.log(`Set to ${value}`)
+  //   setAmountToStake(0);
+  //   switch (value) {
+  //     case "1":
+  //       setSelectedType("1")
+  //       setCurrentStakingAddress(stakingV2Address);
+  //       setStakeTypeIcon(logoPRZS);
+  //       setStakedBalance(przsBalance);
+  //       setStakesCount(stakesCountBN);
+  //       setTotalEarned(realtimeRewardsBN);
+  //       break;
+  //     case "2":
+  //       setSelectedType("2")
+  //       setCurrentStakingAddress(stakingLPAddress);
+  //       setStakeTypeIcon(logoLPToken);
+  //       setStakedBalance(lpTokenBalance);   
+  //       setStakesCount(0);     
+  //       setTotalEarned(realtimeRewardsLp)
+  //       break;
+  //     default:
+  //   }
 
-    // console.log(`TS is ${totalSupplyLP} Selected type is  ${selectedType} ac is ${accumulatedRewards == 0} ${realtimeRewardsBN} ${realtimeRewardsLp} current staking address ${currentStakingAddress}`); 
-  }
+  //   // console.log(`TS is ${totalSupplyLP} Selected type is  ${selectedType} ac is ${accumulatedRewards == 0} ${realtimeRewardsBN} ${realtimeRewardsLp} current staking address ${currentStakingAddress}`); 
+  // }
 
   const amountToStakeReadable = formatEther(amountToStake || 0);
   const sideButtonsGroupSize = isMobile ? "35px" : "25px";
 
+  // Run on first render (page load)
+  useEffect(() => {
+
+    function doIt() {
+      console.log(`Executed - przsBalance: ${przsBalance}, stakesCountBN: ${stakesCountBN}, realtimeRewardsBN: ${realtimeRewardsBN}`)
+      setAmountToStake(0);
+      setSelectedType(1)
+      setCurrentStakingAddress(stakingV2Address);
+      setStakeTypeIcon(logoPRZS);
+      if (typeof przsBalance !== 'undefined') {
+        setStakedBalance(przsBalance);
+      }
+      if (typeof stakesCountBN !== 'undefined') {
+        setStakesCount(stakesCountBN);
+      }
+      if (typeof realtimeRewardsBN !== 'undefined') {
+        setTotalEarned(realtimeRewardsBN);      
+      }
+    }
+
+    doIt()
+
+  }, [address, przsBalance, stakesCountBN, realtimeRewardsBN]);
 
   // console.log(`AC is ${accumulatedRewards} -- ${Number(accumulatedRewards) == 0}`)
 
@@ -700,33 +724,17 @@ const Staking: React.FC = () => {
               <Heading as="h3" className="m-0">
                     {!ctx.isSpanishCountry ? "Perezoso Farming (Phase 2)" : "Acuña tu token Perezoso"}</Heading>
                   <SimpleGrid>
-                  <Box w="50%" >
-                    
-                  <HStack><h4>Choose type </h4><h5 style={{color:"tomato", fontWeight:"bolder"}}>(NEW)</h5></HStack>
-                        <Box className="input-text">
-                          <Select
-                            width={160} 
-                            height={45} 
-                            border="1px solid" 
-                            borderRadius={"10px"} 
-                            onChange={(event) => handleChangeStakingType(event.target.value)}                           
-                          >
-                            <option key={0} value={0}>Choose ...</option>
-                            <option key={1} value={1}>PRZS</option>
-                            {/* <option key={2} value={2}>BNB/PRZS (LP)</option> */}
-                          </Select>
-                        </Box>
-                  </Box>
+
                   <Box w="50%"  >
-                  <SimpleGrid mt={20}>
+                  <SimpleGrid mt={-125} >
                         <HStack>
-                        <Box w={"50%"} ml={150}>
+                        <Box w={"50%"} ml={150} >
                           {/* <HStack>
                             <Text>Time left</Text>
                           </HStack> */}
                         </Box>
                         <Box w={"50%"} w={150}>
-                        <Box mt={!isMobile? "-100px" :"-100px"}>
+                        <Box mt={!isMobile? "-5px" :"-5px"}>
                                   
                           <VStack>
                           {/* <Button 
@@ -757,18 +765,18 @@ const Staking: React.FC = () => {
                   </SimpleGrid>
               </Box>
 
-                <Box className="card no-hover staking-card single-staking" borderRadius={"0px !important"}>
+                <Box className="card no-hover staking-card single-staking" borderRadius={"0px !important"} border="1px solid red">
                   {typeof address !== "undefined" ? 
                     <>
                     {selectedType != -1 ?
-                    <Box className="tab-content mt-md-3" id="myTabContent"  mt={-20}>
+                    <Box className="tab-content" id="myTabContent"  mt={-50}>
                       <Box
                         className="tab-pane fade show active"
                         id="tab-one"
                         role="tabpanel"
                         aria-labelledby="tab-one-tab"
                       >
-                        <Box className="input-box my-4 d-flex row" >
+                        <Box className="input-box my-1 d-flex row" >
                           
                         <Box className="input-area col-lg-6 col-12 mb-3">
                           <h4>Your wallet</h4>
