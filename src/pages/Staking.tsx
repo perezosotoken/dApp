@@ -713,7 +713,7 @@ const Staking: React.FC = () => {
                           >
                             <option key={0} value={0}>Choose ...</option>
                             <option key={1} value={1}>PRZS</option>
-                            <option key={2} value={2}>BNB/PRZS (LP)</option>
+                            {/* <option key={2} value={2}>BNB/PRZS (LP)</option> */}
                           </Select>
                         </Box>
                   </Box>
