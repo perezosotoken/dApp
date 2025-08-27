@@ -73,13 +73,13 @@ const StakingBBP: React.FC = () => {
   const [tierAPR, setTierAPR] = useState(0);
   const [priceUSD, setPriceUSD] = useState(0);
 
-  const { data: realtimeRewards, refetch: refetchRewards } = useContractRead({
-    address: stakingV2Address,
-    abi: StakingRewardsArtifactV4.abi,
-    functionName: "earned",
-    args: [address],
-    watch: true,
-  });
+  // const { data: realtimeRewards, refetch: refetchRewards } = useContractRead({
+  //   address: stakingV2Address,
+  //   abi: StakingRewardsArtifactV4.abi,
+  //   functionName: "earned",
+  //   args: [address],
+  //   watch: true,
+  // });
 
   const {data: stakingContractBalance, refetch: refetchStakingContractBalance} = 
   useContractRead({
@@ -180,24 +180,24 @@ const StakingBBP: React.FC = () => {
   });
 
   // console.log(`Stakes count is ${stakesCount} selected stake is ${selectedStake} realtime rewards is ${realtimeRewards}`)
-  const { data: earnedOnStake } = useContractRead({
-    address: stakingV2Address,
-    abi: StakingRewardsArtifactV4.abi,
-    functionName: "earnedOnStake",
-    args: [address, selectedStake],
-    watch: true,
-  });
+  // const { data: earnedOnStake } = useContractRead({
+  //   address: stakingV2Address,
+  //   abi: StakingRewardsArtifactV4.abi,
+  //   functionName: "earnedOnStake",
+  //   args: [address, selectedStake],
+  //   watch: true,
+  // });
  
 
   // Setup an interval to refetch rewards every 5 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      refetchRewards();  // This will refetch the contract read
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     refetchRewards();  // This will refetch the contract read
 
-    }, 5000);
+  //   }, 5000);
 
-    return () => clearInterval(interval);
-  }, [stakesCount]);  // Depend on refetch to reset the interval when it changes
+  //   return () => clearInterval(interval);
+  // }, [stakesCount]);  // Depend on refetch to reset the interval when it changes
 
   const {data: stakes } = useContractRead({
     address: stakingV2Address,
@@ -775,7 +775,7 @@ const StakingBBP: React.FC = () => {
                              /> : <></>}
                         </HStack>
                         </Box>
-
+                              {/* amountToStake == 0 || przsBalance == 0 */}
                           <VStack mr={95}>
                           <Box w="200px" ml={isMobile ? "-2vh" : "1vh"} pb={20} mt={isMobile ? -60 : 10}>
                            {amountToStakeReadable > 0 ?  <Text ml={isMobile ? 18 : 0} style={{fontSize:"16px"}} color="lightgray">(Staking: {formatNumber(Number(amountToStakeReadable))})</Text> : <></>}
@@ -786,7 +786,7 @@ const StakingBBP: React.FC = () => {
                               {!isMobile ? 
                               <Button 
                               mt={-20}
-                              isDisabled={amountToStake == 0 || przsBalance == 0}
+                              isDisabled={true}
                               width={"120px"} 
                               style={{ border:"1px solid white", borderRadius:"10px"}}
                               onClick={() => approve()}
@@ -1043,7 +1043,7 @@ const StakingBBP: React.FC = () => {
                           <Button 
                             size="sm" 
                             borderRadius={10} 
-                            isDisabled={!getRewardsActivated}
+                            // isDisabled={!getRewardsActivated}
                             mt={10} 
                             ml={60}
                             w={120} 
@@ -1055,7 +1055,7 @@ const StakingBBP: React.FC = () => {
                             w={120} 
                             style={{border:"1px solid white", borderRadius:"10px"}}
                             onClick={() => withdraw()}
-                            isDisabled={!isSelectedPositionUnlocked}
+                            // isDisabled={!isSelectedPositionUnlocked}
                             >Exit
                             </Button>
                            </VStack>                          
@@ -1077,10 +1077,10 @@ const StakingBBP: React.FC = () => {
                         <VStack>
                         <HStack>
                           <Box w="160px" textAlign="right" mr={80} >
-                          <Heading as="h6" style={{color:"lightgray"}}>
+                          {/* <Heading as="h6" style={{color:"lightgray"}}>
                             {stakesCount > 0 && realtimeRewards > 0 ? 
                               commify(formatEther(realtimeRewards || 0), 4) : 0}
-                            </Heading>
+                            </Heading> */}
                           </Box>
                           <Image src={logoBBP} width="18px" mt={-5} ml={-80}></Image>
                         </HStack>
@@ -1094,10 +1094,10 @@ const StakingBBP: React.FC = () => {
                         <VStack>
                           <HStack>
                           <Box w="160px" textAlign="right" mr={80}>
-                            <Heading as="h6" style={{color:"lightgray"}}>
+                            {/* <Heading as="h6" style={{color:"lightgray"}}>
                               {stakesCount > 0 && earnedOnStake > 0 ? 
                                 commify(formatEther(earnedOnStake || 0), 4) : 0}
-                              </Heading>
+                              </Heading> */}
                             </Box>
                             <Image src={logoBBP} width="18px" mt={-5} ml={-80}></Image>
                             </HStack>

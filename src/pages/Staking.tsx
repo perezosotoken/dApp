@@ -179,7 +179,7 @@ const Staking: React.FC = () => {
     
     const calculateAPR = async () => {
       if (stakingContractBalance) {
-        const weeklyRewards = 90_000_000_000;
+        const weeklyRewards = 30_000_000_000;
 
         const stakingContractBalanceReadable = formatEther(stakingContractBalance); 
         const balanceWithoutRewards = Number(stakingContractBalanceReadable) - weeklyRewards;
@@ -947,8 +947,8 @@ const Staking: React.FC = () => {
                                   >
                                     <option value={2592000}>30  days</option>
                                     <option value={2592000 * 3}>90  days</option>
-                                    <option value={2592000 * 6}>180 days</option>
-                                    <option value={2592000 * 12}>365 days</option>
+                                    {/* <option value={2592000 * 6}>180 days</option>
+                                    <option value={2592000 * 12}>365 days</option> */}
                                 </Select>
                                 </Box>
                                 &nbsp;&nbsp;
