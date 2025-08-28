@@ -983,6 +983,7 @@ const Staking: React.FC = () => {
                               placeholder={"type here..."} // Display the formatted value
                               style={{ border: "1px solid white", borderRadius: "10px", backgroundColor: "gray" }} 
                               width={180} 
+                              value={formatEther(amountToStake || 0)}
                               onChange={(ev) => handleAmountToStake(ev.target.value)}
                             >
                           </Input>
