@@ -33,7 +33,13 @@ function StakingTable({amountToStake, przsBalance, lpTokenBalance, sideButtonsGr
           isDisabled={amountToStake === BigInt(0) || !przsBalance || BigInt(przsBalance || 0) === BigInt(0)}
           width={"120px"} 
           style={{ border:"1px solid white", borderRadius:"10px"}}
-          onClick={() => approve()}
+          onClick={() => {
+            console.log('Mobile Stake button clicked');
+            console.log('amountToStake:', amountToStake);
+            console.log('przsBalance:', przsBalance);
+            console.log('approve function:', approve);
+            approve?.();
+          }}
         > 
         &nbsp;Stake 
         </Button> : <></>}

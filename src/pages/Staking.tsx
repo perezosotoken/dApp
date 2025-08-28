@@ -32,7 +32,6 @@ import { toast } from "react-toastify";
 import { parseEther, formatEther } from "ethers";
 import { commify, formatNumber, formatAndCommifyNumber } from "../utils";
 import { isMobile } from "react-device-detect";
-import axios from 'axios';
 import { ethers } from 'ethers';
 
 const Staking: React.FC = () => {
@@ -64,6 +63,7 @@ const Staking: React.FC = () => {
 
   /** V2 Variables */
   const [amountToStake, setAmountToStake] = useState(parseEther(`${0}`));
+  const [displayAmount, setDisplayAmount] = useState("");
   const [selectedTier, setSelectedTier] = useState("1");
   const [selectedTime, setSelectedTime] = useState("2592000");
   const [selectedStake, setSelectedStake] = useState("0");
@@ -146,15 +146,15 @@ const Staking: React.FC = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       const fetchTokenPrice = async () => {
-        const url = 'https://stats.perezosotoken.com/price';
-        const response = await fetch(url, {
-          headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-          }
-        });
-        const text = await response.json();
+        // const url = 'https://stats.perezosotoken.com/price';
+        // const response = await fetch(url, {
+        //   headers: {
+        //     'X-Requested-With': 'XMLHttpRequest',
+        //   }
+        // });
+        // const text = await response.json();
         // console.log(`Token price is ${Number(text.price).toFixed(14)}`)
-        setTokenPrice(Number(text.price).toFixed(14))
+        setTokenPrice(Number(0))
     };
 
     fetchTokenPrice();
@@ -579,6 +579,7 @@ const Staking: React.FC = () => {
   });
 
   const handleAmountToStake = (value) => {
+    setDisplayAmount(value);
     if (value == "") {
       setAmountToStake(parseEther("0")); // Ensure this is a BigNumber
     } else {
@@ -605,12 +606,12 @@ const Staking: React.FC = () => {
   };
   
   const handleStakeAll = (quantity) => {
-
-    setAmountToStake(
-      selectedType == 1 ? 
+    const calculatedAmount = selectedType == 1 ? 
       BigInt(przsBalance) * BigInt(quantity == "100" ? 9999n : quantity) / (quantity == "100" ? 10000n : 100n) :
-      BigInt(lpTokenBalance) * BigInt(quantity) / 100n
-    );
+      BigInt(lpTokenBalance) * BigInt(quantity) / 100n;
+    
+    setAmountToStake(calculatedAmount);
+    setDisplayAmount(formatEther(calculatedAmount));
   };
 
   const handleSetSelectedStake = (value) => {
@@ -983,7 +984,7 @@ const Staking: React.FC = () => {
                               placeholder={"type here..."} // Display the formatted value
                               style={{ border: "1px solid white", borderRadius: "10px", backgroundColor: "gray" }} 
                               width={180} 
-                              value={formatEther(amountToStake || 0)}
+                              value={displayAmount}
                               onChange={(ev) => handleAmountToStake(ev.target.value)}
                             >
                           </Input>
@@ -1012,7 +1013,13 @@ const Staking: React.FC = () => {
                                 isDisabled={amountToStake === BigInt(0) || !przsBalance || BigInt(przsBalance || 0) === BigInt(0)}
                                 width={"120px"} 
                                 style={{ border:"1px solid white", borderRadius:"10px"}}
-                                onClick={() => approve()}
+                                onClick={() => {
+                                  console.log('Stake button clicked');
+                                  console.log('amountToStake:', amountToStake);
+                                  console.log('przsBalance:', przsBalance);
+                                  console.log('approve function:', approve);
+                                  approve?.();
+                                }}
                               > 
                               &nbsp;Stake 
                               </Button> : <></>}
