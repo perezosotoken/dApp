@@ -608,8 +608,7 @@ const Staking: React.FC = () => {
 
     setAmountToStake(
       selectedType == 1 ? 
-      BigInt(przsBalance) * BigInt(quantity == "100" ? 9999n : quantity   
-    ) / (quantity == "100" ? 10000n : 100n) :
+      BigInt(przsBalance) * BigInt(quantity == "100" ? 9999n : quantity) / (quantity == "100" ? 10000n : 100n) :
       BigInt(lpTokenBalance) * BigInt(quantity) / 100n
     );
   };
@@ -1009,7 +1008,7 @@ const Staking: React.FC = () => {
                                 {!isMobile ? 
                                 <Button 
                                 mt={-20}
-                                isDisabled={amountToStake == 0 || przsBalance == 0}
+                                isDisabled={amountToStake === BigInt(0) || !przsBalance || BigInt(przsBalance || 0) === BigInt(0)}
                                 width={"120px"} 
                                 style={{ border:"1px solid white", borderRadius:"10px"}}
                                 onClick={() => approve()}

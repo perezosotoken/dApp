@@ -19,18 +19,18 @@ function StakingTable({amountToStake, przsBalance, lpTokenBalance, sideButtonsGr
       <VStack>
         <Box mt={isMobile ? 0 : 10}>
         <HStack>
-          <Button isDisabled={true} size={sideButtonsGroupSize} borderRadius={10} mt={5} onClick={() => handleStakeAll("25")}>25%</Button>&nbsp;
-          <Button isDisabled={true} size={sideButtonsGroupSize} borderRadius={10} mt={5} onClick={() => handleStakeAll("50")}>50%</Button>&nbsp;
+          <Button size={sideButtonsGroupSize} borderRadius={10} mt={5} onClick={() => handleStakeAll("25")}>25%</Button>&nbsp;
+          <Button size={sideButtonsGroupSize} borderRadius={10} mt={5} onClick={() => handleStakeAll("50")}>50%</Button>&nbsp;
           </HStack>
         <HStack>
-        <Button isDisabled={true} size={sideButtonsGroupSize} borderRadius={10} mt={5} onClick={() => handleStakeAll("75")}>75%</Button>&nbsp;
-        <Button isDisabled={true} border="4px solid green" size={sideButtonsGroupSize} borderRadius={10} mt={5} onClick={() => handleStakeAll("100")}>MAX</Button>&nbsp;
+        <Button size={sideButtonsGroupSize} borderRadius={10} mt={5} onClick={() => handleStakeAll("75")}>75%</Button>&nbsp;
+        <Button border="4px solid green" size={sideButtonsGroupSize} borderRadius={10} mt={5} onClick={() => handleStakeAll("100")}>MAX</Button>&nbsp;
         </HStack>      
         </Box>
 
         {isMobile ? 
           <Button 
-          isDisabled={true}
+          isDisabled={amountToStake === BigInt(0) || !przsBalance || BigInt(przsBalance || 0) === BigInt(0)}
           width={"120px"} 
           style={{ border:"1px solid white", borderRadius:"10px"}}
           onClick={() => approve()}
