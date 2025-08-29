@@ -678,7 +678,6 @@ const Staking: React.FC = () => {
 
     function doIt() {
       console.log(`Executed - przsBalance: ${przsBalance}, stakesCountBN: ${stakesCountBN}, realtimeRewardsBN: ${realtimeRewardsBN}`)
-      setAmountToStake(0);
       setSelectedType(1)
       setCurrentStakingAddress(stakingV2Address);
       setStakeTypeIcon(logoPRZS);
